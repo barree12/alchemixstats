@@ -2,12 +2,6 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { calculateEmissionScheduleChart, createDateArray } from './Functions'
 
-function createLabels() {
-  let labels = [];
-  for(let i=0;i<350;i++) labels[i]=i;
-  return labels;
-}
-
 function ChartInflation(){
     return (
       <div className="chart-container-2">
@@ -17,9 +11,7 @@ function ChartInflation(){
             datasets: [{
               label: 'Inflation',
               data: calculateEmissionScheduleChart().inflationArray,
-              backgroundColor: [ 
-                'rgba(240,238,129,0.5)',
-              ],
+              backgroundColor: 'rgba(240,238,129,0.5)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

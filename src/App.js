@@ -2,7 +2,7 @@ import './App.css';
 import ChartDonut from './ChartDonut';
 import ChartEmissions from './ChartEmissions';
 import ChartInflation from './ChartInflation';
-import {emissionWeek, tokenEmission, currentStats, futureInflation, createDateArray} from './Functions';
+import {emissionWeek, tokenEmission, currentStats, futureInflation} from './Functions';
 
 let date = new Date();
 let today = {
@@ -28,7 +28,7 @@ function App() {
         <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({today.year+3}-{today.month+1}-{today.day}): <span className="important">{futureInflation(3).totalInflation}%</span> Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}%</span><br/>
         <br/>
         Current <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply: <span className="important">{currentStats().currentSupply}</span><br/>
-        Official emission schedule: <a href="https://alchemix-finance.gitbook.io/alchemix-finance/token-distribution/alcx-monetary-policy">ALCX Monetary Policy</a>
+        Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/alchemix-finance/token-distribution/alcx-monetary-policy">ALCX Monetary Policy</a>
       </div>
 
       <div className="section-wrapper">
@@ -113,13 +113,16 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="normal-content">Latest adjustments to emissions: <a href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe111e77d0bcc78d2c7c994c38ec1e915b1b50a306f9d90fa09b1e78db71eba12">
-              AIP-31</a>, <a href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xa1737555482930ca3687b3ed0c955f32fe204b19216290b43a77c099a41ebf85">
-              AIP-32</a>, <a href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe476e3a4bc6749e3e980b2aed3db7af63e95792ff45c626d717a213dcae96e41">
+            <div className="normal-content">Latest adjustments to emissions: <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe111e77d0bcc78d2c7c994c38ec1e915b1b50a306f9d90fa09b1e78db71eba12">
+              AIP-31</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xa1737555482930ca3687b3ed0c955f32fe204b19216290b43a77c099a41ebf85">
+              AIP-32</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe476e3a4bc6749e3e980b2aed3db7af63e95792ff45c626d717a213dcae96e41">
               AIP-34</a></div>
           </div>
         </div>
         <ChartDonut />
+      </div>
+      <div className="footer">
+        With issues or suggestions about the site, send me an email at barree12ATgmail.com or find me in the Alchemix Discord (Barree #2314)
       </div>
     </div>
   );

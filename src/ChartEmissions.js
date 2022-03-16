@@ -2,11 +2,11 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { calculateEmissionScheduleChart, createDateArray } from './Functions'
 
-function createLabels() {
+/*function createLabels() {
   let labels = [];
   for(let i=0;i<350;i++) labels[i]=i;
   return labels;
-}
+}*/
 
 function ChartEmissions(){
     return (
