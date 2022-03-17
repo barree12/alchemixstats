@@ -95,7 +95,7 @@ function App() {
                 </div>
               </div>
               <div className="weight-table-column">
-                <span className="table-title">Bribes (18%)</span>
+                <span className="table-title">alAssets (18%)</span>
                 <div className="weight-table-row">
                   <img src={ require('./logos/alusd.png') } alt="alUSD" className="image" />
                   <div className="table-item-1">alUSD3CRV</div>
@@ -109,6 +109,11 @@ function App() {
                 <div className="weight-table-row">
                   <img src={ require('./logos/d3pool.png') } alt="d3pool" className="image" />
                   <div className="table-item-1">d3pool</div>
+                  <div className="table-item-2">2%</div>
+                </div>
+                <div className="weight-table-row">
+                  <img src={ require('./logos/aleth_saddle.png') } alt="alETH Saddle" className="image" />
+                  <div className="table-item-1">alETHSaddle</div>
                   <div className="table-item-2">2%</div>
                 </div>
               </div>
