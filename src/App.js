@@ -127,7 +127,7 @@ function App() {
         <ChartDonut />
       </div>
       <div className="footer">
-        With issues or suggestions about the site, send me an email at barree12ATgmail.com or find me in the Alchemix Discord (Barree #2314)
+        With issues or suggestions about the site, find me in the Alchemix Discord (Barree #2314)
       </div>
     </div>
   );
