@@ -40,6 +40,7 @@ function ChartInflation(){
                 },
               },
               responsive: true,
+              maintainAspectRatio: false,
               legend: {
                 display: false,
                 position: 'top',
@@ -74,8 +75,6 @@ function ChartInflation(){
                 ],
               }
             }}
-            height={500}
-            width={1000}
         />
       </div>
     )

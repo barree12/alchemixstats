@@ -103,7 +103,7 @@ function App() {
                 </div>
                 <div className="weight-table-row">
                   <img src={ require('./logos/eth_aleth.png') } alt="alETH-ETH" className="image" />
-                  <div className="table-item-1">alETH-ETH</div>
+                  <div className="table-item-1">alETHCRV</div>
                   <div className="table-item-2">5%</div>
                 </div>
                 <div className="weight-table-row">

@@ -10,7 +10,7 @@ function ChartDonut(){
             data={{
             labels: ['Staking - ALCX/ETH SLP', 'Bonds - CVX', 'Staking - tALCX', 'Staking - ALCX',
             'Bonds - ALCX/ETH SLP', 'Bribe - alUSD3CRV', 'Bonds - ETH', 'Bonds - DAI', 
-             'Bribe - alETH-ETH', 'Bonds - Toke', 'Bribe - d3pool'],
+             'Bribe - alETHCRV', 'Bonds - Toke', 'Bribe - d3pool'],
             datasets: [{
               label: '',
               data: [20, 17.5, 12, 10, 10, 10, 5, 5, 5, 2.5, 2],
@@ -35,6 +35,7 @@ function ChartDonut(){
             }}
             options={{
             responsive: true,
+            maintainAspectRatio: false,
             legend: {
               display: true,
               position: 'right',
@@ -47,14 +48,11 @@ function ChartDonut(){
             tooltips: {
               callbacks: {
                 label: function(tooltipItem, data) {
-                  console.log(data);
                   return data.labels[tooltipItem.index] + ': ' + data.datasets[0].data[tooltipItem.index] + '%';
                 },
               },
             }
             }}
-            height={450}
-            width={800}
         />
       </div>
     )

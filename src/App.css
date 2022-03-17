@@ -63,6 +63,7 @@ h2 {
   flex-direction: row;
   margin-bottom: 40px;
   padding-top: 20px;
+  border: solid 1px white;
 }
 
 .weight-table-column {
@@ -149,6 +150,52 @@ h2 {
 .inflation-title {
   margin-bottom: 0px;
 }
+
+@media (max-width: 740px) {
+  .chart-container {
+    width: 600px;
+  }
+  .chart-container-2 {
+    width: 600px;
+  }
+  .weight-table {
+    flex-direction: column;
+    width: 330px;
+  }
+  .weight-table-column {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .chart-container {
+    width: 500px;
+    height: 350px;
+  }
+  .chart-container-2 {
+    width: 500px;
+  }
+}
+
+@media (max-width: 500px) {
+  .chart-container {
+    width: 400px;
+    height: 270px;
+  }
+  .chart-container-2 {
+    width: 400px;
+  }
+}
+
+@media (max-width: 400px) {
+  .chart-container {
+    width: 370px;
+  }
+  .chart-container-2 {
+    width: 370px;
+  }
+}
+
 
 @media (max-width: 1200px) {
   .section-wrapper {

@@ -56,6 +56,7 @@ function ChartEmissions(){
                 displayColors: false
               },
               responsive: true,
+              maintainAspectRatio: false,
               legend: {
                 display: true,
                 position: 'top',
@@ -80,7 +81,7 @@ function ChartEmissions(){
                 yAxes: [
                   {
                     position: 'left',
-                    id: 'supply',
+                    id: 'emissions',
                     gridLines: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
@@ -89,13 +90,13 @@ function ChartEmissions(){
                       beginAtZero: true,
                     },
                     scaleLabel: {
-                      display: true,
+                      display: false,
                       labelString: 'Total Supply',
                     },
                   },
                   {
                     position: 'right',
-                    id: 'emissions',
+                    id: 'supply',
                     gridLines: {
                       color: 'rgba(0, 0, 0, 0.0)',
                     },
@@ -103,15 +104,14 @@ function ChartEmissions(){
                       beginAtZero: true,
                     },
                     scaleLabel: {
-                      display: true,
+                      display: false,
                       labelString: 'Weekly Emissions',
                     },
                   },
                 ],
               },
             }}
-            height={500}
-            width={1000}
+
         />
       </div>
     )
