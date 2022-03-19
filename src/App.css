@@ -18,14 +18,15 @@ h1, h2, h3 {
 }
 
 h2 {
-  margin-top: 30px;
+  margin-top: 0px;
   margin-bottom: 30px;
 }
 
 .section-wrapper {
   display: flex;
   flex-direction: row;
-  margin-top: 60px;
+  margin-top: 30px;
+  margin-bottom: 60px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -53,6 +54,11 @@ h2 {
 }
 
 .chart-container-2 {
+  width: 700px;
+  height: 400px;
+}
+
+.chart-container-3 {
   width: 700px;
   height: 400px;
 }
@@ -116,6 +122,10 @@ h2 {
   padding-right: 10px;
 }
 
+.header-image {
+  margin-bottom: 40px;
+}
+
 .image {
   height: 30px;
   padding: 3px;
@@ -124,6 +134,11 @@ h2 {
 .image2 {
   height: 15px;
   padding: 1px;
+}
+
+.image3 {
+  height: 70px;
+  margin-top: 40px;
 }
 
 .normal-content {
@@ -150,11 +165,20 @@ h2 {
   margin-bottom: 0px;
 }
 
+.tokens {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 @media (max-width: 740px) {
   .chart-container {
     width: 600px;
   }
   .chart-container-2 {
+    width: 600px;
+  }
+  .chart-container-3 {
     width: 600px;
   }
   .weight-table {
@@ -174,6 +198,9 @@ h2 {
   .chart-container-2 {
     width: 500px;
   }
+  .chart-container-3 {
+    width: 500px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -182,6 +209,9 @@ h2 {
     height: 290px;
   }
   .chart-container-2 {
+    width: 400px;
+  }
+  .chart-container-3 {
     width: 400px;
   }
 }
@@ -193,14 +223,20 @@ h2 {
   .chart-container-2 {
     width: 370px;
   }
+  .chart-container-3 {
+    width: 370px;
+  }
 }
 
 
-@media (max-width: 1200px) {
+@media (max-width: 1470px) {
   .section-wrapper {
     flex-direction: column;
   }
   .chart-container {
+    margin-top: 20px;
+  }
+  .chart-container-3 {
     margin-top: 20px;
   }
   .box-wrapper {

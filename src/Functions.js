@@ -1,5 +1,5 @@
 let today = new Date();
-let emissionStart = new Date('2/28/2021');
+let emissionStart = new Date('2/27/2021');
 
 export function emissionWeek(){
     const diffTime = Math.abs(today - emissionStart);
@@ -63,7 +63,7 @@ export function calculateEmissionScheduleChart(){
 }
 
 export function createDateArray(){
-    let date = new Date('2/28/2021');
+    let date = new Date('2/27/2021');
     let dateArray = [];
     for(let i=0;i<350;i++) {
         dateArray[i] = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
