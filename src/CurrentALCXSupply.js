@@ -45,7 +45,7 @@ export default class CurrentALCXSupply extends React.Component {
             <span>
                 {this.state.isLoading === true ? "Loading..." : 
                 <span>
-                  On-chain data - <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX price: <span className="important">{this.state.price}</span> <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply: <span className="important">{this.state.currentSupply}</span> Total Marketcap: <span className="important">${this.state.marketcap}M</span>
+                  On-chain data - <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX price: <span className="important">{this.state.price}</span> <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply (incl. treasury assets): <span className="important">{this.state.currentSupply}</span> Total Marketcap: <span className="important">${this.state.marketcap}M</span>
                 </span>
                 }
             </span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
-export default class ChartAlusdSupply extends React.Component {
+export default class ChartDaiTVL extends React.Component {
 
   render(){  
   
@@ -9,11 +9,21 @@ export default class ChartAlusdSupply extends React.Component {
       <div className="chart-container-3">
         <Line 
           data={{
-            labels: this.props.marketcapDates,
+            labels: this.props.tvlDates,
             datasets: [{
-              label: '',
-              data: this.props.marketcaps,
-              backgroundColor: 'rgba(49,204,75,0.5)',
+              label: 'Alchemist DAI TVL',
+              data: this.props.daiAlchemistTVL,
+              backgroundColor: 'rgba(35,148,54,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'Transmuter DAI TVL',
+              data: this.props.daiTransmuterTVL,
+              backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
@@ -29,7 +39,7 @@ export default class ChartAlusdSupply extends React.Component {
               tooltips: {
                 enabled: true,
                 intersect: false,
-                mode: 'nearest',
+                mode: 'index',
                 cornerRadius: 1,
                 caretPadding: 5,
                 caretSize: 10,
@@ -37,14 +47,14 @@ export default class ChartAlusdSupply extends React.Component {
                 displayColors: false,
                 callbacks: {
                   label: function(tooltipItem, data) {
-                    return 'alUSD supply: $' + Math.round(tooltipItem.value*100)/100 + 'M';
+                    return data.datasets[tooltipItem.datasetIndex].label + ': $' + tooltipItem.value + 'M';
                   },
                 },
               },
               responsive: true,
               maintainAspectRatio: false,
               legend: {
-                display: false,
+                display: true,
                 position: 'top',
                 labels: {
                   fontColor: '#F5C09A',
@@ -73,6 +83,7 @@ export default class ChartAlusdSupply extends React.Component {
                     ticks: {
                       beginAtZero: true,
                     },
+                    stacked: true
                   }
                 ],
               }
