@@ -107,7 +107,6 @@ export default class App extends React.Component {
   }
 
   calculateEthAlchemistTVL(result){
-    console.log(result);
     if(result){
       let ethTVLDates = [];
       let ethAlchemistTVL = [];
@@ -217,7 +216,6 @@ export default class App extends React.Component {
   }
 
   toggleEthCurrency(){
-    console.log(this.state.ethAlchemistTVL);
     if(this.state.ethCurrencyToggle) this.setState({ ethCurrencyToggle: false });
     else this.setState({ ethCurrencyToggle: true });
   }
@@ -226,7 +224,7 @@ export default class App extends React.Component {
 
   return (
     <div className="App">
-      <div className="header-disclaimer">This service provides statistics for the Alchemix dApp (<a href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
+      <div className="header-disclaimer">This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
       The service is unofficial and is not connected to the core team.</div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png') } alt="ALCX logo" />

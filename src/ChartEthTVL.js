@@ -21,7 +21,6 @@ export default class ChartEthTVL extends React.Component {
   calculateUsdTVL(){
       let alchemistUsdTVL = [];
       let transmuterUsdTVL = [];
-      console.log("tvl calculation")
       for(let i=0;i<this.props.ethAlchemistTVL.length;i++){
         alchemistUsdTVL[i] = Math.round(this.props.ethAlchemistTVL[i]*this.props.ethPricesForTVL[i]/10000)/100;
       }
