@@ -9,11 +9,11 @@ function ChartDonut(){
         <Doughnut 
             data={{
             labels: ['Staking - ALCX/ETH SLP', 'Bonds - CVX', 'Staking - tALCX', 'Staking - ALCX',
-            'Bonds - ALCX/ETH SLP', 'alAssets - alUSD3CRV', 'Bonds - ETH', 'Bonds - DAI', 
-             'alAssets - alETHCRV', 'Bonds - Toke', 'alAssets - d3pool', 'alAssets - alETHSaddle'],
+            'Bonds - ALCX/ETH SLP', 'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Bonds - ETH', 'Bonds - DAI', 
+             'Bonds - Toke', 'alAssets - d3pool', 'alAssets - alETHSaddle'],
             datasets: [{
               label: '',
-              data: [20, 17.5, 12, 10, 10, 10, 5, 5, 5, 2.5, 2, 2],
+              data: [20, 17.5, 12, 10, 10, 8, 6, 5, 5, 2.5, 2, 2],
               backgroundColor: [ 
                 '#0052bd',
                 '#0a8c24',

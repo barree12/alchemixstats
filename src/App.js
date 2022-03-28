@@ -310,12 +310,12 @@ export default class App extends React.Component {
                 <div className="weight-table-row">
                   <img src={ require('./logos/alusd.png') } alt="alUSD" className="image" />
                   <div className="table-item-1">alUSD3CRV</div>
-                  <div className="table-item-2">10%</div>
+                  <div className="table-item-2">8%</div>
                 </div>
                 <div className="weight-table-row">
                   <img src={ require('./logos/eth_aleth.png') } alt="alETH-ETH" className="image" />
                   <div className="table-item-1">alETHCRV</div>
-                  <div className="table-item-2">5%</div>
+                  <div className="table-item-2">6%</div>
                 </div>
                 <div className="weight-table-row">
                   <img src={ require('./logos/d3pool.png') } alt="d3pool" className="image" />
