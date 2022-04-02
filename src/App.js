@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+//import Web3Test from './Web3Test';
 import ChartDonut from './ChartDonut';
 import ChartEmissions from './ChartEmissions';
 import ChartInflation from './ChartInflation';
@@ -9,6 +10,8 @@ import ChartAlethSupply from './ChartAlethSupply';
 import CurrentALCXSupply from './CurrentALCXSupply';
 import ChartDaiTVL from './ChartDaiTVL';
 import ChartEthTVL from './ChartEthTVL';
+import ChartV2AlchemistTVL from './ChartV2AlchemistTVL';
+import ChartV2AlchemistEthTVL from './ChartV2AlchemistEthTVL';
 import {emissionWeek, tokenEmission, currentStats, futureInflation} from './Functions';
 import { Switch } from '@mui/material';
 
@@ -37,12 +40,20 @@ export default class App extends React.Component {
       ethAlchemistTVL: [],
       ethTransmuterTVL: [],
       ethPricesForTVL: [],
+      rethPricesForTVL: [],
+      stethPricesForTVL: [],
+      v2AlchemistTVL: {},
+      v2AlchemistEthTVL: {},
       ethCurrencyToggle: true,
       ethPricesForTVLLoading: true,
+      rethPricesForTVLLoading: true,
+      stethPricesForTVLLoading: true,
       ethTransmuterTVLLoading: true,
       ethAlchemistTVLLoading: true,
       daiTransmuterTVLLoading: true,
       daiAlchemistTVLLoading: true,
+      v2AlchemistTVLLoading: true,
+      v2AlchemistEthTVLLoading: true,
       isLoading: true
     };
 
@@ -55,7 +66,11 @@ export default class App extends React.Component {
     this.getDaiTransmuterTVL();
     this.getEthAlchemistTVL();
     this.getEthTransmuterTVL();
+    this.getV2AlchemistTVL();
+    this.getV2AlchemistEthTVL();
     this.getEthPrice();
+    this.getRETHPrice();
+    this.getWstETHPrice();
   }
 
   calculateArrays(result){
@@ -136,6 +151,58 @@ export default class App extends React.Component {
     this.setState({ ethPricesForTVL: ethPricesForTVL, ethPricesForTVLLoading: false });
   }
 
+  calculateRETHPrice(result){
+    let rethPricesForTVL = [];
+    for(let i=0;i<result.prices.length;i++){
+      rethPricesForTVL[i] = result.prices[i][1]; 
+    }
+    this.setState({ rethPricesForTVL: rethPricesForTVL, rethPricesForTVLLoading: false });
+  }
+
+  calculateWstETHPrice(result){
+    let stethPricesForTVL = [];
+    for(let i=0;i<result.prices.length;i++){
+      stethPricesForTVL[i] = result.prices[i][1]; 
+    }
+    this.setState({ stethPricesForTVL: stethPricesForTVL, stethPricesForTVLLoading: false });
+  }
+
+  calculateV2AlchemistTVL(result){
+    if(result){
+      let v2AlchemistTVL = {
+        balance_date: [],
+        dai: [],
+        usdc: [],
+        usdt: []
+      };
+      for(let i=0;i<result.length;i++){
+        v2AlchemistTVL.balance_date[i] = result[i].BALANCE_DATE;
+        v2AlchemistTVL.dai[i] = Math.round(result[i].DAI/10000)/100;
+        v2AlchemistTVL.usdc[i] = Math.round(result[i].USDC/10000)/100;
+        v2AlchemistTVL.usdt[i] = Math.round(result[i].USDT/10000)/100;
+      }
+      this.setState({ v2AlchemistTVL: v2AlchemistTVL, v2AlchemistTVLLoading: false })
+    }
+  }
+
+  calculateV2AlchemistEthTVL(result){
+    if(result){
+      let v2AlchemistEthTVL = {
+        balance_date: [],
+        eth: [],
+        reth: [],
+        steth: []
+      };
+      for(let i=0;i<result.length;i++){
+        v2AlchemistEthTVL.balance_date[i] = result[i].BALANCE_DATE;
+        v2AlchemistEthTVL.eth[i] = Math.round(result[i].ETH*100)/100;
+        v2AlchemistEthTVL.reth[i] = Math.round(result[i].RETH*100)/100;
+        v2AlchemistEthTVL.steth[i] = Math.round(result[i].STETH*100)/100;
+      }
+      this.setState({ v2AlchemistEthTVL: v2AlchemistEthTVL, v2AlchemistEthTVLLoading: false })
+    }
+  }
+
   getData() {
     fetch("https://api.coingecko.com/api/v3/coins/alchemix-usd/market_chart?vs_currency=usd&days=max&interval=daily")
       .then(res => res.json())
@@ -212,8 +279,60 @@ export default class App extends React.Component {
         console.log(error)
       }
     )
-
   }
+
+  getRETHPrice(){
+    fetch("https://api.coingecko.com/api/v3/coins/rocket-pool-eth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.calculateRETHPrice(result)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  getWstETHPrice(){
+    fetch("https://api.coingecko.com/api/v3/coins/wrapped-steth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.calculateWstETHPrice(result)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  getV2AlchemistTVL(){
+    fetch("https://api.flipsidecrypto.com/api/v2/queries/6f29b174-9b21-43cf-a359-fd82c22fd22a/data/latest")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.calculateV2AlchemistTVL(result)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  getV2AlchemistEthTVL(){
+    fetch("https://api.flipsidecrypto.com/api/v2/queries/b9235fa9-79a7-454d-a42a-d5d2e294487b/data/latest")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.calculateV2AlchemistEthTVL(result)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
 
   toggleEthCurrency(){
     if(this.state.ethCurrencyToggle) this.setState({ ethCurrencyToggle: false });
@@ -222,20 +341,35 @@ export default class App extends React.Component {
 
   render() {
 
+  let v1DaiTVL = (this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading) ? 0 : Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100)/100;
+  let v1EthTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1]));
+  let v1EthUsdTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v2DaiTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.dai[this.state.v2AlchemistTVL.dai.length-1];
+  let v2UsdcTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.usdc[this.state.v2AlchemistTVL.usdc.length-1];
+  let v2UsdtTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.usdt[this.state.v2AlchemistTVL.usdt.length-1];
+  let v2EthTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.eth[this.state.v2AlchemistEthTVL.eth.length-1];
+  let v2EthUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.eth[this.state.v2AlchemistEthTVL.eth.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v2RethTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.reth[this.state.v2AlchemistEthTVL.reth.length-1];
+  let v2RethUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.rethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.reth[this.state.v2AlchemistEthTVL.reth.length-1])*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
+  let v2StethTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.steth[this.state.v2AlchemistEthTVL.steth.length-1];
+  let v2StethUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.stethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.steth[this.state.v2AlchemistEthTVL.steth.length-1])*this.state.stethPricesForTVL[this.state.stethPricesForTVL.length-1]/10000)/100;
+
   return (
     <div className="App">
       <div className="header-disclaimer">This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
       The service is unofficial and is not connected to the core team.</div>
       <h1>Alchemix Statistics</h1>
-      <img className="header-image" src={ require('./logos/alcx_logo.png') } alt="ALCX logo" />
+      <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
       <h2>ALCX Emissions</h2>
       <div className="summary">
+        {//<Web3Test />
+  }
         <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
-        <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX/week.</span></span>
+        <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
         <span>Current inflation is <span className="important">{currentStats().currentInflation}%/week</span> ({currentStats().currentInflationAnnual}% annually)</span>
-        <span><img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({today.year+1}-{today.month+1}-{today.day}): <span className="important">{futureInflation(1).totalInflation}%</span> Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
-        <span><img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({today.year+2}-{today.month+1}-{today.day}): <span className="important">{futureInflation(2).totalInflation}%</span> Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
-        <span><img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({today.year+3}-{today.month+1}-{today.day}): <span className="important">{futureInflation(3).totalInflation}%</span> Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}%</span></span>
+        <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({today.year+1}-{today.month+1}-{today.day}): <span className="important">{futureInflation(1).totalInflation}%</span> Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
+        <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({today.year+2}-{today.month+1}-{today.day}): <span className="important">{futureInflation(2).totalInflation}%</span> Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
+        <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({today.year+3}-{today.month+1}-{today.day}): <span className="important">{futureInflation(3).totalInflation}%</span> Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}%</span></span>
         <br/>
         <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/alchemix-finance/token-distribution/alcx-monetary-policy">ALCX Monetary Policy</a></span>
         <br/>
@@ -262,17 +396,17 @@ export default class App extends React.Component {
               <div className="weight-table-column">
                 <span className="table-title">Staking (42%)</span>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/alcx_eth_slp.png') } alt="ALCX-ETH SLP" className="image" />
+                  <img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX-ETH SLP" className="image" />
                   <div className="table-item-1">ALCX/ETH SLP</div>
                   <div className="table-item-2">20%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/talcx.png') } alt="tALCX" className="image" />
+                  <img src={ require('./logos/talcx.png').default } alt="tALCX" className="image" />
                   <div className="table-item-1">tALCX</div>
                   <div className="table-item-2">12%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/alcx_logo.png') } alt="ALCX" className="image" />
+                  <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image" />
                   <div className="table-item-1">ALCX</div>
                   <div className="table-item-2">10%</div>
                 </div>
@@ -280,27 +414,27 @@ export default class App extends React.Component {
               <div className="weight-table-column">
                 <span className="table-title">Bonds (40%)</span>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/cvx.png') } alt="CVX logo" className="image" />
+                  <img src={ require('./logos/cvx.png').default } alt="CVX logo" className="image" />
                   <div className="table-item-1">CVX</div>
                   <div className="table-item-2">17.5%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/alcx_eth_slp.png') } alt="ALCX-ETH SLP" className="image" />
+                  <img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX-ETH SLP" className="image" />
                   <div className="table-item-1">ALCX/ETH SLP</div>
                   <div className="table-item-2">10%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/eth.png') } alt="ETH logo" className="image" />
+                  <img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />
                   <div className="table-item-1">ETH</div>
                   <div className="table-item-2">5%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/dai.png') } alt="DAI logo" className="image" />
+                  <img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />
                   <div className="table-item-1">DAI</div>
                   <div className="table-item-2">5%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/tokemak.png') } alt="Toke" className="image" />
+                  <img src={ require('./logos/tokemak.png').default } alt="Toke" className="image" />
                   <div className="table-item-1">Toke</div>
                   <div className="table-item-2">2.5%</div>
                 </div>
@@ -308,22 +442,22 @@ export default class App extends React.Component {
               <div className="weight-table-column">
                 <span className="table-title">alAsset liquidity (18%)</span>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/alusd.png') } alt="alUSD" className="image" />
+                  <img src={ require('./logos/alusd.png').default } alt="alUSD" className="image" />
                   <div className="table-item-1">alUSD3CRV</div>
                   <div className="table-item-2">8%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/eth_aleth.png') } alt="alETH-ETH" className="image" />
+                  <img src={ require('./logos/eth_aleth.png').default } alt="alETH-ETH" className="image" />
                   <div className="table-item-1">alETHCRV</div>
                   <div className="table-item-2">6%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/d3pool.png') } alt="d3pool" className="image" />
+                  <img src={ require('./logos/d3pool.png').default } alt="d3pool" className="image" />
                   <div className="table-item-1">d3pool</div>
                   <div className="table-item-2">2%</div>
                 </div>
                 <div className="weight-table-row">
-                  <img src={ require('./logos/aleth_saddle.png') } alt="alETH Saddle" className="image" />
+                  <img src={ require('./logos/aleth_saddle.png').default } alt="alETH Saddle" className="image" />
                   <div className="table-item-1">alETHSaddle</div>
                   <div className="table-item-2">2%</div>
                 </div>
@@ -342,17 +476,38 @@ export default class App extends React.Component {
       <div className="summary">
             In Alchemix V1 only one collateral type is accepted both for alUSD and alETH, DAI and ETH.<br/>
             Both the Alchemist and the Transmuter deploy their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
-            Total TVL for ETH and DAI though is not sufficient to see what assets the protocol controls, as there are assets owned by the treasury that generate yield and are beneficial for the protocol (Pool2 (ALCX/ETH SLP) tokens, CVX, TOKE tokens, etc.)<br/>
+            Alchemix V2 introduces additional collateral types and yield sources.<br/>
+            Total TVL for ETH variants and stablecoins though is not sufficient to see what assets the protocol controls, as there are assets owned by the treasury that generate yield and are beneficial for the protocol (Pool2 (ALCX/ETH SLP) tokens, CVX, TOKE tokens, etc.)<br/>
             I will add these as well in the coming weeks.<br/>
-            V2 is currently in guarded launch phase, negligible amount of assets are deployed there.<br/>
             <br/>
-            {(this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
-            <div className="small-table">
-              <span className="small-table-row"><img src={ require('./logos/dai.png') } alt="DAI logo" className="image" />DAI TVL</span><span className="important-2">${Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100)/100}M</span>
-              <span className="small-table-row"><img src={ require('./logos/eth.png') } alt="ETH logo" className="image" />ETH TVL</span><span className="important-2">${Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100}M&nbsp;<i>({Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1]))} ETH)</i></span>
-              <span className="small-table-row"><img src={ require('./logos/dai.png') } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png') } alt="ETH logo" className="image" />TVL</span><span className="important-2">${Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100+(this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100}M</span>
+            <div className="tvl-tables">
+              {(this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
+              <div className="small-table">
+                <h3>V1 TVL</h3>
+                <div className="small-table-inner">
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v1DaiTVL}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-2">${v1EthUsdTVL}M&nbsp;<i>({v1EthTVL} ETH)</i></span>
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${v1DaiTVL + v1EthUsdTVL}M</span>
+                </div>
+              </div>
+              }
+              {(this.state.v2AlchemistTVLLoading || this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
+              <div className="small-table">
+                <h3>V2 TVL</h3>
+                <div className="small-table-inner">
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v2DaiTVL}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdc.png').default } alt="USDC logo" className="image" />USDC</span><span className="important-2">${v2UsdcTVL}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdt.png').default } alt="USDT logo" className="image" />USDT</span><span className="important-2">${v2UsdtTVL}M</span>
+
+                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-2">${v2EthUsdTVL}M&nbsp;<i>({v2EthTVL} ETH)</i></span>
+                  <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="RETH logo" className="image" />RETH</span><span className="important-2">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} rETH)</i></span>
+                  <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />stETH</span><span className="important-2">${v2StethUsdTVL}M&nbsp;<i>({v2StethTVL} stETH)</i></span>
+
+                  <span className="small-table-row-2">TOTAL V2</span><span className="important-3">${Math.round((v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2EthUsdTVL + v2RethUsdTVL + v2StethUsdTVL)*100)/100}M</span>
+                </div>
+              </div>
+              }
             </div>
-            }
       </div>
       <div className="section-wrapper">
         <div className="chart-title">
@@ -375,7 +530,22 @@ export default class App extends React.Component {
         </div>
       </div>
 
-      <img src={ require('./logos/alusd.png') } alt="alUSD logo" className="image3" />
+      <div className="section-wrapper">
+        <div className="chart-title">
+          <h3>Alchemist V2 Stablecoin TVL</h3>
+          {(this.state.v2AlchemistTVLLoading ) ? "Loading..." :
+          <ChartV2AlchemistTVL v2AlchemistTVL={this.state.v2AlchemistTVL} />
+          }
+        </div>
+        <div className="chart-title">
+          <h3>Alchemist V2 Eth TVL</h3>
+          {(this.state.v2AlchemistEthTVLLoading ) ? "Loading..." :
+          <ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.state.v2AlchemistEthTVL} />
+          }
+        </div>
+      </div>
+
+      <img src={ require('./logos/alusd.png').default } alt="alUSD logo" className="image3" />
       <h2>alUSD</h2>
       <div className="summary">
       alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -383,15 +553,15 @@ export default class App extends React.Component {
           In these cases the protocol burns the alUSD tokens and the total supply decreases.<br/><br/>
           Since the launch of Alchemix V2, the following collateral types are supported:<br/>
           <div className="small-table-2">
-            <div className="tokens"><img src={ require('./logos/dai.png') } alt="dai token" className="image" />DAI</div>
-            <div className="tokens"><img src={ require('./logos/usdt.png') } alt="usdt token" className="image" />USDT</div>
-            <div className="tokens"><img src={ require('./logos/usdc.png') } alt="usdc token" className="image" />USDC</div>
+            <div className="tokens"><img src={ require('./logos/dai.png').default } alt="dai token" className="image" />DAI</div>
+            <div className="tokens"><img src={ require('./logos/usdt.png').default } alt="usdt token" className="image" />USDT</div>
+            <div className="tokens"><img src={ require('./logos/usdc.png').default } alt="usdc token" className="image" />USDC</div>
           </div>
           The protocol deploys collateral assets into one of the supported yield strategies. Currently supported yield options:
           <div className="small-table-2">
-            <div className="tokens"><img src={ require('./logos/yearn_dai.png') } alt="yearn dai token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xdA816459F1AB5631232FE5e97a05BBBb94970c95">Yearn DAI</a></div>
-            <div className="tokens"><img src={ require('./logos/yearn_usdt.png') } alt="yearn usdt token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0x7Da96a3891Add058AdA2E826306D812C638D87a7">Yearn USDT</a></div>
-            <div className="tokens"><img src={ require('./logos/yearn_usdc.png') } alt="yearn usdc token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE">Yearn USDC</a></div>
+            <div className="tokens"><img src={ require('./logos/yearn_dai.png').default } alt="yearn dai token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xdA816459F1AB5631232FE5e97a05BBBb94970c95">Yearn DAI</a></div>
+            <div className="tokens"><img src={ require('./logos/yearn_usdt.png').default } alt="yearn usdt token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0x7Da96a3891Add058AdA2E826306D812C638D87a7">Yearn USDT</a></div>
+            <div className="tokens"><img src={ require('./logos/yearn_usdc.png').default } alt="yearn usdc token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE">Yearn USDC</a></div>
           </div>
           The protocol assumes every alUSD is worth $1 and the transmuter exchanges alUSD for $1 worth of any collateral asset.<br/>
           Thus it is the primary goal of the protocol to maintain the peg ($1 value) for alUSD.
@@ -412,7 +582,7 @@ export default class App extends React.Component {
         </div>
       </div>
 
-      <img src={ require('./logos/aleth.png') } alt="alETH logo" className="image3" />
+      <img src={ require('./logos/aleth.png').default } alt="alETH logo" className="image3" />
       <h2>alETH</h2>
       <div className="summary">
         
@@ -427,11 +597,15 @@ export default class App extends React.Component {
           In these cases the protocol burns the alETH tokens and the total supply decreases.<br></br>
           Currently, the following collateral types are supported:<br/>
           <div className="small-table-2">
-            <div className="tokens"><img src={ require('./logos/eth.png') } alt="eth token" className="image" />ETH</div>
-            <div className="tokens"><img src={ require('./logos/weth.png') } alt="weth token" className="image" />WETH</div>
+            <div className="tokens"><img src={ require('./logos/eth.png').default } alt="eth token" className="image" />ETH</div>
+            <div className="tokens"><img src={ require('./logos/weth.png').default } alt="weth token" className="image" />WETH</div>
+            <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />RETH</div>
+            <div className="tokens"><img src={ require('./logos/steth.png').default } alt="steth token" className="image" />wstETH</div>
           </div>
-          The protocol deploys collateral assets into one of the supported yield strategies. Currently supported yield options:
-          <div className="tokens"><img src={ require('./logos/yearn_weth.png') } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
+          The protocol deploys collateral assets into one of the supported yield strategies.<br/>
+          In the case of RETH and wstETH, the tokens are already yield bearing, so there is no need for an additional yield strategy.<br/>
+          Currently supported general yield options:
+          <div className="tokens"><img src={ require('./logos/yearn_weth.png').default } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
         </div>
         <ChartAlethSupply />
       </div>

@@ -110,7 +110,7 @@ h2 {
   border-bottom: solid 1px #F5C09A;
 }
 
-.small-table {
+.small-table-inner {
   display: grid;
   grid-template-columns: 40% 60%;
   row-gap: 3px;
@@ -122,6 +122,21 @@ h2 {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.small-table-row-2 {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.small-table {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .small-table-2 {
@@ -185,6 +200,15 @@ h2 {
   align-items: center;
 }
 
+.important-3 {
+  margin-top: 15px;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .chart-title {
   display: flex;
   flex-direction: column;
@@ -211,6 +235,11 @@ h2 {
 .toggle-text {
   color: #fff;
   font-size: 11pt;
+}
+
+.tvl-tables {
+  display: flex;
+  flex-direction: row;
 }
 
 @media (max-width: 740px) {

@@ -41,7 +41,7 @@ const helperPointer = this;
           data={{
             labels: this.props.ethTVLDates,
             datasets: [{
-              label: 'Alchemist ETH TVL',
+              label: 'Alchemist ETH',
               data: this.props.toggle ? this.props.ethAlchemistTVL : this.state.alchemistUsdTVL,
               backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
@@ -51,7 +51,7 @@ const helperPointer = this;
               fill: true,
             },
             {
-              label: 'Transmuter ETH TVL',
+              label: 'Transmuter ETH',
               data: this.props.toggle ? this.props.ethTransmuterTVL : this.state.transmuterUsdTVL,
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',

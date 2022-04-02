@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
-export default class ChartDaiTVL extends React.Component {
+export default class ChartV2AlchemistTVL extends React.Component {
 
   render(){  
   
@@ -9,10 +9,10 @@ export default class ChartDaiTVL extends React.Component {
       <div className="chart-container-3">
         <Line 
           data={{
-            labels: this.props.tvlDates,
+            labels: this.props.v2AlchemistTVL.balance_date,
             datasets: [{
-              label: 'Alchemist DAI',
-              data: this.props.daiAlchemistTVL,
+              label: 'DAI',
+              data: this.props.v2AlchemistTVL.dai,
               backgroundColor: 'rgba(35,148,54,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -21,9 +21,19 @@ export default class ChartDaiTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'Transmuter DAI',
-              data: this.props.daiTransmuterTVL,
+              label: 'USDC',
+              data: this.props.v2AlchemistTVL.usdc,
               backgroundColor: 'rgba(255,204,75,0.7)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'USDT',
+              data: this.props.v2AlchemistTVL.usdt,
+              backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

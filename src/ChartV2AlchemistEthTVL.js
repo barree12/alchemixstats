@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
-export default class ChartDaiTVL extends React.Component {
+export default class ChartV2AlchemistEthTVL extends React.Component {
 
   render(){  
   
@@ -9,10 +9,10 @@ export default class ChartDaiTVL extends React.Component {
       <div className="chart-container-3">
         <Line 
           data={{
-            labels: this.props.tvlDates,
+            labels: this.props.v2AlchemistEthTVL.balance_date,
             datasets: [{
-              label: 'Alchemist DAI',
-              data: this.props.daiAlchemistTVL,
+              label: 'ETH',
+              data: this.props.v2AlchemistEthTVL.eth,
               backgroundColor: 'rgba(35,148,54,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -21,9 +21,19 @@ export default class ChartDaiTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'Transmuter DAI',
-              data: this.props.daiTransmuterTVL,
+              label: 'rETH',
+              data: this.props.v2AlchemistEthTVL.reth,
               backgroundColor: 'rgba(255,204,75,0.7)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'stETH',
+              data: this.props.v2AlchemistEthTVL.steth,
+              backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
@@ -47,7 +57,7 @@ export default class ChartDaiTVL extends React.Component {
                 displayColors: false,
                 callbacks: {
                   label: function(tooltipItem, data) {
-                    return data.datasets[tooltipItem.datasetIndex].label + ': $' + tooltipItem.value + 'M';
+                    return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
                   },
                 },
               },
