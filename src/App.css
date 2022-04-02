@@ -262,6 +262,9 @@ h2 {
   .content-tab {
     width: 600px;
   }
+  .tvl-tables {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 600px) {
