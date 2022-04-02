@@ -21,7 +21,7 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'rETH',
+              label: 'RETH',
               data: this.props.v2AlchemistEthTVL.reth,
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(240,238,129,1)',
@@ -31,7 +31,7 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'stETH',
+              label: 'wstETH',
               data: this.props.v2AlchemistEthTVL.steth,
               backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
