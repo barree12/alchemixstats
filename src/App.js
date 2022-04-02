@@ -487,7 +487,7 @@ export default class App extends React.Component {
                 <div className="small-table-inner">
                   <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v1DaiTVL}M</span>
                   <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-2">${v1EthUsdTVL}M&nbsp;<i>({v1EthTVL} ETH)</i></span>
-                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${v1DaiTVL + v1EthUsdTVL}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${Math.round((v1DaiTVL + v1EthUsdTVL)*100)/100}M</span>
                 </div>
               </div>
               }
