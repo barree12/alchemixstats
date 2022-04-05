@@ -606,8 +606,8 @@ export default class App extends React.Component {
               <div className="small-table">
                 <h3>V1 TVL</h3>
                 <div className="small-table-inner">
-                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v1DaiTVL}M</span>
-                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-2">${v1EthUsdTVL}M&nbsp;<i>({v1EthTVL} ETH)</i></span>
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />yvDAI</span><span className="important-2">${v1DaiTVL}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />yvWETH</span><span className="important-2">${v1EthUsdTVL}M&nbsp;<i>({v1EthTVL} ETH)</i></span>
                   <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${Math.round((v1DaiTVL + v1EthUsdTVL)*100)/100}M</span>
                 </div>
               </div>
@@ -617,11 +617,11 @@ export default class App extends React.Component {
                 <h3>V2 TVL and Deposit Caps</h3>
                 <div className="small-table-inner-2">
                   <span className="small-table-row"></span><span>TVL</span><span>Deposit cap</span>
-                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v2DaiTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.dai/10000)/100}M</span>
-                  <span className="small-table-row"><img src={ require('./logos/usdc.png').default } alt="USDC logo" className="image" />USDC</span><span className="important-2">${v2UsdcTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdc/10000)/100}M</span>
-                  <span className="small-table-row"><img src={ require('./logos/usdt.png').default } alt="USDT logo" className="image" />USDT</span><span className="important-2">${v2UsdtTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdt/10000)/100}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />yvDAI</span><span className="important-2">${v2DaiTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.dai/10000)/100}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdc.png').default } alt="USDC logo" className="image" />yvUSDC</span><span className="important-2">${v2UsdcTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdc/10000)/100}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdt.png').default } alt="USDT logo" className="image" />yvUSDT</span><span className="important-2">${v2UsdtTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdt/10000)/100}M</span>
 
-                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-4"><span>${v2EthUsdTVL}M</span><i>({v2EthTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.eth)} ETH</span>
+                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />yvWETH</span><span className="important-4"><span>${v2EthUsdTVL}M</span><i>({v2EthTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.eth)} ETH</span>
                   <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />wstETH</span><span className="important-4">${v2StethUsdTVL}M&nbsp;<i>({v2StethTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.wstEth)} ETH</span>
                   <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="rETH logo" className="image" />rETH</span><span className="important-4">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} rETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.rEth)} rETH</span>
 
