@@ -118,6 +118,14 @@ h2 {
   text-align: left;
 }
 
+.small-table-inner-2 {
+  display: grid;
+  grid-template-columns: 35% 38% 27%;
+  row-gap: 3px;
+  width: 350px;
+  text-align: left;
+}
+
 .small-table-row {
   display: flex;
   flex-direction: row;
@@ -207,6 +215,15 @@ h2 {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.important-4 {
+  margin-top: 10px;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .chart-title {

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-//import Web3Test from './Web3Test';
+import Web3 from 'web3';
 import ChartDonut from './ChartDonut';
 import ChartEmissions from './ChartEmissions';
 import ChartInflation from './ChartInflation';
@@ -21,6 +21,54 @@ let today = {
   month: date.getMonth(),
   day: date.getDate()
 }
+let yvDaiAddress = '0xda816459f1ab5631232fe5e97a05bbbb94970c95';
+let yvUsdcAddress = '0xa354f35829ae975e850e23e9615b11da1b3dc4de';
+let yvUsdtAddress = '0x7da96a3891add058ada2e826306d812c638d87a7';
+let yvWethAddress = '0xa258c4606ca8206d8aa700ce2143d7db854d168c';
+let wstEthAddress = '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0';
+let rEthAddress = '0xae78736cd615f374d3085123a210448e74fc6393';
+
+const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
+const alchemistAbi = [{
+	constant: true,
+	inputs: [{
+		name: 'yieldToken',
+		type: 'address'
+	}],
+	name: 'getYieldTokenParameters',
+	outputs: [{
+		name: 'params',
+		type: 'tuple',
+		components: [
+			{ type: "uint8", name: "decimals" },
+			{ type: "address", name: "underlyingToken" },
+			{ type: "address", name: "adapter" },
+			{ type: "uint256", name: "maximumLoss" },
+			{ type: "uint256", name: "expectedValue" },
+			{ type: "uint256", name: "totalShares" },
+			{ type: "bool", name: "enabled" },
+      { type: "uint256", name: "something" },
+      { type: "uint256", name: "something2" }]
+	}],
+  payable: false,
+	stateMutability: 'view',
+	type: 'function'
+},
+{
+	constant: true,
+	inputs: [{
+		name: 'yieldToken',
+		type: 'address'
+	}],
+	name: 'getUnderlyingTokensPerShare',
+	outputs: [{
+		name: 'rate',
+		type: 'uint256'
+	}],
+  payable: false,
+	stateMutability: 'view',
+	type: 'function'
+}];
 
 export default class App extends React.Component {
 
@@ -44,6 +92,9 @@ export default class App extends React.Component {
       stethPricesForTVL: [],
       v2AlchemistTVL: {},
       v2AlchemistEthTVL: {},
+      v2Caps: {},
+      v2Deposit: {},
+      tokensPerShare: {},
       ethCurrencyToggle: true,
       ethPricesForTVLLoading: true,
       rethPricesForTVLLoading: true,
@@ -54,10 +105,21 @@ export default class App extends React.Component {
       daiAlchemistTVLLoading: true,
       v2AlchemistTVLLoading: true,
       v2AlchemistEthTVLLoading: true,
-      isLoading: true
+      v2CurrentLoading: true,
+      isLoading: true,
     };
 
     this.toggleEthCurrency = this.toggleEthCurrency.bind(this);
+    this.alchemistContract = new web3.eth.Contract(
+      alchemistAbi,
+      // Alchemist V2 address
+      '0x5C6374a2ac4EBC38DeA0Fc1F8716e5Ea1AdD94dd'
+    );
+    this.alchemistEthContract = new web3.eth.Contract(
+      alchemistAbi,
+      // Alchemist Eth V2 address
+      '0x062Bf725dC4cDF947aa79Ca2aaCCD4F385b13b5c'
+    );
   }
 
   componentDidMount() {
@@ -71,6 +133,7 @@ export default class App extends React.Component {
     this.getEthPrice();
     this.getRETHPrice();
     this.getWstETHPrice();
+    this.aggregateWeb3Calls();
   }
 
   calculateArrays(result){
@@ -96,8 +159,66 @@ export default class App extends React.Component {
       }
       this.setState({ dates: dates, prices: prices, volumes: volumes, marketcaps: marketcaps, marketcapDates: marketcapDates, isLoading: false });
     }
-  }
+  } 
 
+  aggregateWeb3Calls(){
+    let v2Caps = {
+      dai: 0,
+      usdc: 0,
+      usdt: 0,
+      eth: 0,
+      wstEth: 0,
+      rEth: 0
+    }
+    let tokensPerShare = {
+      dai: 0,
+      usdc: 0,
+      usdt: 0,
+      eth: 0,
+      wstEth: 0
+    }
+    let deposit = {
+      dai: 0,
+      usdc: 0,
+      usdt: 0,
+      eth: 0,
+      wstEth: 0,
+      rEth: 0
+    }
+
+    Promise.all([this.alchemistContract.methods.getYieldTokenParameters(yvDaiAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(yvUsdcAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(yvUsdtAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(yvDaiAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(yvUsdcAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(yvUsdtAddress).call(),
+      this.alchemistEthContract.methods.getYieldTokenParameters(yvWethAddress).call(),
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(yvWethAddress).call(),
+      this.alchemistEthContract.methods.getYieldTokenParameters(wstEthAddress).call(),
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(wstEthAddress).call(),
+      this.alchemistEthContract.methods.getYieldTokenParameters(rEthAddress).call()])
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams]) => {
+        v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
+        v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
+        v2Caps.usdt = usdtParams[4]/Math.pow(10, usdtParams[0]);
+        v2Caps.eth = ethParams[4]/Math.pow(10, ethParams[0]);
+        v2Caps.wstEth = wstEthParams[4]/Math.pow(10, wstEthParams[0]);
+        v2Caps.rEth = rEthParams[4]/Math.pow(10, rEthParams[0]);
+        tokensPerShare.dai = daiTokens/Math.pow(10, 18);
+        tokensPerShare.usdc = usdcTokens/Math.pow(10, 6);
+        tokensPerShare.usdt = usdtTokens/Math.pow(10, 6);
+        tokensPerShare.eth = ethTokens/Math.pow(10, 18);
+        tokensPerShare.wstEth = wstEthTokens/Math.pow(10, 18);
+        deposit.dai = daiParams[8]/Math.pow(10, 24);
+        deposit.usdc = usdcParams[8]/Math.pow(10, 12);
+        deposit.usdt = usdtParams[8]/Math.pow(10, 12);
+        deposit.eth = ethParams[8]/Math.pow(10, 18);
+        deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
+        deposit.rEth = rEthParams[8]/Math.pow(10, 18);
+        console.log(ethParams[8]);
+        this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
+    });
+  }
 
   calculateDaiAlchemistTVL(result){
     if(result){
@@ -341,18 +462,18 @@ export default class App extends React.Component {
 
   render() {
 
-  let v1DaiTVL = (this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading) ? 0 : Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100)/100;
-  let v1EthTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1]));
-  let v1EthUsdTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
-  let v2DaiTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.dai[this.state.v2AlchemistTVL.dai.length-1];
-  let v2UsdcTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.usdc[this.state.v2AlchemistTVL.usdc.length-1];
-  let v2UsdtTVL = this.state.v2AlchemistTVLLoading ? 0 : this.state.v2AlchemistTVL.usdt[this.state.v2AlchemistTVL.usdt.length-1];
-  let v2EthTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.eth[this.state.v2AlchemistEthTVL.eth.length-1];
-  let v2EthUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.eth[this.state.v2AlchemistEthTVL.eth.length-1])*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
-  let v2RethTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.reth[this.state.v2AlchemistEthTVL.reth.length-1];
-  let v2RethUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.rethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.reth[this.state.v2AlchemistEthTVL.reth.length-1])*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
-  let v2StethTVL = this.state.v2AlchemistEthTVLLoading ? 0 : this.state.v2AlchemistEthTVL.steth[this.state.v2AlchemistEthTVL.steth.length-1];
-  let v2StethUsdTVL = (this.state.v2AlchemistEthTVLLoading || this.state.stethPricesForTVLLoading) ? 0 : Math.round((this.state.v2AlchemistEthTVL.steth[this.state.v2AlchemistEthTVL.steth.length-1])*this.state.stethPricesForTVL[this.state.stethPricesForTVL.length-1]/10000)/100;
+  let v1DaiTVL = (this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100*this.state.tokensPerShare.dai)/100;
+  let v1EthTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.tokensPerShare.eth);
+  let v1EthUsdTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round(v1EthTVL*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v2DaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.dai*this.state.tokensPerShare.dai*100)/100;
+  let v2UsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdc*this.state.tokensPerShare.usdc*100)/100;
+  let v2UsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdt*this.state.tokensPerShare.usdt*100)/100;
+  let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
+  let v2EthUsdTVL = (this.state.ethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*100)/100;
+  let v2RethUsdTVL = (this.state.rethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2RethTVL*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
+  let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth*100)/100;
+  let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.stethPricesForTVLLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.stethPricesForTVL[this.state.stethPricesForTVL.length-1]/10000)/100;
 
   return (
     <div className="App">
@@ -362,8 +483,6 @@ export default class App extends React.Component {
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
       <h2>ALCX Emissions</h2>
       <div className="summary">
-        {//<Web3Test />
-  }
         <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
         <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
         <span>Current inflation is <span className="important">{currentStats().currentInflation}%/week</span> ({currentStats().currentInflationAnnual}% annually)</span>
@@ -472,13 +591,15 @@ export default class App extends React.Component {
         <ChartDonut />
       </div>
 
-      <h2>TVL (Total Value Locked)</h2>
+      <h2>TVL and Deposit Caps</h2>
       <div className="summary">
             In Alchemix V1 only one collateral type is accepted both for alUSD and alETH, DAI and ETH.<br/>
             Both the Alchemist and the Transmuter deploy their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
             Alchemix V2 introduces additional collateral types and yield sources.<br/>
             Total TVL for ETH variants and stablecoins though is not sufficient to see what assets the protocol controls, as there are assets owned by the treasury that generate yield and are beneficial for the protocol (Pool2 (ALCX/ETH SLP) tokens, CVX, TOKE tokens, etc.)<br/>
-            I will add these as well in the coming weeks.<br/>
+            Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
+            Please note that for wstETH the deposit cap is set in ETH, not wstETH.<br/>
+            This is different from V1, where debt caps were set, but no deposit caps, meaning that someone could deposit collateral and not be able to take out a loan on that if the system was already at maximum debt cap.<br/>
             <br/>
             <div className="tvl-tables">
               {(this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
@@ -491,17 +612,18 @@ export default class App extends React.Component {
                 </div>
               </div>
               }
-              {(this.state.v2AlchemistTVLLoading || this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
+              {(this.state.v2AlchemistTVLLoading || this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading || this.state.v2CurrentLoading) ? "Loading..." :
               <div className="small-table">
-                <h3>V2 TVL</h3>
-                <div className="small-table-inner">
-                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v2DaiTVL}M</span>
-                  <span className="small-table-row"><img src={ require('./logos/usdc.png').default } alt="USDC logo" className="image" />USDC</span><span className="important-2">${v2UsdcTVL}M</span>
-                  <span className="small-table-row"><img src={ require('./logos/usdt.png').default } alt="USDT logo" className="image" />USDT</span><span className="important-2">${v2UsdtTVL}M</span>
+                <h3>V2 TVL and Deposit Caps</h3>
+                <div className="small-table-inner-2">
+                  <span className="small-table-row"></span><span>TVL</span><span>Deposit cap</span>
+                  <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${v2DaiTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.dai/10000)/100}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdc.png').default } alt="USDC logo" className="image" />USDC</span><span className="important-2">${v2UsdcTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdc/10000)/100}M</span>
+                  <span className="small-table-row"><img src={ require('./logos/usdt.png').default } alt="USDT logo" className="image" />USDT</span><span className="important-2">${v2UsdtTVL}M</span><span className="important-2">${Math.round(this.state.v2Caps.usdt/10000)/100}M</span>
 
-                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-2">${v2EthUsdTVL}M&nbsp;<i>({v2EthTVL} ETH)</i></span>
-                  <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="RETH logo" className="image" />RETH</span><span className="important-2">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} rETH)</i></span>
-                  <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />stETH</span><span className="important-2">${v2StethUsdTVL}M&nbsp;<i>({v2StethTVL} stETH)</i></span>
+                  <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />ETH</span><span className="important-4"><span>${v2EthUsdTVL}M</span><i>({v2EthTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.eth)} ETH</span>
+                  <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />wstETH</span><span className="important-4">${v2StethUsdTVL}M&nbsp;<i>({v2StethTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.wstEth)} ETH</span>
+                  <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="rETH logo" className="image" />rETH</span><span className="important-4">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} rETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.rEth)} rETH</span>
 
                   <span className="small-table-row-2">TOTAL V2</span><span className="important-3">${Math.round((v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2EthUsdTVL + v2RethUsdTVL + v2StethUsdTVL)*100)/100}M</span>
                 </div>
@@ -599,8 +721,8 @@ export default class App extends React.Component {
           <div className="small-table-2">
             <div className="tokens"><img src={ require('./logos/eth.png').default } alt="eth token" className="image" />ETH</div>
             <div className="tokens"><img src={ require('./logos/weth.png').default } alt="weth token" className="image" />WETH</div>
-            <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />RETH</div>
             <div className="tokens"><img src={ require('./logos/steth.png').default } alt="steth token" className="image" />wstETH</div>
+            <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />rETH</div>
           </div>
           The protocol deploys collateral assets into one of the supported yield strategies.<br/>
           In the case of RETH and wstETH, the tokens are already yield bearing, so there is no need for an additional yield strategy.<br/>
