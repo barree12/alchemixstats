@@ -14,6 +14,7 @@ import ChartV2AlchemistTVL from './ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './ChartV2AlchemistEthTVL';
 import {emissionWeek, tokenEmission, currentStats, futureInflation} from './Functions';
 import { Switch } from '@mui/material';
+import { toHaveFocus } from '@testing-library/jest-dom/dist/matchers';
 
 let date = new Date();
 let today = {
@@ -175,7 +176,8 @@ export default class App extends React.Component {
       usdc: 0,
       usdt: 0,
       eth: 0,
-      wstEth: 0
+      wstEth: 0,
+      rEth: 0
     }
     let deposit = {
       dai: 0,
@@ -196,8 +198,9 @@ export default class App extends React.Component {
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(yvWethAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(wstEthAddress).call(),
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(wstEthAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(rEthAddress).call()])
-      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams]) => {
+      this.alchemistEthContract.methods.getYieldTokenParameters(rEthAddress).call(),
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(rEthAddress).call()])
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
         v2Caps.usdt = usdtParams[4]/Math.pow(10, usdtParams[0]);
@@ -209,13 +212,13 @@ export default class App extends React.Component {
         tokensPerShare.usdt = usdtTokens/Math.pow(10, 6);
         tokensPerShare.eth = ethTokens/Math.pow(10, 18);
         tokensPerShare.wstEth = wstEthTokens/Math.pow(10, 18);
+        tokensPerShare.rEth = rEthTokens/Math.pow(10, 18);
         deposit.dai = daiParams[8]/Math.pow(10, 24);
         deposit.usdc = usdcParams[8]/Math.pow(10, 12);
         deposit.usdt = usdtParams[8]/Math.pow(10, 12);
         deposit.eth = ethParams[8]/Math.pow(10, 18);
         deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
         deposit.rEth = rEthParams[8]/Math.pow(10, 18);
-        console.log(ethParams[8]);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     });
   }
@@ -470,8 +473,8 @@ export default class App extends React.Component {
   let v2UsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdt*this.state.tokensPerShare.usdt*100)/100;
   let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
   let v2EthUsdTVL = (this.state.ethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
-  let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*100)/100;
-  let v2RethUsdTVL = (this.state.rethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2RethTVL*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
+  let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth*100)/100;
+  let v2RethUsdTVL = (this.state.rethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth*100)/100;
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.stethPricesForTVLLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.stethPricesForTVL[this.state.stethPricesForTVL.length-1]/10000)/100;
 
@@ -598,7 +601,7 @@ export default class App extends React.Component {
             Alchemix V2 introduces additional collateral types and yield sources.<br/>
             Total TVL for ETH variants and stablecoins though is not sufficient to see what assets the protocol controls, as there are assets owned by the treasury that generate yield and are beneficial for the protocol (Pool2 (ALCX/ETH SLP) tokens, CVX, TOKE tokens, etc.)<br/>
             Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
-            Please note that for wstETH the deposit cap is set in ETH, not wstETH.<br/>
+            Please note that for wstETH and rETH the deposit cap is set in ETH, not wstETH and rETH<br/>
             This is different from V1, where debt caps were set, but no deposit caps, meaning that someone could deposit collateral and not be able to take out a loan on that if the system was already at maximum debt cap.<br/>
             <br/>
             <div className="tvl-tables">
@@ -623,7 +626,7 @@ export default class App extends React.Component {
 
                   <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />yvWETH</span><span className="important-4"><span>${v2EthUsdTVL}M</span><i>({v2EthTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.eth)} ETH</span>
                   <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />wstETH</span><span className="important-4">${v2StethUsdTVL}M&nbsp;<i>({v2StethTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.wstEth)} ETH</span>
-                  <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="rETH logo" className="image" />rETH</span><span className="important-4">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} rETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.rEth)} rETH</span>
+                  <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="rETH logo" className="image" />rETH</span><span className="important-4">${v2RethUsdTVL}M&nbsp;<i>({v2RethTVL} ETH)</i></span><span className="important-2">{Math.round(this.state.v2Caps.rEth)} ETH</span>
 
                   <span className="small-table-row-2">TOTAL V2</span><span className="important-3">${Math.round((v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2EthUsdTVL + v2RethUsdTVL + v2StethUsdTVL)*100)/100}M</span>
                 </div>
@@ -721,13 +724,16 @@ export default class App extends React.Component {
           <div className="small-table-2">
             <div className="tokens"><img src={ require('./logos/eth.png').default } alt="eth token" className="image" />ETH</div>
             <div className="tokens"><img src={ require('./logos/weth.png').default } alt="weth token" className="image" />WETH</div>
-            <div className="tokens"><img src={ require('./logos/steth.png').default } alt="steth token" className="image" />wstETH</div>
+            <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" />wstETH</div>
             <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />rETH</div>
           </div>
           The protocol deploys collateral assets into one of the supported yield strategies.<br/>
-          In the case of RETH and wstETH, the tokens are already yield bearing, so there is no need for an additional yield strategy.<br/>
+          In the case of rETH, it is only possible to deposit rETH, which is the yield strategy itself.<br/>
           Currently supported general yield options:
-          <div className="tokens"><img src={ require('./logos/yearn_weth.png').default } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
+          <div className="small-table-2">
+            <div className="tokens"><img src={ require('./logos/yearn_weth.png').default } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
+            <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" /><a target="_blank" rel="noreferrer" href="https://lido.fi/ethereum">wstETH</a></div>
+          </div>
         </div>
         <ChartAlethSupply />
       </div>
