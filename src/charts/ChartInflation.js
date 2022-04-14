@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { calculateEmissionScheduleChart, createDateArray } from './Functions'
+import { calculateEmissionScheduleChart, createDateArray } from '../Functions';
 
 function ChartInflation(){
     return (

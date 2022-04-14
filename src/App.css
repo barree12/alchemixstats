@@ -126,6 +126,14 @@ h2 {
   text-align: left;
 }
 
+.small-table-inner-3 {
+  display: grid;
+  grid-template-columns: 15% 35% 25% 25%;
+  row-gap: 3px;
+  width: 350px;
+  text-align: left;
+}
+
 .small-table-row {
   display: flex;
   flex-direction: row;
@@ -226,6 +234,19 @@ h2 {
   justify-content: center;
 }
 
+.table-text-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.table-text-bold {
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .chart-title {
   display: flex;
   flex-direction: column;
@@ -257,6 +278,23 @@ h2 {
 .tvl-tables {
   display: flex;
   flex-direction: row;
+}
+
+.MuiButton-containedSizeSmall {
+  color: #1b2c3b !important;
+  background-color: #F5C09A !important;
+}
+
+.MuiSwitch-switchBase.Mui-checked {
+  color: #F5C09A !important;
+}
+
+.MuiSwitch-track {
+  background-color: #fff !important;
+}
+
+.MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+  background-color: #F5C09A !important;
 }
 
 @media (max-width: 740px) {

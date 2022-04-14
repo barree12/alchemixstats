@@ -1,18 +1,21 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
-export default class ChartAlusdPrice extends React.Component {
+export default class ChartAlEthPrice extends React.Component {
 
   render(){  
-  
+  let dates = [...this.props.data.date];
+  let values = [...this.props.data.peg];
+  let valuesPerc = [...this.props.data.pegPerc];
+  const helperPointer = this;
   return (
       <div className="chart-container-3">
         <Line 
           data={{
-            labels: this.props.dates,
+            labels: dates,
             datasets: [{
               label: 'Inflation',
-              data: this.props.prices,
+              data: this.props.toggle ? valuesPerc : values,
               backgroundColor: 'rgba(240,238,129,0.5)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -23,13 +26,13 @@ export default class ChartAlusdPrice extends React.Component {
           }}
             options={{
               hover: {
-                mode: 'nearest',
+                mode: 'index',
                 intersect: false,
               },
               tooltips: {
                 enabled: true,
                 intersect: false,
-                mode: 'nearest',
+                mode: 'index',
                 cornerRadius: 1,
                 caretPadding: 5,
                 caretSize: 10,
@@ -37,7 +40,8 @@ export default class ChartAlusdPrice extends React.Component {
                 displayColors: false,
                 callbacks: {
                   label: function(tooltipItem, data) {
-                    return '$' + Math.round(tooltipItem.value*10000)/10000;
+                    if(helperPointer.props.toggle) return (Math.round(tooltipItem.value*10000)/10000) + '%';
+                    else return '$' + Math.round(tooltipItem.value*10000)/10000;
                   },
                 },
               },

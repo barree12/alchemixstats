@@ -66,8 +66,18 @@ export function createDateArray(){
     let date = new Date('2/27/2021');
     let dateArray = [];
     for(let i=0;i<350;i++) {
-        dateArray[i] = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        dateArray[i] = formatDate(date, 0);
         date.setDate(date.getDate() + 7)
     }
     return dateArray;
+}
+
+export function formatDate(date, yearOffset){
+    let month = 0;
+    let day = 0;
+    if(date.getMonth()<9) month = '0' + (date.getMonth() + 1);
+    else month = date.getMonth() + 1;
+    if(date.getDate()<10) day = '0' + (date.getDate());
+    else day = date.getDate();
+    return (date.getFullYear() + yearOffset) + '-' + month + '-' + day;
 }

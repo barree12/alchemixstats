@@ -32,7 +32,7 @@ export default class ChartEthTVL extends React.Component {
 
   render(){  
   
-const helperPointer = this;
+  const helperPointer = this;
 
   return (
       <div className="chart-container-3">
