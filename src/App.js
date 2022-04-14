@@ -734,7 +734,7 @@ export default class App extends React.Component {
         <br/>
         {this.state.alcxDataLoading ? "Loading..." : 
           <span>
-            On-chain data - <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.state.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply (incl. treasury assets): <span className="important">{this.state.alcxData.currentSupply}</span> Total Marketcap: <span className="important">${this.state.alcxData.marketcap}M</span>
+            <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.state.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply (incl. treasury assets): <span className="important">{this.state.alcxData.currentSupply}</span> Total Marketcap: <span className="important">${this.state.alcxData.marketcap}M</span>
           </span>
         }
       </div>
@@ -837,7 +837,7 @@ export default class App extends React.Component {
       <div className="summary">
           There are 2 main treasury addresses of the Alchemix protocol, plus 2 addresses for the alUSD and alETH Elixirs.<br/>
           The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
-          The funds in the Elixir should generally grow, but the protocol can utilize and effectively spend the funds for peg stabilization purposes.<br/>
+          The funds in the Elixirs should generally grow, but the protocol can utilize and effectively spend the funds for peg stabilization purposes.<br/>
           Other than the big items listed below, the wallets hold roughly another $1M of various stablecoins and multiple other assets.<br/>
           These are mostly just leftovers, strategically unimportant for the protocol.
           <span>
