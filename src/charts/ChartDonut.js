@@ -6,25 +6,26 @@ function ChartDonut(){
       <div className="chart-container">
         <Doughnut 
             data={{
-            labels: ['Staking - ALCX/ETH SLP', 'Bonds - CVX', 'Staking - tALCX', 'Staking - ALCX',
-            'Bonds - ALCX/ETH SLP', 'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Bonds - ETH', 'Bonds - DAI', 
-             'Bonds - Toke', 'alAssets - d3pool', 'alAssets - alETHSaddle'],
+            labels: ['Staking - ALCX/ETH SLP', 'Bonds - CVX', 'Staking - tALCX', 'alAssets - alUSD3CRV',
+            'Staking - ALCX', 'Bonds - ALCX/ETH SLP',  'alAssets - alETHCRV', 'Bonds - Toke', 'Fantom - Beethoven X alUSD/USDC',
+            'alAssets - d3pool', 'alAssets - Saddle alETH', 'Fantom - Spooky gALCX/FTM', 'Fantom - Spirit gALCX/FTM'],
             datasets: [{
               label: '',
-              data: [20, 17.5, 12, 10, 10, 8, 6, 5, 5, 2.5, 2, 2],
+              data: [20, 17.5, 12, 11, 10, 10, 9, 2.5, 2.5, 2, 2, 0.83, 0.66],
               backgroundColor: [ 
                 '#0052bd',
                 '#0a8c24',
                 '#106feb',
+                '#b5b331',
                 '#3483eb',
                 '#14b835',
-                '#b5b331', 
-                '#2bd64d',
-                '#51ed70',
                 '#d6d456',
-                '#74f28d',
+                '#2bd64d',
+                '#1f1f1f',
                 '#f0ee81',
-                '#fffda1'
+                '#fffda1',
+                '#4d4d4d',
+                '#666666'
               ],
               borderColor: [
                 '#F5C09A'
