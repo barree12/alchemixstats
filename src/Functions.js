@@ -81,3 +81,7 @@ export function formatDate(date, yearOffset){
     else day = date.getDate();
     return (date.getFullYear() + yearOffset) + '-' + month + '-' + day;
 }
+
+export function datesEqual(date1, date2){
+    return (date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate());
+}

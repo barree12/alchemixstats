@@ -18,7 +18,7 @@ import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
 import EmissionWeights from './EmissionWeights';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
-import {emissionWeek, tokenEmission, currentStats, futureInflation, formatDate} from './Functions';
+import {emissionWeek, tokenEmission, currentStats, futureInflation, formatDate, datesEqual} from './Functions';
 import { Switch, Button, ButtonGroup } from '@mui/material';
 
 let treasuryWallet1Address = '0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9';
@@ -48,6 +48,7 @@ let saddleAlEthContractAddress = '0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368';
 let saddleStakingContractAddress = '0x691ef79e40d909c715be5e9e93738b3ff7d58534';
 let alUsd3CrvContractAddress = '0x43b4fdfd4ff969587185cdb6f0bd875c5fc83f8c';
 let alEthCrvContractAddress = '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e';
+let sdtContractAddress = '0x73968b9a57c6e53d41345fd57a6e6ae27d6cdb2f';
 
 const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const alchemistAbi = [{
@@ -183,20 +184,10 @@ export default class App extends React.Component {
       volumes: [],
       marketcaps: [],
       marketcapDates: [],
-      tvlDates: [],
-      daiAlchemistTVL: [],
-      daiTransmuterTVL: [],
-      ethTVLDates: [],
-      ethAlchemistTVL: [],
-      ethTransmuterTVL: [],
-      ethPricesForTVL: [],
-      rethPricesForTVL: [],
-      stethPricesForTVL: [],
-      tokePrices: [],
-      cvxPrices: [],
+      vaultV1Tvls: {},
+      vaultV2Tvls: {},
+      tokenPrices: {},
       alcxData: {},
-      v2AlchemistTVL: {},
-      v2AlchemistEthTVL: {},
       alUsdPeg: {},
       alEthPeg: {},
       v2Caps: {},
@@ -211,17 +202,8 @@ export default class App extends React.Component {
       ethCurrencyToggle: true,
       alUsdPegToggle: true,
       alEthPegToggle: true,
-      ethPricesForTVLLoading: true,
-      rethPricesForTVLLoading: true,
-      stethPricesForTVLLoading: true,
-      tokePricesLoading: true,
-      cvxPricesLoading: true,
-      ethTransmuterTVLLoading: true,
-      ethAlchemistTVLLoading: true,
-      daiTransmuterTVLLoading: true,
-      daiAlchemistTVLLoading: true,
-      v2AlchemistTVLLoading: true,
-      v2AlchemistEthTVLLoading: true,
+      tokenPricesLoading: true,
+      vaultTvlsLoading: true,
       v2CurrentLoading: true,
       treasuryLoading: true,
       alUsdPegLoading: true,
@@ -250,6 +232,7 @@ export default class App extends React.Component {
     this.saddleAlEthContract = new web3.eth.Contract(erc20LikeAbi, saddleAlEthContractAddress);
     this.alUsd3CrvContract = new web3.eth.Contract(erc20LikeAbi, alUsd3CrvContractAddress);
     this.alEthCrvContract = new web3.eth.Contract(erc20LikeAbi, alEthCrvContractAddress);
+    this.sdtContract = new web3.eth.Contract(erc20LikeAbi, sdtContractAddress);
   }
 
   componentDidMount() {
@@ -260,7 +243,6 @@ export default class App extends React.Component {
     this.getTreasury();
     this.getAlUsdPeg();
     this.getCoinGeckoData();
-    //this.getTotalWallet1Balance();
   }
 
   calculateArrays(result){
@@ -329,7 +311,7 @@ export default class App extends React.Component {
   }
 
   getTreasury(){
-    let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, abraDebt: 0 }
+    let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, abraDebt: 0, sdt: 0 }
     let alcxEthSlp = { alcx: 0, weth: 0 }
     let alchemixStaking = { alcx: 0, tAlcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0, saddleAlEth: 0 }
     let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0 };
@@ -354,9 +336,10 @@ export default class App extends React.Component {
       this.abraAlcxCauldronContract.methods.userCollateralShare(treasuryWallet1Address).call(),
       this.abraAlcxCauldronContract.methods.userBorrowPart(treasuryWallet1Address).call(),
       this.saddleAlEthContract.methods.balanceOf(alchemixStakingAddress).call(),
-      this.saddleAlEthContract.methods.balanceOf(saddleStakingContractAddress).call()
+      this.saddleAlEthContract.methods.balanceOf(saddleStakingContractAddress).call(),
+      this.sdtContract.methods.balanceOf(treasuryWallet1Address).call()
     ])
-    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlUsd3CrvTreasury, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, abraAlcx, abraDebt, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle]) => {
+    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlUsd3CrvTreasury, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, abraAlcx, abraDebt, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt]) => {
       treasury.tAlcx = tAlcx/Math.pow(10, 18);
       treasury.alcx = Math.round(alcx1/Math.pow(10, 18) + alcx2/Math.pow(10, 18) + abraAlcx/Math.pow(10, 18));
       treasury.cvxAlUsd3CrvElixir = cvxAlUsd3CrvElixir/Math.pow(10, 18);
@@ -370,6 +353,7 @@ export default class App extends React.Component {
       alcxEthSlp.alcx = alcxInSlp/Math.pow(10, 18);
       alcxEthSlp.weth = wethInSlp/Math.pow(10, 18);
       treasury.abraDebt = abraDebt/Math.pow(10, 18);
+      treasury.sdt = sdt/Math.pow(10, 18);
       alchemixStaking.alcx = stakedAlcx/Math.pow(10, 18);
       alchemixStaking.tAlcx = stakedTAlcx/Math.pow(10, 18);
       alchemixStaking.alcxEthSlp = stakedAlcxEth/Math.pow(10, 18);
@@ -381,124 +365,59 @@ export default class App extends React.Component {
     });
   }
 
-  calculateDaiAlchemistTVL(result){
-    if(result){
-      let tvlDates = [];
-      let daiAlchemistTVL = [];
-      for(let i=0;i<result.length;i++){
-        tvlDates[i] = result[i].BALANCE_DATE;
-        daiAlchemistTVL[i] = Math.round(result[i].TOTAL/10000)/100;
+  calculateVaultTVLs(daiAlchemist, daiTransmuter, EthAlchemist, EthTransmuter, AlchemistV2, AlchemistV2Eth){
+    let vaultV1Tvls = { daiTvlDates: [], daiAlchemistTVL: [], daiTransmuterTVL: [], ethTVLDates: [], ethAlchemistTVL: [], ethTransmuterTVL: [] }
+    let vaultV2Tvls = { alchemist: { balance_date: [], dai: [], usdc: [], usdt: [] }, alchemistEth: { balance_date: [], eth: [], reth: [], steth: [] } }
+      for(let i=0;i<daiAlchemist.length;i++){
+        vaultV1Tvls.daiTvlDates[i] = daiAlchemist[i].BALANCE_DATE;
+        vaultV1Tvls.daiAlchemistTVL[i] = Math.round(daiAlchemist[i].TOTAL/10000)/100;
       }
-      this.setState({ tvlDates: tvlDates, daiAlchemistTVL: daiAlchemistTVL, daiAlchemistTVLLoading: false })
-    }
-  }
-
-  calculateDaiTransmuterTVL(result){
-    if(result){
-      let daiTransmuterTVL = [];
-      for(let i=0;i<result.length;i++){
-        daiTransmuterTVL[i] = Math.round(result[i].TOTAL/10000)/100;
+      for(let i=0;i<daiTransmuter.length;i++){
+        vaultV1Tvls.daiTransmuterTVL[i] = Math.round(daiTransmuter[i].TOTAL/10000)/100;
       }
-      this.setState({ daiTransmuterTVL: daiTransmuterTVL, daiTransmuterTVLLoading: false })
-    }
-  }
-
-  calculateEthAlchemistTVL(result){
-    if(result){
-      let ethTVLDates = [];
-      let ethAlchemistTVL = [];
-      for(let i=0;i<result.length;i++){
-        ethTVLDates[i] = result[i].BALANCE_DATE;
-        ethAlchemistTVL[i] = Math.round(result[i].TOTAL);
+      for(let i=0;i<EthAlchemist.length;i++){
+        vaultV1Tvls.ethTVLDates[i] = EthAlchemist[i].BALANCE_DATE;
+        vaultV1Tvls.ethAlchemistTVL[i] = Math.round(EthAlchemist[i].TOTAL);
       }
-      this.setState({ ethTVLDates: ethTVLDates, ethAlchemistTVL: ethAlchemistTVL, ethAlchemistTVLLoading: false })
-    }
-  }
-
-  calculateEthTransmuterTVL(result){
-    if(result){
-      let ethTransmuterTVL = [];
-      for(let i=0;i<result.length;i++){
-        ethTransmuterTVL[i] = Math.round(result[i].TOTAL);
+      for(let i=0;i<EthTransmuter.length;i++){
+        vaultV1Tvls.ethTransmuterTVL[i] = Math.round(EthTransmuter[i].TOTAL);
       }
-      this.setState({ ethTransmuterTVL: ethTransmuterTVL, ethTransmuterTVLLoading: false })
-    }
-  }
-
-  calculateEthPrice(result){
-    let ethPricesForTVL = [];
-    for(let i=0;i<result.prices.length;i++){
-      ethPricesForTVL[i] = result.prices[i][1]; 
-    }
-    this.setState({ ethPricesForTVL: ethPricesForTVL, ethPricesForTVLLoading: false });
-  }
-
-  calculateRETHPrice(result){
-    let rethPricesForTVL = [];
-    for(let i=0;i<result.prices.length;i++){
-      rethPricesForTVL[i] = result.prices[i][1]; 
-    }
-    this.setState({ rethPricesForTVL: rethPricesForTVL, rethPricesForTVLLoading: false });
-  }
-
-  calculateWstETHPrice(result){
-    let stethPricesForTVL = [];
-    for(let i=0;i<result.prices.length;i++){
-      stethPricesForTVL[i] = result.prices[i][1]; 
-    }
-    this.setState({ stethPricesForTVL: stethPricesForTVL, stethPricesForTVLLoading: false });
-  }
-
-  calculateTokePrice(result){
-    let tokePrices = [];
-    for(let i=0;i<result.prices.length;i++){
-      tokePrices[i] = result.prices[i][1]; 
-    }
-    this.setState({ tokePrices: tokePrices, tokePricesLoading: false });
-  }
-
-  calculateCvxPrice(result){
-    let cvxPrices = [];
-    for(let i=0;i<result.prices.length;i++){
-      cvxPrices[i] = result.prices[i][1]; 
-    }
-    this.setState({ cvxPrices: cvxPrices, cvxPricesLoading: false });
-  }
-
-  calculateV2AlchemistTVL(result){
-    if(result){
-      let v2AlchemistTVL = {
-        balance_date: [],
-        dai: [],
-        usdc: [],
-        usdt: []
-      };
-      for(let i=0;i<result.length;i++){
-        v2AlchemistTVL.balance_date[i] = result[i].BALANCE_DATE;
-        v2AlchemistTVL.dai[i] = Math.round(result[i].DAI/10000)/100;
-        v2AlchemistTVL.usdc[i] = Math.round(result[i].USDC/10000)/100;
-        v2AlchemistTVL.usdt[i] = Math.round(result[i].USDT/10000)/100;
+      for(let i=0;i<AlchemistV2.length;i++){
+        vaultV2Tvls.alchemist.balance_date[i] = AlchemistV2[i].BALANCE_DATE;
+        vaultV2Tvls.alchemist.dai[i] = Math.round(AlchemistV2[i].DAI/10000)/100;
+        vaultV2Tvls.alchemist.usdc[i] = Math.round(AlchemistV2[i].USDC/10000)/100;
+        vaultV2Tvls.alchemist.usdt[i] = Math.round(AlchemistV2[i].USDT/10000)/100;
       }
-      this.setState({ v2AlchemistTVL: v2AlchemistTVL, v2AlchemistTVLLoading: false })
-    }
+      for(let i=0;i<AlchemistV2Eth.length;i++){
+        vaultV2Tvls.alchemistEth.balance_date[i] = AlchemistV2Eth[i].BALANCE_DATE;
+        vaultV2Tvls.alchemistEth.eth[i] = Math.round(AlchemistV2Eth[i].ETH*100)/100;
+        vaultV2Tvls.alchemistEth.reth[i] = Math.round(AlchemistV2Eth[i].RETH*100)/100;
+        vaultV2Tvls.alchemistEth.steth[i] = Math.round(AlchemistV2Eth[i].STETH*100)/100;
+      }
+      this.setState({ vaultV1Tvls: vaultV1Tvls, vaultV2Tvls: vaultV2Tvls, vaultTvlsLoading: false })
   }
 
-  calculateV2AlchemistEthTVL(result){
-    if(result){
-      let v2AlchemistEthTVL = {
-        balance_date: [],
-        eth: [],
-        reth: [],
-        steth: []
-      };
-      for(let i=0;i<result.length;i++){
-        v2AlchemistEthTVL.balance_date[i] = result[i].BALANCE_DATE;
-        v2AlchemistEthTVL.eth[i] = Math.round(result[i].ETH*100)/100;
-        v2AlchemistEthTVL.reth[i] = Math.round(result[i].RETH*100)/100;
-        v2AlchemistEthTVL.steth[i] = Math.round(result[i].STETH*100)/100;
-      }
-      this.setState({ v2AlchemistEthTVL: v2AlchemistEthTVL, v2AlchemistEthTVLLoading: false })
+  calculateTokenPrices(eth, rEth, wstEth, toke, cvx, sdt){
+    let tokenPrices = { eth: [], rEth: [], wstEth: [], toke: [], cvx: [], sdt: [] }
+    for(let i=0;i<eth.prices.length;i++){
+      tokenPrices.eth[i] = eth.prices[i][1]; 
     }
+    for(let i=0;i<rEth.prices.length;i++){
+      tokenPrices.rEth[i] = rEth.prices[i][1]; 
+    }
+    for(let i=0;i<wstEth.prices.length;i++){
+      tokenPrices.wstEth[i] = wstEth.prices[i][1]; 
+    }
+    for(let i=0;i<toke.prices.length;i++){
+      tokenPrices.toke[i] = toke.prices[i][1]; 
+    }
+    for(let i=0;i<cvx.prices.length;i++){
+      tokenPrices.cvx[i] = cvx.prices[i][1]; 
+    }
+    for(let i=0;i<sdt.prices.length;i++){
+      tokenPrices.sdt[i] = sdt.prices[i][1]; 
+    }
+    this.setState({ tokenPrices: tokenPrices, tokenPricesLoading: false });
   }
 
   calculateAlEthPeg(result){
@@ -508,7 +427,7 @@ export default class App extends React.Component {
     for(let i=0;i<result.length;i++){
       try {
         let tempDate = new Date(result[i].timestamp*1000);
-        if(tempDate.getFullYear() !== alEthDate.getFullYear() || tempDate.getMonth() !== alEthDate.getMonth() || tempDate.getDate() !== alEthDate.getDate()){
+        if(!datesEqual(tempDate, alEthDate)){
           alEthPeg.date[index] = formatDate(tempDate, 0); 
           alEthPeg.peg[index] = result[i].outputAmount/Math.pow(10, 18)/500;
           alEthPeg.pegPerc[index] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
@@ -536,21 +455,21 @@ export default class App extends React.Component {
         let tempDaiDate = new Date(daiPeg[i].timestamp*1000);
         let tempUsdcDate = new Date(usdcPeg[i].timestamp*1000);
         let tempUsdtDate = new Date(usdtPeg[i].timestamp*1000);
-        if(tempDaiDate.getFullYear() !== daiDate.getFullYear() || tempDaiDate.getMonth() !== daiDate.getMonth() || tempDaiDate.getDate() !== daiDate.getDate()){
+        if(!datesEqual(tempDaiDate, daiDate)){
           alUsdPeg.dai.date[daiIndex] = formatDate(tempDaiDate, 0); 
           alUsdPeg.dai.peg[daiIndex] = daiPeg[i].outputAmount/Math.pow(10, 24);
           alUsdPeg.dai.pegPerc[daiIndex] = (1-daiPeg[i].outputAmount/Math.pow(10, 24))*(-100);
           daiIndex++;
           daiDate = tempDaiDate;
         }
-        if(tempUsdcDate.getFullYear() !== usdcDate.getFullYear() || tempUsdcDate.getMonth() !== usdcDate.getMonth() || tempUsdcDate.getDate() !== usdcDate.getDate()){
+        if(!datesEqual(tempUsdcDate, usdcDate)){
           alUsdPeg.usdc.date[usdcIndex] = formatDate(tempUsdcDate, 0); 
           alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           usdcIndex++;
           usdcDate = tempUsdcDate;
         }
-        if(tempUsdtDate.getFullYear() !== usdtDate.getFullYear() || tempUsdtDate.getMonth() !== usdtDate.getMonth() || tempUsdtDate.getDate() !== usdtDate.getDate()){
+        if(!datesEqual(tempUsdtDate, usdtDate)){
           alUsdPeg.usdt.date[usdtIndex] = formatDate(tempUsdtDate, 0); 
           alUsdPeg.usdt.peg[usdtIndex] = usdtPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdt.pegPerc[usdtIndex] = (1-usdtPeg[i].outputAmount/Math.pow(10, 12))*(-100);
@@ -566,9 +485,10 @@ export default class App extends React.Component {
   }
 
   calculateHarvests(result){
-    //console.log(result)
+    let startDate = new Date(1648591199*1000); //March 29th
+    let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
-    let index = 0;
+    let resultIndex = 0;
     let harvests = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], };
     let tempYvDai = 0;
     let tempYvUsdc = 0;
@@ -576,33 +496,37 @@ export default class App extends React.Component {
     let tempYvWeth = 0;
     let tempWstEth = 0;
     let tempReth = 0;
-    for(let i=0;i<result.length;i++){
-      let tempDate = new Date(result[i].timestamp*1000);
-      if(tempDate.getFullYear() !== dateTracker.getFullYear() || tempDate.getMonth() !== dateTracker.getMonth() || tempDate.getDate() !== dateTracker.getDate()){
-        index++;
-        dateTracker = tempDate;
-        tempYvDai = 0;
-        tempYvUsdc = 0;
-        tempYvUsdt = 0;
-        tempYvWeth = 0;
-        tempWstEth = 0;
-        tempReth = 0;
+    for(let j=0;startDate<today;j++){
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].timestamp*1000);
+        if(tempDate>startDate) break;
+
+        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+
+        tempYvDai = result[i].yieldToken === yvDaiAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvDai) : tempYvDai;
+        tempYvUsdc = result[i].yieldToken === yvUsdcAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdc) : tempYvUsdc;
+        tempYvUsdt = result[i].yieldToken === yvUsdtAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdt) : tempYvUsdt;
+        tempYvWeth = result[i].yieldToken === yvWethAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvWeth) : tempYvWeth;
+        tempWstEth = result[i].yieldToken === wstEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempWstEth) : tempWstEth;
+        tempReth = result[i].yieldToken === rEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempReth) : tempReth;
+        resultIndex++;
       }
-      tempYvDai = result[i].yieldToken === yvDaiAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvDai) : tempYvDai;
-      tempYvUsdc = result[i].yieldToken === yvUsdcAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdc) : tempYvUsdc;
-      tempYvUsdt = result[i].yieldToken === yvUsdtAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdt) : tempYvUsdt;
-      tempYvWeth = result[i].yieldToken === yvWethAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvWeth) : tempYvWeth;
-      tempWstEth = result[i].yieldToken === wstEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempWstEth) : tempWstEth;
-      tempReth = result[i].yieldToken === rEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempReth) : tempReth;
-      harvests.yvDai[index] = tempYvDai;
-      harvests.yvUsdc[index] = tempYvUsdc;
-      harvests.yvUsdt[index] = tempYvUsdt;
-      harvests.yvWeth[index] = tempYvWeth;
-      harvests.wstEth[index] = tempWstEth;
-      harvests.rEth[index] = tempReth;
-      harvests.date[index] = formatDate(tempDate, 0);
+      harvests.yvDai[j] = tempYvDai;
+      harvests.yvUsdc[j] = tempYvUsdc;
+      harvests.yvUsdt[j] = tempYvUsdt;
+      harvests.yvWeth[j] = tempYvWeth;
+      harvests.wstEth[j] = tempWstEth;
+      harvests.rEth[j] = tempReth;
+      harvests.date[j] = formatDate(startDate, 0);
+      startDate.setDate(startDate.getDate() + 1);
+      tempYvDai = 0;
+      tempYvUsdc = 0;
+      tempYvUsdt = 0;
+      tempYvWeth = 0;
+      tempWstEth = 0;
+      tempReth = 0;
     }
-    //console.log(harvests)
     this.setState({ harvests: harvests, harvestsLoading: false });
   }
 
@@ -642,12 +566,7 @@ export default class App extends React.Component {
       fetch("https://api.flipsidecrypto.com/api/v2/queries/b9235fa9-79a7-454d-a42a-d5d2e294487b/data/latest").then(res => res.json()),
     ])
       .then(([daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl, v2AlchemistTvl, v2AlchemistEthTvl]) => {
-        this.calculateDaiAlchemistTVL(daiAlchemistTvl);
-        this.calculateDaiTransmuterTVL(daiTransmuterTvl);
-        this.calculateEthAlchemistTVL(ethAlchemistTvl);
-        this.calculateEthTransmuterTVL(ethTransmuterTvl);
-        this.calculateV2AlchemistTVL(v2AlchemistTvl);
-        this.calculateV2AlchemistEthTVL(v2AlchemistEthTvl);
+        this.calculateVaultTVLs(daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl, v2AlchemistTvl, v2AlchemistEthTvl);
     })
   }
   
@@ -657,13 +576,10 @@ export default class App extends React.Component {
       fetch("https://api.coingecko.com/api/v3/coins/rocket-pool-eth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/tokemak/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/convex-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
+      fetch("https://api.coingecko.com/api/v3/coins/stake-dao/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json())
     ])
-      .then(([ethPrice, wstEthPrice, rEthPrice, tokePrice, cvxPrice]) => {
-        this.calculateEthPrice(ethPrice);
-        this.calculateWstETHPrice(wstEthPrice);
-        this.calculateRETHPrice(rEthPrice);
-        this.calculateTokePrice(tokePrice);
-        this.calculateCvxPrice(cvxPrice);
+      .then(([ethPrice, wstEthPrice, rEthPrice, tokePrice, cvxPrice, sdtPrice]) => {
+        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, tokePrice, cvxPrice, sdtPrice);
     })
   }
 
@@ -787,32 +703,33 @@ export default class App extends React.Component {
 
   render() {
 
-  let v1DaiTVL = (this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.daiAlchemistTVL[this.state.daiAlchemistTVL.length-1]+this.state.daiTransmuterTVL[this.state.daiTransmuterTVL.length-1])*100*this.state.tokensPerShare.dai)/100;
-  let v1EthTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.ethAlchemistTVL[this.state.ethAlchemistTVL.length-1]+this.state.ethTransmuterTVL[this.state.ethTransmuterTVL.length-1])*this.state.tokensPerShare.eth);
-  let v1EthUsdTVL = (this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? 0 : Math.round(v1EthTVL*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v1DaiTVL = (this.state.vaultTvlsLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.vaultV1Tvls.daiAlchemistTVL[this.state.vaultV1Tvls.daiAlchemistTVL.length-1]+this.state.vaultV1Tvls.daiTransmuterTVL[this.state.vaultV1Tvls.daiTransmuterTVL.length-1])*100*this.state.tokensPerShare.dai)/100;
+  let v1EthTVL = (this.state.vaultTvlsLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.vaultV1Tvls.ethAlchemistTVL[this.state.vaultV1Tvls.ethAlchemistTVL.length-1]+this.state.vaultV1Tvls.ethTransmuterTVL[this.state.vaultV1Tvls.ethTransmuterTVL.length-1])*this.state.tokensPerShare.eth);
+  let v1EthUsdTVL = (this.state.vaultTvlsLoading || this.state.tokenPricesLoading) ? 0 : Math.round(v1EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2DaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.dai*this.state.tokensPerShare.dai*100)/100;
   let v2UsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdc*this.state.tokensPerShare.usdc*100)/100;
   let v2UsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdt*this.state.tokensPerShare.usdt*100)/100;
   let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
-  let v2EthUsdTVL = (this.state.ethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1]/10000)/100;
+  let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth*100)/100;
-  let v2RethUsdTVL = (this.state.rethPricesForTVLLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.rethPricesForTVL[this.state.rethPricesForTVL.length-1]/10000)/100;
+  let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth*100)/100;
-  let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.stethPricesForTVLLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.stethPricesForTVL[this.state.stethPricesForTVL.length-1]/10000)/100;
+  let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
   let treasuryAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.alcx*this.state.alcxData.price;
   let treasuryTAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.tAlcx*this.state.alcxData.price;
-  let treasuryCvxAlEthCrvValue = (this.state.ethPricesForTVLLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvTreasury*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1];
-  let elixirCvxAlEthCrvValue = (this.state.ethPricesForTVLLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvElixir*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1];  
-  let treasuryTokeValue = (this.state.tokePricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.stakedToke*this.state.tokePrices[this.state.tokePrices.length-1];
-  let treasuryCvxValue = (this.state.cvxPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.vlCvx*this.state.cvxPrices[this.state.cvxPrices.length-1];
-  let treasurySlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.ethPricesForTVLLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1])*this.state.treasury.alcxEthSlpOwnedRatio;
+  let treasuryCvxAlEthCrvValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvTreasury*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
+  let elixirCvxAlEthCrvValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];  
+  let treasuryTokeValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.stakedToke*this.state.tokenPrices.toke[this.state.tokenPrices.toke.length-1];
+  let treasuryCvxValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.vlCvx*this.state.tokenPrices.cvx[this.state.tokenPrices.cvx.length-1];
+  let treasurySlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.treasury.alcxEthSlpOwnedRatio;
   let treasuryOther = 1000000;
   let stakedAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let stakedTAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.tAlcx*this.state.alcxData.price;
-  let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.ethPricesForTVLLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
-  let stakingSaddleAlEthValue = (this.state.ethPricesForTVLLoading || this.state.treasuryLoading) ? 0 : this.state.alchemixStaking.saddleAlEth*this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1];
+  let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
+  let stakingSaddleAlEthValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alchemixStaking.saddleAlEth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let circulatingMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 - treasuryAlcxValue/10000 - treasuryTAlcxValue/10000)/100;
-  let alEthCrvTotalValue = (this.state.ethPricesForTVLLoading || this.state.treasuryLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.ethPricesForTVL[this.state.ethPricesForTVL.length-1];
+  let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
+  let sdtValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdt * this.state.tokenPrices.sdt[this.state.tokenPrices.sdt.length-1];
 
   return (
     <div className="App">
@@ -868,7 +785,7 @@ export default class App extends React.Component {
             **The Staking table shows assets that are directly incentivized by ALCX emissions. Please note that technically the whole ALCX/ETH SLP and a part of the SaddlealETH pool are not staked in Alchemix contracts, but Sushiswap and Saddle contracts.<br/>
             ***The current data provider provides inconsistent data, as it is unfortunately visible on the charts. Switching to a new data source is in progress.<br/>
             <div className="tvl-tables-2">
-              {(this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading || this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
+              {(this.state.vaultTVLsLoading || this.state.tokenPricesLoading) ? "Loading..." :
               <div className="small-table">
                 <h3>V1 Deposits</h3>
                 <div className="small-table-inner">
@@ -878,7 +795,7 @@ export default class App extends React.Component {
                 </div>
               </div>
               }
-              {(this.state.v2AlchemistTVLLoading || this.state.v2AlchemistEthTVLLoading || this.state.ethPricesForTVLLoading || this.state.v2CurrentLoading) ? "Loading..." :
+              {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? "Loading..." :
               <div className="small-table">
                 <h3>V2 Deposits and Deposit Caps*</h3>
                 <div className="small-table-inner-2">
@@ -913,8 +830,8 @@ export default class App extends React.Component {
       <div className="section-wrapper">
         <div className="chart-title">
           <h3>DAI TVL V1</h3>
-          {(this.state.daiAlchemistTVLLoading || this.state.daiTransmuterTVLLoading ) ? "Loading..." :
-          <ChartDaiTVL tvlDates={this.state.tvlDates} daiAlchemistTVL={this.state.daiAlchemistTVL} daiTransmuterTVL={this.state.daiTransmuterTVL} />
+          {this.state.vaultTvlsLoading ? "Loading..." :
+          <ChartDaiTVL tvlDates={this.state.vaultV1Tvls.daiTvlDates} daiAlchemistTVL={this.state.vaultV1Tvls.daiAlchemistTVL} daiTransmuterTVL={this.state.vaultV1Tvls.daiTransmuterTVL} />
           }
         </div>
         <div className="chart-title">
@@ -923,8 +840,8 @@ export default class App extends React.Component {
             $<Switch onChange={this.toggleEthCurrency} checked={this.state.ethCurrencyToggle} />ETH
           </div>
           
-          {(this.state.ethAlchemistTVLLoading || this.state.ethTransmuterTVLLoading || this.state.ethPricesForTVLLoading) ? "Loading..." :
-          <ChartEthTVL toggle={this.state.ethCurrencyToggle} ethTVLDates={this.state.ethTVLDates} ethAlchemistTVL={[...this.state.ethAlchemistTVL]} ethTransmuterTVL={[...this.state.ethTransmuterTVL]} ethPricesForTVL={this.state.ethPricesForTVL} />
+          {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading) ? "Loading..." :
+          <ChartEthTVL toggle={this.state.ethCurrencyToggle} ethTVLDates={this.state.vaultV1Tvls.ethTVLDates} ethAlchemistTVL={[...this.state.vaultV1Tvls.ethAlchemistTVL]} ethTransmuterTVL={[...this.state.vaultV1Tvls.ethTransmuterTVL]} ethPricesForTVL={this.state.tokenPrices.eth} />
           }
         </div>
       </div>
@@ -932,14 +849,14 @@ export default class App extends React.Component {
       <div className="section-wrapper">
         <div className="chart-title">
           <h3>Alchemist V2 Stablecoin TVL***</h3>
-          {(this.state.v2AlchemistTVLLoading ) ? "Loading..." :
-          <ChartV2AlchemistTVL v2AlchemistTVL={this.state.v2AlchemistTVL} />
+          {(this.state.vaultTvlsLoading ) ? "Loading..." :
+          <ChartV2AlchemistTVL v2AlchemistTVL={this.state.vaultV2Tvls.alchemist} />
           }
         </div>
         <div className="chart-title">
           <h3>Alchemist V2 Eth TVL***</h3>
-          {(this.state.v2AlchemistEthTVLLoading ) ? "Loading..." :
-          <ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.state.v2AlchemistEthTVL} />
+          {(this.state.vaultTvlsLoading ) ? "Loading..." :
+          <ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.state.vaultV2Tvls.alchemistEth} />
           }
         </div>
       </div>
@@ -954,8 +871,8 @@ export default class App extends React.Component {
           These are mostly just leftovers, strategically unimportant for the protocol.
           <span>
             <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
-              DevMultiSigWallet</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x8392f6669292fa56123f71949b52d883ae57e225">
-              MultiSigWalletWithTimelock</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
+              Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x8392f6669292fa56123f71949b52d883ae57e225">
+              Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
               alUSD Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0xe761bf731a06fe8259fee05897b2687d56933110">
               alETH Elixir</a><br/>
           </span>
@@ -972,10 +889,11 @@ export default class App extends React.Component {
                 <span className="small-table-row"><img src={ require('./logos/tokemak.png').default } alt="TOKE logo" className="image" /></span><span className="table-text-title">TOKE</span><span className="table-text-bold">{Math.round(this.state.treasury.stakedToke)}</span><span className="important-2">${Math.round(treasuryTokeValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlEthCrvTreasury*100)/100}</span><span className="important-2">${Math.round(treasuryCvxAlEthCrvValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="alcxethslp logo" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span><span className="table-text-bold">{Math.round(this.state.treasury.alcxEthSlpOwned*100)/100}</span><span className="important-2">${Math.round(treasurySlpValue/10000)/100}M</span>
+                <span className="small-table-row"><img src={ require('./logos/stakedao.png').default } alt="sdt logo" className="image" /></span><span className="table-text-title">StakeDAO</span><span className="table-text-bold">{Math.round(this.state.treasury.sdt)}</span><span className="important-2">${Math.round(sdtValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="circle" className="image" /></span><span className="table-text-title">Other</span><span className="table-text-bold"></span><span className="important-2">${Math.round(treasuryOther/1000000)}M</span>
                 <span className="small-table-row"><img src={ require('./logos/abra.png').default } alt="abra logo" className="image" /></span><span className="table-text-title">Debt</span><span className="table-text-bold"></span><span className="important-2">-${Math.round(this.state.treasury.abraDebt/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury-this.state.treasury.abraDebt)/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">-(t)ALCX</span><span className="important-3">${Math.round((treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury-this.state.treasury.abraDebt)/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury-this.state.treasury.abraDebt)/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">-(t)ALCX</span><span className="important-3">${Math.round((treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury-this.state.treasury.abraDebt)/10000)/100}M</span>
               </div>
             </div>
             <div className="small-table">
@@ -1054,8 +972,8 @@ export default class App extends React.Component {
         </div>
       </div>
 
-      {/*<img src={ require('./logos/harvest.png').default } alt="harvest icon" className="image3" />
-      <h2>Harvests</h2>
+      <img src={ require('./logos/harvest.png').default } alt="harvest icon" className="image3" />
+      <h2>Harvests V2</h2>
       <div className="summary">
         Harvests are denominated in the underlying assets, i.e. DAI, USDC, USDT, ETH, etc. and not the yield token that is harvested.<br/>
         Thus the legends on the charts only show which vault was harvested, but the displayed value is in the underlying asset.
@@ -1073,7 +991,7 @@ export default class App extends React.Component {
             <ChartHarvestsEth harvests={this.state.harvests} />
           }
         </div>
-        </div>*/}
+        </div>
 
       <div className="footer">
         With issues or suggestions about the site, find me in the Alchemix Discord (Barree #2314)
