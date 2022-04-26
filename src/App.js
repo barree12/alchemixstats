@@ -512,12 +512,12 @@ export default class App extends React.Component {
         tempReth = result[i].yieldToken === rEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempReth) : tempReth;
         resultIndex++;
       }
-      harvests.yvDai[j] = tempYvDai;
-      harvests.yvUsdc[j] = tempYvUsdc;
-      harvests.yvUsdt[j] = tempYvUsdt;
-      harvests.yvWeth[j] = tempYvWeth;
-      harvests.wstEth[j] = tempWstEth;
-      harvests.rEth[j] = tempReth;
+      harvests.yvDai[j] = Math.round(tempYvDai);
+      harvests.yvUsdc[j] = Math.round(tempYvUsdc);
+      harvests.yvUsdt[j] = Math.round(tempYvUsdt);
+      harvests.yvWeth[j] = Math.round(tempYvWeth*1000)/1000;
+      harvests.wstEth[j] = Math.round(tempWstEth*1000)/1000;
+      harvests.rEth[j] = Math.round(tempReth*1000)/1000;
       harvests.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
       tempYvDai = 0;
