@@ -619,7 +619,7 @@ export default class App extends React.Component {
           The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
           The funds in the Elixirs should generally grow, but the protocol can utilize and effectively spend the funds for peg stabilization purposes.<br/>
           Other than the big items listed below, the wallets hold roughly another $1M of various stablecoins and multiple other assets.<br/>
-          These are mostly just leftovers, strategically unimportant for the protocol.
+          These are mostly just leftovers, strategically unimportant for the protocol.<br/>
           *Please note that treasury numbers may not be correct at the moment, as the composition is currently in a small transition.
           <span>
             <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
@@ -644,8 +644,8 @@ export default class App extends React.Component {
                 <span className="small-table-row"><img src={ require('./logos/stakedao.png').default } alt="sdt logo" className="image" /></span><span className="table-text-title">StakeDAO</span><span className="table-text-bold">{Math.round(this.state.treasury.sdt)}</span><span className="important-2">${Math.round(sdtValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="circle" className="image" /></span><span className="table-text-title">Other</span><span className="table-text-bold"></span><span className="important-2">${Math.round(treasuryOther/1000000)}M</span>
                 {/*<span className="small-table-row"><img src={ require('./logos/abra.png').default } alt="abra logo" className="image" /></span><span className="table-text-title">Debt</span><span className="table-text-bold"></span><span className="important-2">-${Math.round(this.state.treasury.abraDebt/10000)/100}M</span>*/}
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury)/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">-(t)ALCX</span><span className="important-3">${Math.round((treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury)/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">Total*</span><span className="important-3">${Math.round((treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury)/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">-(t)ALCX*</span><span className="important-3">${Math.round((treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury)/10000)/100}M</span>
               </div>
             </div>
             <div className="small-table">
