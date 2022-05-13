@@ -27,7 +27,8 @@ export const addresses = {
     saddleStakingContractAddress: '0x691ef79e40d909c715be5e9e93738b3ff7d58534',
     alUsd3CrvContractAddress: '0x43b4fdfd4ff969587185cdb6f0bd875c5fc83f8c',
     alEthCrvContractAddress: '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e',
-    sdtContractAddress: '0x73968b9a57c6e53d41345fd57a6e6ae27d6cdb2f'
+    sdtContractAddress: '0x73968b9a57c6e53d41345fd57a6e6ae27d6cdb2f',
+    sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466'
 }
 
 export const abis = {
