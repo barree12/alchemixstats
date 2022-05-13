@@ -263,7 +263,7 @@ export default class App extends React.Component {
     for(let i=0;i<result.length;i++){
       try {
         let tempDate = new Date(result[i].timestamp*1000);
-        if(!datesEqual(tempDate, alEthDate)){
+        //if(!datesEqual(tempDate, alEthDate)){
           alEthPeg.date[index] = formatDate(tempDate, 0); 
           alEthPeg.peg[index] = result[i].outputAmount/Math.pow(10, 18)/500;
           alEthPeg.pegPerc[index] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
@@ -274,7 +274,7 @@ export default class App extends React.Component {
           index++;
           alEthDate = tempDate;
         }
-      }
+      //}
       catch (err) {
         console.log(err);
       }
@@ -284,7 +284,7 @@ export default class App extends React.Component {
 
   calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, dai50mPeg){
     //console.log(dai10mPeg)
-    //console.log(daiPeg)
+    console.log(daiPeg)
     let daiDate = new Date();
     let usdcDate = new Date();
     let usdtDate = new Date();
@@ -297,7 +297,7 @@ export default class App extends React.Component {
         let tempDaiDate = new Date(daiPeg[i].timestamp*1000);
         let tempUsdcDate = new Date(usdcPeg[i].timestamp*1000);
         let tempUsdtDate = new Date(usdtPeg[i].timestamp*1000);
-        if(!datesEqual(tempDaiDate, daiDate)){
+        //if(!datesEqual(tempDaiDate, daiDate)){
           alUsdPeg.dai.date[daiIndex] = formatDate(tempDaiDate, 0); 
           alUsdPeg.dai.peg[daiIndex] = daiPeg[i].outputAmount/Math.pow(10, 24);
           alUsdPeg.dai.pegPerc[daiIndex] = (1-daiPeg[i].outputAmount/Math.pow(10, 24))*(-100);
@@ -311,21 +311,21 @@ export default class App extends React.Component {
           }*/
           daiIndex++;
           daiDate = tempDaiDate;
-        }
-        if(!datesEqual(tempUsdcDate, usdcDate)){
+        //}
+        //if(!datesEqual(tempUsdcDate, usdcDate)){
           alUsdPeg.usdc.date[usdcIndex] = formatDate(tempUsdcDate, 0); 
           alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           usdcIndex++;
           usdcDate = tempUsdcDate;
-        }
-        if(!datesEqual(tempUsdtDate, usdtDate)){
+        //}
+        //if(!datesEqual(tempUsdtDate, usdtDate)){
           alUsdPeg.usdt.date[usdtIndex] = formatDate(tempUsdtDate, 0); 
           alUsdPeg.usdt.peg[usdtIndex] = usdtPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdt.pegPerc[usdtIndex] = (1-usdtPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           usdtIndex++;
           usdtDate = tempUsdtDate;
-        }
+        //}
       }
       catch (err) {
         console.log(err)
