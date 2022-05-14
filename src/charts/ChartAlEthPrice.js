@@ -67,7 +67,7 @@ export default class ChartAlEthPrice extends React.Component {
               responsive: true,
               maintainAspectRatio: false,
               legend: {
-                display: false,
+                display: true,
                 position: 'top',
                 labels: {
                   fontColor: '#F5C09A',

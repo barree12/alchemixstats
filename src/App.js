@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Web3 from 'web3';
 import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
-import ChartQuartiles from './charts/ChartQuartiles';
+//import ChartQuartiles from './charts/ChartQuartiles';
 import Deposits from './Deposits';
 import AlAssets from './AlAssets';
 import Harvests from './Harvests';
@@ -272,7 +272,7 @@ export default class App extends React.Component {
             alEthPeg.peg5kPerc[index] = (1-result5k[i].outputAmount/Math.pow(10, 19)/500)*(-100);
           }
           index++;
-          alEthDate = tempDate;
+          //alEthDate = tempDate;
         }
       //}
       catch (err) {
@@ -282,16 +282,16 @@ export default class App extends React.Component {
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
-  calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, dai50mPeg){
-    //console.log(dai10mPeg)
-    console.log(daiPeg)
+  calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
+    //console.log(usdc10mPeg)
+    //console.log(daiPeg)
     let daiDate = new Date();
     let usdcDate = new Date();
     let usdtDate = new Date();
     let daiIndex = 0;
     let usdcIndex = 0;
     let usdtIndex = 0;
-    let alUsdPeg = {dai: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [], peg50m: [], peg50mPerc: [] }, usdc: { date: [], peg: [], pegPerc: [] }, usdt: { date: [], peg: [], pegPerc: [] }};
+    let alUsdPeg = {dai: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdc: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdt: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }};
     for(let i=0;i<daiPeg.length;i++){
       try {
         let tempDaiDate = new Date(daiPeg[i].timestamp*1000);
@@ -305,26 +305,30 @@ export default class App extends React.Component {
             alUsdPeg.dai.peg10m[daiIndex] = dai10mPeg[i].outputAmount/Math.pow(10, 25);
             alUsdPeg.dai.peg10mPerc[daiIndex] = (1-dai10mPeg[i].outputAmount/Math.pow(10, 25))*(-100);
           }
-          /*if(daiPeg.length === dai50mPeg.length){
-            alUsdPeg.dai.peg50m[daiIndex] = dai50mPeg[i].outputAmount/Math.pow(10, 26);
-            alUsdPeg.dai.peg50mPerc[daiIndex] = (1-dai50mPeg[i].outputAmount/Math.pow(10, 26))*(-100);
-          }*/
           daiIndex++;
-          daiDate = tempDaiDate;
+          //daiDate = tempDaiDate;
         //}
         //if(!datesEqual(tempUsdcDate, usdcDate)){
           alUsdPeg.usdc.date[usdcIndex] = formatDate(tempUsdcDate, 0); 
           alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
+          if(usdcPeg.length === usdc10mPeg.length){
+            alUsdPeg.usdc.peg10m[usdcIndex] = usdc10mPeg[i].outputAmount/Math.pow(10, 13);
+            alUsdPeg.usdc.peg10mPerc[usdcIndex] = (1-usdc10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
+          }
           usdcIndex++;
-          usdcDate = tempUsdcDate;
+          //usdcDate = tempUsdcDate;
         //}
         //if(!datesEqual(tempUsdtDate, usdtDate)){
           alUsdPeg.usdt.date[usdtIndex] = formatDate(tempUsdtDate, 0); 
           alUsdPeg.usdt.peg[usdtIndex] = usdtPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdt.pegPerc[usdtIndex] = (1-usdtPeg[i].outputAmount/Math.pow(10, 12))*(-100);
+          if(usdtPeg.length === usdt10mPeg.length){
+            alUsdPeg.usdt.peg10m[usdtIndex] = usdt10mPeg[i].outputAmount/Math.pow(10, 13);
+            alUsdPeg.usdt.peg10mPerc[usdtIndex] = (1-usdt10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
+          }
           usdtIndex++;
-          usdtDate = tempUsdtDate;
+          //usdtDate = tempUsdtDate;
         //}
       }
       catch (err) {
@@ -335,7 +339,7 @@ export default class App extends React.Component {
   }
 
   calculateHarvests(result){
-    console.log(result)
+    //console.log(result)
     let startDate = new Date(1648591199*1000); //March 29th
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
@@ -426,84 +430,39 @@ export default class App extends React.Component {
     })
   }
 
+  getPegQuery(alAsset, collateralToken, tradeSize){
+    return `{
+      poolHistoricalRates(
+        first: 1000
+        where: {inputToken: "` + alAsset + `", outputToken: "` + collateralToken + `", inputAmount: "` + tradeSize.toLocaleString('fullwide', {useGrouping:false}) + `"}
+        orderBy: timestamp
+        orderDirection: desc
+      ) {
+        outputAmount
+        timestamp
+      }
+    }`
+  }
+
+  getSubgraphRequestOptions(query){
+    return {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: query })
+    }
+  }
+
   getAlUsdPeg(){
-    const daiPegQuery = `{
-        poolHistoricalRates(
-          first: 1000
-          where: {inputToken: "0xbc6da0fe9ad5f3b0d58160288917aa56653660e9", outputToken: "0x6b175474e89094c44da98b954eedeac495271d0f", inputAmount: "1000000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const daiPeg10mQuery = `{
-        poolHistoricalRates(
-          first: 1000
-          where: {inputToken: "0xbc6da0fe9ad5f3b0d58160288917aa56653660e9", outputToken: "0x6b175474e89094c44da98b954eedeac495271d0f", inputAmount: "10000000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const daiPeg50mQuery = `{
-        poolHistoricalRates(
-          first: 1000
-          where: {inputToken: "0xbc6da0fe9ad5f3b0d58160288917aa56653660e9", outputToken: "0x6b175474e89094c44da98b954eedeac495271d0f", inputAmount: "50000000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const usdcPegQuery = `{
-        poolHistoricalRates(
-          first: 1000
-          where: {inputToken: "0xbc6da0fe9ad5f3b0d58160288917aa56653660e9", outputToken: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", inputAmount: "1000000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const usdtPegQuery = `{
-        poolHistoricalRates(
-          first: 1000
-          where: {inputToken: "0xbc6da0fe9ad5f3b0d58160288917aa56653660e9", outputToken: "0xdac17f958d2ee523a2206206994597c13d831ec7", inputAmount: "1000000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const alEthPegQuery = `{
-        poolHistoricalRates(
-          first: 800
-          where: {inputToken: "0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6", outputToken: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", inputAmount: "500000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
-    const alEthPeg5kQuery = `{
-        poolHistoricalRates(
-          first: 800
-          where: {inputToken: "0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6", outputToken: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", inputAmount: "5000000000000000000000"}
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          outputAmount
-          timestamp
-        }
-      }`
+    const daiPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24))
+    const daiPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25))
+    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24))
+    const usdcPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25))
+    const usdtPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24))
+    const usdtPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25))
+    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5)
+    const alEthPeg5kQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5)
+    //console.log(alEthPegQuery);
+
     const harvestsQuery = `{
       alchemistHarvestEvents(
         first: 1000
@@ -518,57 +477,18 @@ export default class App extends React.Component {
         }
       }
     }`
-    const daiRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: daiPegQuery })
-    };
-    const dai10mRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: daiPeg10mQuery })
-    };
-    const dai50mRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: daiPeg50mQuery })
-    };
-    const usdcRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: usdcPegQuery })
-    };
-    const usdtRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: usdtPegQuery })
-    };
-    const alEthRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: alEthPegQuery })
-    };
-    const alEth5kRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: alEthPeg5kQuery })
-    };
-    const harvestsRequestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: harvestsQuery })
-    };
 
-    Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", daiRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", dai10mRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", dai50mRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", usdcRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", usdtRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", alEthRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", alEth5kRequestOptions).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/barree12/alcxdev", harvestsRequestOptions).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, dai50mPeg, usdcPeg, usdtPeg, alEthPeg, alEth5kPeg, harvests]) => {
-        this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), dai50mPeg.data.poolHistoricalRates.reverse())
+    Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPeg5kQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/barree12/alcxdev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, harvests]) => {
+        this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
     })

@@ -7,10 +7,8 @@ export default class ChartAlusdPrice extends React.Component {
   let dates = this.props.active.dai ? [...this.props.data.dai.date] : (this.props.active.usdc ? [...this.props.data.usdc.date] : [...this.props.data.usdt.date]);
   let values = this.props.active.dai ? [...this.props.data.dai.peg] : (this.props.active.usdc ? [...this.props.data.usdc.peg] : [...this.props.data.usdt.peg]);
   let valuesPerc = this.props.active.dai ? [...this.props.data.dai.pegPerc] : (this.props.active.usdc ? [...this.props.data.usdc.pegPerc] : [...this.props.data.usdt.pegPerc]);
-  let values10m = this.props.active.dai ? [...this.props.data.dai.peg10m] : (this.props.active.usdc ? [...this.props.data.usdc.peg] : [...this.props.data.usdt.peg]);
-  let values10mPerc = this.props.active.dai ? [...this.props.data.dai.peg10mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.pegPerc] : [...this.props.data.usdt.pegPerc]);
-  //let values50m = this.props.active.dai ? [...this.props.data.dai.peg50m] : (this.props.active.usdc ? [...this.props.data.usdc.peg] : [...this.props.data.usdt.peg]);
-  //let values50mPerc = this.props.active.dai ? [...this.props.data.dai.peg50mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.pegPerc] : [...this.props.data.usdt.pegPerc]);
+  let values10m = this.props.active.dai ? [...this.props.data.dai.peg10m] : (this.props.active.usdc ? [...this.props.data.usdc.peg10m] : [...this.props.data.usdt.peg10m]);
+  let values10mPerc = this.props.active.dai ? [...this.props.data.dai.peg10mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.peg10mPerc] : [...this.props.data.usdt.peg10mPerc]);
 
   const helperPointer = this;
   return (
@@ -38,18 +36,7 @@ export default class ChartAlusdPrice extends React.Component {
               pointBorderColor: '#ffffff',
               fill: false,
               hidden: true
-            },
-            /*{
-              label: '50m trade',
-              data: this.props.toggle ? values50mPerc : values50m,
-              backgroundColor: 'rgba(240,238,129,0.5)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: false,
-              hidden: true
-            }*/]
+            }]
           }}
             options={{
               hover: {
@@ -65,12 +52,6 @@ export default class ChartAlusdPrice extends React.Component {
                 caretSize: 10,
                 position: 'nearest',
                 displayColors: false,
-                /*callbacks: {
-                  label: function(tooltipItem) {
-                    if(helperPointer.props.toggle) return (Math.round(tooltipItem.value*10000)/10000) + '%';
-                    else return '$' + Math.round(tooltipItem.value*10000)/10000;
-                  },
-                },*/
                 callbacks: {
                   label: function(tooltipItem, data) {
                     if(helperPointer.props.toggle) return data.datasets[tooltipItem.datasetIndex].label + ': ' + (Math.round(tooltipItem.value*10000)/10000) + '%';
@@ -81,7 +62,7 @@ export default class ChartAlusdPrice extends React.Component {
               responsive: true,
               maintainAspectRatio: false,
               legend: {
-                display: false,
+                display: true,
                 position: 'top',
                 labels: {
                   fontColor: '#F5C09A',
