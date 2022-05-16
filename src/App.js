@@ -33,6 +33,7 @@ export default class App extends React.Component {
       v2Deposit: {},
       tokensPerShare: {},
       treasury: {},
+      lps: {},
       alcxEthSlp: {},
       alchemixStaking: {},
       harvests: {},
@@ -41,6 +42,7 @@ export default class App extends React.Component {
       vaultTvlsLoading: true,
       v2CurrentLoading: true,
       treasuryLoading: true,
+      lpsLoading: true,
       alUsdPegLoading: true,
       alEthPegLoading: true,
       alcxDataLoading: true,
@@ -62,15 +64,23 @@ export default class App extends React.Component {
     //this.abraAlcxCauldronContract = new web3.eth.Contract(abis.abraCauldronAbi, addresses.abraAlcxCauldronAddress);
     this.saddleAlEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleAlEthContractAddress);
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
+    this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
+    this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
+    this.feiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.feiAddress);
+    this.lUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.lUsdAddress);
+    this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
     this.alEthCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthCrvContractAddress);
     this.sdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdtContractAddress);
     this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
+    this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
+    this.alEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthAddress);
   }
 
   componentDidMount() {
     this.getFlipsideCryptoData();
     this.aggregateWeb3Calls();
     this.getTreasury();
+    this.getLPs();
     this.getAlUsdPeg();
     this.getCoinGeckoData();
   }
@@ -154,7 +164,7 @@ export default class App extends React.Component {
       this.wethContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.elixirAddress).call(),
       this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
-      this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
+      //this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
       this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
       this.alUsd3CrvContract.methods.totalSupply().call(),
       this.alEthCrvContract.methods.totalSupply().call(),
@@ -170,13 +180,13 @@ export default class App extends React.Component {
       this.sdtContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
       this.sdCrvContract.methods.balanceOf(addresses.treasuryWallet1Address).call()
     ])
-    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlUsd3CrvTreasury, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt, sdCrv]) => {
+    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt, sdCrv]) => {
       treasury.tAlcx = tAlcx/Math.pow(10, 18);
       treasury.alcx = Math.round(alcx1/Math.pow(10, 18) + alcx2/Math.pow(10, 18));
       // + abraAlcx/Math.pow(10, 18));
       treasury.cvxAlUsd3CrvElixir = cvxAlUsd3CrvElixir/Math.pow(10, 18);
       treasury.cvxAlEthCrvElixir = cvxAlEthCrvElixir/Math.pow(10, 18);
-      treasury.cvxAlUsd3CrvTreasury = cvxAlUsd3CrvTreasury/Math.pow(10, 18);
+      //treasury.cvxAlUsd3CrvTreasury = cvxAlUsd3CrvTreasury/Math.pow(10, 18);
       treasury.cvxAlEthCrvTreasury = cvxAlEthCrvTreasury/Math.pow(10, 18);
       treasury.vlCvx = vlCvx/Math.pow(10, 18);
       treasury.stakedToke = stakedToke/Math.pow(10, 18);
@@ -195,6 +205,42 @@ export default class App extends React.Component {
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
       this.setState({ treasury: treasury, alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, treasuryLoading: false })
+    });
+  }
+
+  getLPs(){
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD3: 0, fraxInD3: 0, feiInD3: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0 }
+    Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
+      this.alUsdContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
+      this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
+      this.fraxContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
+      this.fraxContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      this.feiContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
+      this.feiContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      this.lUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
+      this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
+      web3.eth.getBalance(addresses.alEthCrvContractAddress),
+      this.wethContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
+      this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call()
+    ])
+    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle]) => {
+      lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
+      lps.alUsdInD3 = alUsdInD3/Math.pow(10, 18);
+      lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
+      lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
+      lps.fraxInD3 = fraxInD3/Math.pow(10, 18);
+      lps.fraxInD4 = fraxInD4/Math.pow(10, 18);
+      lps.feiInD3 = feiInD3/Math.pow(10, 18);
+      lps.feiInD4 = feiInD4/Math.pow(10, 18);
+      lps.lUsdInD4 = lUsdInD4/Math.pow(10, 18);
+      lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
+      lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
+      lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
+      lps.wethInSaddle = wethInSaddle/Math.pow(10, 18);
+      lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
+      this.setState({ lps: lps, lpsLoading: false })
     });
   }
 
@@ -257,7 +303,7 @@ export default class App extends React.Component {
   }
 
   calculateAlEthPeg(result, result5k){
-    let alEthDate = new Date();
+    //let alEthDate = new Date();
     let index = 0;
     let alEthPeg = { date: [], peg: [], pegPerc: [], peg5k: [], peg5kPerc: [] }
     for(let i=0;i<result.length;i++){
@@ -283,11 +329,9 @@ export default class App extends React.Component {
   }
 
   calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
-    //console.log(usdc10mPeg)
-    //console.log(daiPeg)
-    let daiDate = new Date();
-    let usdcDate = new Date();
-    let usdtDate = new Date();
+    //let daiDate = new Date();
+    //let usdcDate = new Date();
+    //let usdtDate = new Date();
     let daiIndex = 0;
     let usdcIndex = 0;
     let usdtIndex = 0;
@@ -461,8 +505,6 @@ export default class App extends React.Component {
     const usdtPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25))
     const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5)
     const alEthPeg5kQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5)
-    //console.log(alEthPegQuery);
-
     const harvestsQuery = `{
       alchemistHarvestEvents(
         first: 1000
@@ -605,10 +647,10 @@ export default class App extends React.Component {
         </div>
       </div>
       
-      {(this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading) ? "Loading..." :
+      {(this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
       <AlAssets 
           alUsdMarketcapDates={this.state.alUsdMarketcapDates} alUsdMarketcaps={this.state.alUsdMarketcaps}
-          alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg}
+          alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
       />
       }
 

@@ -42,7 +42,7 @@ export default class AlAssetsDeposits extends React.Component {
             <>
                 <img src={ require('./logos/alusd.png').default } alt="alUSD logo" className="image3" />
                 <h2>alUSD</h2>
-                <AlUsdSummary />
+                <AlUsdSummary lps={this.props.lps} />
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alUSD Total Supply</h3>
@@ -66,7 +66,7 @@ export default class AlAssetsDeposits extends React.Component {
 
                 <img src={ require('./logos/aleth.png').default } alt="alETH logo" className="image3" />
                 <h2>alETH</h2>
-                <AlEthSummary />
+                <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} />
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alETH Total Supply</h3>
