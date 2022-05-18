@@ -52,7 +52,7 @@ export default class AlEthSummary extends React.Component {
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${alEthInCrvUsd + ethInCrvUsd}M</span>
+                      <span className="important-2">${Math.round((alEthInCrvUsd + ethInCrvUsd)*100)/100}M</span>
                     </span>
                   </div>
                   <div className="small-table-inner-5">
@@ -77,7 +77,7 @@ export default class AlEthSummary extends React.Component {
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd}M</span>
+                      <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
                     </span>
                   </div>
                 </div>
