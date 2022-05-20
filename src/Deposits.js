@@ -3,6 +3,8 @@ import ChartDaiTVL from './charts/ChartDaiTVL';
 import ChartEthTVL from './charts/ChartEthTVL';
 import ChartV2AlchemistTVL from './charts/ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './charts/ChartV2AlchemistEthTVL';
+import ChartV2AlchemistFtmTVL from './charts/ChartV2AlchemistFtmTVL';
+import FtmSummary from './FtmSummary';
 import { Switch } from '@mui/material';
 
 export default class Deposits extends React.Component {
@@ -95,6 +97,13 @@ export default class Deposits extends React.Component {
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL***</h3>
                     <ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.props.vaultV2Tvls.alchemistEth} />
+                    </div>
+                </div>
+                <div className="section-wrapper">
+                    <FtmSummary v2Caps={this.props.v2Caps} ftmTvl={this.props.ftmTvl} />
+                    <div className="chart-title">
+                        <h3>Fantom Alchemist TVL</h3>
+                        <ChartV2AlchemistFtmTVL ftmTvl={this.props.ftmTvl} />
                     </div>
                 </div>
             </>

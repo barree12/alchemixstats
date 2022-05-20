@@ -23,8 +23,11 @@ export const addresses = {
     lUsdAddress: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
     crv3Address: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
     yvDaiAddress: '0xda816459f1ab5631232fe5e97a05bbbb94970c95',
+    ftmYvDaiAddress: '0x637eC617c86D24E421328e6CAEa1d92114892439',
     yvUsdcAddress: '0xa354f35829ae975e850e23e9615b11da1b3dc4de',
+    ftmYvUsdcAddress: '0xEF0210eB96c7EB36AF8ed1c20306462764935607',
     yvUsdtAddress: '0x7da96a3891add058ada2e826306d812c638d87a7',
+    ftmYvUsdtAddress: '0x148c05caf1Bb09B5670f00D511718f733C54bC4c',
     yvWethAddress: '0xa258c4606ca8206d8aa700ce2143d7db854d168c',
     wstEthAddress: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
     rEthAddress: '0xae78736cd615f374d3085123a210448e74fc6393',
@@ -41,8 +44,10 @@ export const addresses = {
     d3CrvContractAddress: '0xbaaa1f5dba42c3389bdbc2c9d2de134f5cd0dc89',
     saddled4ContractAddress: '0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6',
     alEthCrvContractAddress: '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e',
-    sdtContractAddress: '0x73968b9a57c6e53d41345fd57a6e6ae27d6cdb2f',
-    sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466'
+    veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
+    sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
+    sdtControllerContractAddress: '0x3216d2a52f0094aa860ca090bc5c335de36e6273',
+    ftmAlchemistContractAddress: '0x76b2E3c5a183970AAAD2A48cF6Ae79E3e16D3A0E'
 }
 
 export const abis = {
