@@ -386,6 +386,9 @@ h2 {
     row-gap: 10px;
     margin-top: 0px;
   }
+  .small-table-cell-title {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 600px) {
