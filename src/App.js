@@ -37,6 +37,7 @@ export default class App extends React.Component {
       lps: {},
       alcxEthSlp: {},
       alchemixStaking: {},
+      alchemistTvl: {},
       ftmTvl: {},
       harvests: {},
       alAssetCrvSupply: {},
@@ -48,6 +49,7 @@ export default class App extends React.Component {
       alUsdPegLoading: true,
       alEthPegLoading: true,
       alcxDataLoading: true,
+      alchemistTvlLoading: true,
       ftmTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
@@ -157,7 +159,7 @@ export default class App extends React.Component {
         deposit.eth = ethParams[8]/Math.pow(10, 18);
         deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
         deposit.rEth = rEthParams[8]/Math.pow(10, 18);
-        //console.log(ftmDaiParams)
+        console.log(tokensPerShare)
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     });
   }
@@ -432,6 +434,104 @@ export default class App extends React.Component {
     this.setState({ ftmTvl: ftmTvl, ftmTvlLoading: false });
   }
 
+  calculateAlchemistTvl(result){
+    //console.log(result)
+    let startDate = new Date(1647385201*1000); //March 16th
+    let today = new Date();
+    let dateTracker = new Date(result[0].timestamp*1000);
+    let resultIndex = 0;
+    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] };
+    let tempYvDai = 0;
+    let tempYvUsdc = 0;
+    let tempYvUsdt = 0;
+    let tempYvWeth = 0;
+    let tempWstEth = 0;
+    let tempReth = 0;
+    for(let j=0;startDate<today;j++){
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].timestamp*1000);
+        if(tempDate>startDate) break;
+
+        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+
+        tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvDai;
+        tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdc;
+        tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdt;
+        tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
+        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
+        tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
+        resultIndex++;
+      }
+      alchemistTvl.yvDai[j] = Math.round(tempYvDai/10000)/100;
+      if(j>0 && !tempYvDai) alchemistTvl.yvDai[j] = alchemistTvl.yvDai[j-1];
+      alchemistTvl.yvUsdc[j] = Math.round(tempYvUsdc/10000)/100;
+      if(j>0 && !tempYvUsdc) alchemistTvl.yvUsdc[j] = alchemistTvl.yvUsdc[j-1];
+      alchemistTvl.yvUsdt[j] = Math.round(tempYvUsdt/10000)/100;
+      if(j>0 && !tempYvUsdt) alchemistTvl.yvUsdt[j] = alchemistTvl.yvUsdt[j-1];
+      alchemistTvl.yvWeth[j] = Math.round(tempYvWeth/10000)/100;
+      if(j>0 && !tempYvWeth) alchemistTvl.yvWeth[j] = alchemistTvl.yvWeth[j-1];
+      alchemistTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
+      if(j>0 && !tempWstEth) alchemistTvl.wstEth[j] = alchemistTvl.wstEth[j-1];
+      alchemistTvl.rEth[j] = Math.round(tempReth/10000)/100;
+      if(j>0 && !tempReth) alchemistTvl.rEth[j] = alchemistTvl.rEth[j-1];
+      alchemistTvl.date[j] = formatDate(startDate, 0);
+      startDate.setDate(startDate.getDate() + 1);
+      tempYvDai = 0;
+      tempYvUsdc = 0;
+      tempYvUsdt = 0;
+    }
+    console.log(alchemistTvl)
+    this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
+  }
+
+  /*calculateAlchemistTvlTemp(result){
+    //console.log(result)
+    let startDate = new Date(1647385201*1000); //March 16th
+    let today = new Date();
+    let dateTracker = new Date(result[0].timestamp*1000);
+    let resultIndex = 0;
+    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] };
+    let tempYvDai = 0;
+    let tempYvUsdc = 0;
+    let tempYvUsdt = 0;
+    let tempYvWeth = 0;
+    let tempWstEth = 0;
+    let tempReth = 0;
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].timestamp*1000);
+
+
+        tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvDai;
+        tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdc;
+        tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdt;
+        tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
+        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
+        tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
+
+  
+      alchemistTvl.yvDai[i] = Math.round(tempYvDai/10000)/100;
+      if(i>0 && !tempYvDai) alchemistTvl.yvDai[i] = alchemistTvl.yvDai[i-1];
+      alchemistTvl.yvUsdc[i] = Math.round(tempYvUsdc/10000)/100;
+      if(i>0 && !tempYvUsdc) alchemistTvl.yvUsdc[i] = alchemistTvl.yvUsdc[i-1];
+      alchemistTvl.yvUsdt[i] = Math.round(tempYvUsdt/10000)/100;
+      if(i>0 && !tempYvUsdt) alchemistTvl.yvUsdt[i] = alchemistTvl.yvUsdt[i-1];
+      alchemistTvl.yvWeth[i] = Math.round(tempYvWeth/10000)/100;
+      if(i>0 && !tempYvWeth) alchemistTvl.yvWeth[i] = alchemistTvl.yvWeth[i-1];
+      alchemistTvl.wstEth[i] = Math.round(tempWstEth/10000)/100;
+      if(i>0 && !tempWstEth) alchemistTvl.wstEth[i] = alchemistTvl.wstEth[i-1];
+      alchemistTvl.rEth[i] = Math.round(tempReth/10000)/100;
+      if(i>0 && !tempReth) alchemistTvl.rEth[i] = alchemistTvl.rEth[i-1];
+      alchemistTvl.date[i] = tempDate;
+      tempYvDai = 0;
+      tempYvUsdc = 0;
+      tempYvUsdt = 0;
+    }
+    console.log(alchemistTvl)
+    this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
+  }*/
+
   calculateHarvests(result){
     //console.log(result)
     let startDate = new Date(1648591199*1000); //March 29th
@@ -491,6 +591,20 @@ export default class App extends React.Component {
       alcxData: alcxData,
       alcxDataLoading: false 
     });
+  }
+
+  logCapIncreases(result){
+    //console.log(result)
+    let temp = { yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] }
+    for(let i=0;i<result.length;i++){
+      if(result[i].yieldToken === addresses.yvDaiAddress) temp.yvDai.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 18) })
+      if(result[i].yieldToken === addresses.yvUsdcAddress) temp.yvUsdc.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 6) })
+      if(result[i].yieldToken === addresses.yvUsdtAddress) temp.yvUsdt.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 6) })
+      if(result[i].yieldToken === addresses.yvWethAddress) temp.yvWeth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0031/Math.pow(10, 18) })
+      if(result[i].yieldToken === addresses.wstEthAddress) temp.wstEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0663/Math.pow(10, 18) })
+      if(result[i].yieldToken === addresses.rEthAddress) temp.rEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0198/Math.pow(10, 18) })
+    }
+    console.log(temp);
   }
 
   getFlipsideCryptoData(){
@@ -569,7 +683,7 @@ export default class App extends React.Component {
         }
       }
     }`
-    const ftmAlchemistTvl = `{
+    const alchemistTvl = `{
       alchemistTVLHistories(
         first: 1000
         orderBy: timestamp
@@ -585,6 +699,35 @@ export default class App extends React.Component {
       }
     }`
 
+    const alchemistTvlSkip = `{
+      alchemistTVLHistories(
+        first: 1000
+        skip: 1000
+        orderBy: timestamp
+        orderDirection: desc
+      )
+      {
+        token
+          {
+            symbol
+          }
+        amount
+        timestamp
+      }
+    }`
+
+    const depositCapIncreases = `{
+      alchemistMaximumExpectedValueUpdatedEvents(
+        orderBy: timestamp
+        orderDirection: desc
+      ){
+        id
+        timestamp
+        yieldToken
+        maximumExpectedValue
+      }      
+    }`
+
     Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
@@ -593,13 +736,18 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPeg5kQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(ftmAlchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, ftmAlchemistTvl, harvests]) => {
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(depositCapIncreases)).then(res => res.json())])
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, depositCapIncreases]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
+        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
+        this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
   }
 
@@ -641,13 +789,14 @@ export default class App extends React.Component {
       <h1>Alchemix Statistics</h1>
 
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} circulatingMarketcap={circulatingMarketcap} />
-      {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading) ? "Loading..." :
+      {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
         <Deposits
           v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
           stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
           vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} vaultV2Tvls={this.state.vaultV2Tvls} ftmTvl={this.state.ftmTvl}
+          alchemistTvl={this.state.alchemistTvl}
         />}
 
       <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />

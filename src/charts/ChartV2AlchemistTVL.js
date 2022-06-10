@@ -9,10 +9,10 @@ export default class ChartV2AlchemistTVL extends React.Component {
       <div className="chart-container-3">
         <Line 
           data={{
-            labels: this.props.v2AlchemistTVL.balance_date,
+            labels: this.props.alchemistTvl.date,
             datasets: [{
               label: 'DAI',
-              data: this.props.v2AlchemistTVL.dai,
+              data: this.props.alchemistTvl.yvDai,
               backgroundColor: 'rgba(35,148,54,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -22,7 +22,7 @@ export default class ChartV2AlchemistTVL extends React.Component {
             },
             {
               label: 'USDC',
-              data: this.props.v2AlchemistTVL.usdc,
+              data: this.props.alchemistTvl.yvUsdc,
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -32,7 +32,7 @@ export default class ChartV2AlchemistTVL extends React.Component {
             },
             {
               label: 'USDT',
-              data: this.props.v2AlchemistTVL.usdt,
+              data: this.props.alchemistTvl.yvUsdt,
               backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,

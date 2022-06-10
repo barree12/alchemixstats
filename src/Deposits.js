@@ -34,8 +34,7 @@ export default class Deposits extends React.Component {
                         Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
                         *Please note that for wstETH and rETH the deposit cap is set in ETH, not wstETH and rETH.<br/>
                         This is different from V1, where debt caps were set, but no deposit caps, meaning that someone could deposit collateral and not be able to take out a loan on that if the system was already at maximum debt cap.<br/>
-                        **The Staking table shows assets that are directly incentivized by ALCX emissions. Please note that technically the whole ALCX/ETH SLP and a part of the SaddlealETH pool are not staked in Alchemix contracts, but Sushiswap and Saddle contracts.<br/>
-                        ***The current data provider provides inconsistent data, as it is unfortunately visible on the charts. Switching to a new data source is in progress.<br/>
+                        **The Staking table shows assets that are directly incentivized by ALCX emissions. Please note that technically the whole ALCX/ETH SLP and a part of the Saddle alETH pool are not staked in Alchemix contracts, but Sushiswap and Saddle contracts.<br/>
                         <div className="tvl-tables-2">
                         {this.props.tokenPricesLoading ? "Loading..." :
                         <div className="small-table">
@@ -92,11 +91,13 @@ export default class Deposits extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Alchemist V2 Stablecoin TVL***</h3>
-                    <ChartV2AlchemistTVL v2AlchemistTVL={this.props.vaultV2Tvls.alchemist} />
+                    {/*<ChartV2AlchemistTVL v2AlchemistTVL={this.props.vaultV2Tvls.alchemist} />*/}
+                    <ChartV2AlchemistTVL alchemistTvl={this.props.alchemistTvl} />
                     </div>
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL***</h3>
-                    <ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.props.vaultV2Tvls.alchemistEth} />
+                    {/*<ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.props.vaultV2Tvls.alchemistEth} />*/}
+                    <ChartV2AlchemistEthTVL alchemistTvl={this.props.alchemistTvl} />
                     </div>
                 </div>
                 <div className="section-wrapper">
