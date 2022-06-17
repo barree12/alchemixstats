@@ -161,7 +161,6 @@ export default class App extends React.Component {
         deposit.eth = ethParams[8]/Math.pow(10, 18);
         deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
         deposit.rEth = rEthParams[8]/Math.pow(10, 18);
-        console.log(tokensPerShare)
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     });
   }
@@ -484,7 +483,6 @@ export default class App extends React.Component {
       tempYvUsdc = 0;
       tempYvUsdt = 0;
     }
-    console.log(alchemistTvl)
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
 
@@ -607,7 +605,6 @@ export default class App extends React.Component {
       if(result[i].yieldToken === addresses.wstEthAddress) temp.wstEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0663/Math.pow(10, 18) })
       if(result[i].yieldToken === addresses.rEthAddress) temp.rEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0198/Math.pow(10, 18) })
     }
-    console.log(temp);
   }
 
   getFlipsideCryptoData(){
