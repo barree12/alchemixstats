@@ -81,6 +81,7 @@ export default class App extends React.Component {
     this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
     this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
     this.alEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthAddress);
+    this.daiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.daiAddress);
   }
 
   componentDidMount() {
@@ -166,7 +167,7 @@ export default class App extends React.Component {
   }
 
   getTreasury(){
-    let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, sdt: 0, sdCrv: 0 }
+    let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, sdt: 0, sdCrv: 0, wethInElixir: 0, daiInElixir: 0 }
     let alcxEthSlp = { alcx: 0, weth: 0 }
     let alchemixStaking = { alcx: 0, tAlcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0, saddleAlEth: 0 }
     let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0 };
@@ -177,6 +178,8 @@ export default class App extends React.Component {
       this.alcxContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.alcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.wethContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
+      this.wethContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
+      this.daiContract.methods.balanceOf(addresses.elixirAddress).call(),
       this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.elixirAddress).call(),
       this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
       //this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
@@ -188,14 +191,12 @@ export default class App extends React.Component {
       this.masterChefContract.methods.userInfo('0', addresses.treasuryWallet1Address).call(),
       this.alcxEthSlpContract.methods.totalSupply().call(),
       this.alcxEthSlpContract.methods.balanceOf(addresses.masterChefAddress).call(),
-      //this.abraAlcxCauldronContract.methods.userCollateralShare(addresses.treasuryWallet1Address).call(),
-      //this.abraAlcxCauldronContract.methods.userBorrowPart(addresses.treasuryWallet1Address).call(),
       this.saddleAlEthContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.saddleAlEthContract.methods.balanceOf(addresses.saddleStakingContractAddress).call(),
       this.veSdtContract.methods.balanceOf(addresses.sdtControllerContractAddress).call(),
       this.sdCrvContract.methods.balanceOf(addresses.sdtControllerContractAddress).call()
     ])
-    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt, sdCrv]) => {
+    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, wethInElixir, daiInElixir, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt, sdCrv]) => {
       treasury.tAlcx = tAlcx/Math.pow(10, 18);
       treasury.alcx = Math.round(alcx1/Math.pow(10, 18) + alcx2/Math.pow(10, 18));
       // + abraAlcx/Math.pow(10, 18));
@@ -209,7 +210,6 @@ export default class App extends React.Component {
       treasury.alcxEthSlpOwnedRatio = alcxEthSlpOwned[0]/alcxEthSlpTotalSupply;
       alcxEthSlp.alcx = alcxInSlp/Math.pow(10, 18);
       alcxEthSlp.weth = wethInSlp/Math.pow(10, 18);
-      //treasury.abraDebt = abraDebt/Math.pow(10, 18);
       treasury.sdt = sdt/Math.pow(10, 18);
       treasury.sdCrv = sdCrv/Math.pow(10, 18);
       alchemixStaking.alcx = stakedAlcx/Math.pow(10, 18);
@@ -219,6 +219,8 @@ export default class App extends React.Component {
       alchemixStaking.saddleAlEth = stakedSaddleAlEthAlchemix/Math.pow(10, 18) + stakedSaddleAlEthSaddle/Math.pow(10, 18);
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
+      treasury.daiInElixir = daiInElixir/Math.pow(10, 18);
+      treasury.wethInElixir = wethInElixir/Math.pow(10, 18);
       this.setState({ treasury: treasury, alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, treasuryLoading: false })
     });
   }
@@ -784,6 +786,7 @@ export default class App extends React.Component {
   let sdCrvValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdCrv * this.state.tokenPrices.crv[this.state.tokenPrices.crv.length-1];
   let treasuryTotal = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
   let treasuryNonAlcx = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
+  let wethInElixirUsd = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.wethInElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
 
   return (
     <div className="App">
@@ -825,7 +828,8 @@ export default class App extends React.Component {
           <span>
             <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
               Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x8392f6669292fa56123f71949b52d883ae57e225">
-              Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
+              Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x3216d2a52f0094aa860ca090bc5c335de36e6273">
+              sdCRV Controller</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
               alUSD Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0xe761bf731a06fe8259fee05897b2687d56933110">
               alETH Elixir</a><br/>
           </span>
@@ -854,7 +858,9 @@ export default class App extends React.Component {
                 <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
                 <span className="small-table-row"><img src={ require('./logos/alusd.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlEthCrvElixir*100)/100}</span><span className="important-2">${Math.round(elixirCvxAlEthCrvValue/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((elixirCvxAlEthCrvValue+this.state.treasury.cvxAlUsd3CrvElixir)/10000)/100}M</span>
+                <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" /></span><span className="table-text-title">DAI</span><span className="table-text-bold">{Math.round(this.state.treasury.daiInElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.daiInElixir/10000)/100}M</span>
+                <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="table-text-title">ETH</span><span className="table-text-bold">{Math.round(this.state.treasury.wethInElixir*100)/100}</span><span className="important-2">${Math.round(wethInElixirUsd/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((elixirCvxAlEthCrvValue+this.state.treasury.cvxAlUsd3CrvElixir+this.state.treasury.daiInElixir+wethInElixirUsd)/10000)/100}M</span>
               </div>
             </div>
           </div>

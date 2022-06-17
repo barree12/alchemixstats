@@ -30,7 +30,7 @@ export default class Deposits extends React.Component {
                         In Alchemix V1 only one collateral type is accepted both for alUSD and alETH, DAI and ETH.<br/>
                         Both the Alchemist and the Transmuter deploy their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
                         Alchemix V2 introduces additional collateral types and yield sources.<br/>
-                        <span>In V2, the transmuters hold a very little amount of assets and the Elixirs (Alchemix AMOs) own the funds that were previously controlled by the transmuters.<br/>The contents of the Elixirs are shown in the <i>Treasury and AMO</i> section.</span>
+                        <span>In V2, the transmuters hold a very little amount of assets and the Elixirs (Alchemix AMOs) own the funds that were previously controlled by the transmuters.<br/>The contents of the Elixirs are shown in the <i>Treasury and Elixirs</i> section.</span>
                         Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
                         *Please note that for wstETH and rETH the deposit cap is set in ETH, not wstETH and rETH.<br/>
                         This is different from V1, where debt caps were set, but no deposit caps, meaning that someone could deposit collateral and not be able to take out a loan on that if the system was already at maximum debt cap.<br/>
