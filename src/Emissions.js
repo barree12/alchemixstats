@@ -10,7 +10,7 @@ export default class Emissions extends React.Component {
     render(){
         return (
             <>
-                <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
+                <img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image3" />
                 <h2>ALCX Emissions</h2>
                 <div className="summary">
                     <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
