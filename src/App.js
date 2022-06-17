@@ -800,7 +800,7 @@ export default class App extends React.Component {
         vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} vaultV2Tvls={this.state.vaultV2Tvls} ftmTvl={this.state.ftmTvl}
         alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg}
+        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
       />}
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} circulatingMarketcap={circulatingMarketcap} />
       {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
