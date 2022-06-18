@@ -6,12 +6,12 @@ export default class Overview extends React.Component {
 //console.log(this.props.alchemistTvl.yvDai[this.props.alchemistTvl.yvDai.length-31])
         let alUsdLiquidity = Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInD3/10000 + this.props.lps.fraxInD3/10000 + this.props.lps.feiInD3/10000 + this.props.lps.alUsdInD4/10000 + this.props.lps.fraxInD4/10000 + this.props.lps.feiInD4/10000 + this.props.lps.lUsdInD4/10000)/100;
         let alEthLiquidity = Math.round((this.props.lps.alEthInCrv + this.props.lps.alEthInSaddle + this.props.lps.ethInAlEthCrv + this.props.lps.wethInSaddle + this.props.lps.sEthInSaddle)*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        let stablecoinDeposits = this.props.v1DaiTVL + this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL;
-        let ethDeposits = this.props.v1EthTVL + this.props.v2EthTVL + this.props.v2StethTVL + this.props.v2RethTVL;
-        let ethDepositsUsd = this.props.v1EthUsdTVL + this.props.v2EthUsdTVL + this.props.v2StethUsdTVL + this.props.v2RethUsdTVL;
+        let stablecoinDeposits = Math.round((this.props.v1DaiTVL + this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL)*100)/100;
+        let ethDeposits = Math.round(this.props.v1EthTVL + this.props.v2EthTVL + this.props.v2StethTVL + this.props.v2RethTVL);
+        let ethDepositsUsd = Math.round((this.props.v1EthUsdTVL + this.props.v2EthUsdTVL + this.props.v2StethUsdTVL + this.props.v2RethUsdTVL)*100)/100;
         let deposits = Math.round((stablecoinDeposits + ethDepositsUsd)*100)/100;
         let stablecoinDeposits1mAgo = Math.round((this.props.vaultV1Tvls.daiAlchemistTVL[this.props.vaultV1Tvls.daiAlchemistTVL.length-31] + this.props.alchemistTvl.yvDai[this.props.alchemistTvl.yvDai.length-31] + this.props.alchemistTvl.yvUsdc[this.props.alchemistTvl.yvUsdc.length-31] + this.props.alchemistTvl.yvUsdt[this.props.alchemistTvl.yvUsdt.length-31])*100)/100;
-        let ethDeposits1mAgo = this.props.vaultV1Tvls.ethAlchemistTVL[this.props.vaultV1Tvls.ethAlchemistTVL.length-31] + this.props.alchemistTvl.yvWeth[this.props.alchemistTvl.yvWeth.length-31] + this.props.alchemistTvl.wstEth[this.props.alchemistTvl.wstEth.length-31] + this.props.alchemistTvl.rEth[this.props.alchemistTvl.rEth.length-31]
+        let ethDeposits1mAgo = Math.round(this.props.vaultV1Tvls.ethAlchemistTVL[this.props.vaultV1Tvls.ethAlchemistTVL.length-31] + this.props.alchemistTvl.yvWeth[this.props.alchemistTvl.yvWeth.length-31] + this.props.alchemistTvl.wstEth[this.props.alchemistTvl.wstEth.length-31] + this.props.alchemistTvl.rEth[this.props.alchemistTvl.rEth.length-31]);
         let ethDepositsUsd1mAgo = Math.round(this.props.ethPrice[this.props.ethPrice.length-31]*ethDeposits1mAgo/10000)/100;
         let deposits1mAgo = Math.round((stablecoinDeposits1mAgo + ethDepositsUsd1mAgo)*100)/100;
         let stablecoinVaultChange = Math.round((stablecoinDeposits/stablecoinDeposits1mAgo-1)*10000)/100;
