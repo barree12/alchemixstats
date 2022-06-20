@@ -11,7 +11,8 @@ import Overview from './Overview';
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
 
-const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
+//const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
+const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 
 export default class App extends React.Component {
