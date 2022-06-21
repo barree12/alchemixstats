@@ -9,21 +9,16 @@ export default class EmissionWeights extends React.Component {
                     <h3>Emission Weights</h3>
                     <div className="weight-table">
                         <div className="weight-table-column">
-                            <span className="table-title">Staking (42%)</span>
+                            <span className="table-title">Staking (33%)</span>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX-ETH SLP" className="image" />
                             <div className="table-item-1">ALCX/ETH SLP</div>
                             <div className="table-item-2">20%</div>
                             </div>
                             <div className="weight-table-row">
-                            <img src={ require('./logos/talcx.png').default } alt="tALCX" className="image" />
-                            <div className="table-item-1">tALCX</div>
-                            <div className="table-item-2">12%</div>
-                            </div>
-                            <div className="weight-table-row">
                             <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image" />
-                            <div className="table-item-1">ALCX</div>
-                            <div className="table-item-2">10%</div>
+                            <div className="table-item-1">gALCX</div>
+                            <div className="table-item-2">13%</div>
                             </div>
                         </div>
                         <div className="weight-table-column">
@@ -68,13 +63,14 @@ export default class EmissionWeights extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="normal-content">As per AIP-49, 30% of emissions that were previously allocated to Olympus Pro bonds have been paused and the emissions are redirected to the Alchemix Treasury.<br /></div>
+                    <div className="normal-content">As per AIP-51, 39% of emissions that were previously allocated to Olympus Pro bonds and tALCX staking have been paused and the emissions are redirected to the Alchemix Treasury.<br /></div>
                     <div className="normal-content">Latest adjustments to emissions: <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe111e77d0bcc78d2c7c994c38ec1e915b1b50a306f9d90fa09b1e78db71eba12">
                     AIP-31</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xa1737555482930ca3687b3ed0c955f32fe204b19216290b43a77c099a41ebf85">
                     AIP-32</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xe476e3a4bc6749e3e980b2aed3db7af63e95792ff45c626d717a213dcae96e41">
                     AIP-34</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0x38c2fb21a39ee061ef5b7113d3cd8b8e4954f0a0388749d62199a8d524e69b17">
                     AIP-42</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xbe4447d9317aa275662d09be1e37236e7f84c57c30c598d13d0dc7f1ce06449a">
-                    AIP-49</a></div>
+                    AIP-49</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0x96325f7f574c52c9ee8f9bec50595c6e6fe7523662b521f799213ead02d2fc3a">
+                    AIP-51a</a></div>
                 </div>
             </div>
         );
