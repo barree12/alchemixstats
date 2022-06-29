@@ -416,6 +416,11 @@ h2 {
   flex-direction: row;
 }
 
+.tvl-tables-3 {
+  display: flex;
+  flex-direction: row;
+}
+
 .MuiButton-containedSizeSmall {
   color: #1b2c3b !important;
   background-color: #F5C09A !important;
@@ -551,6 +556,12 @@ h2 {
 
 @media (max-width: 1100px) {
   .tvl-tables-2 {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 1275px) {
+  .tvl-tables-3 {
     flex-direction: column;
   }
 }

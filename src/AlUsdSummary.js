@@ -6,6 +6,8 @@ export default class AlUsdSummary extends React.Component {
       const totalAlUsd3Crv = Math.round(this.props.lps.alUsdIn3Crv/10000+this.props.lps.crv3In3Crv/10000)/100;
       const totalD3 = Math.round(this.props.lps.alUsdInD3/10000+this.props.lps.fraxInD3/10000+this.props.lps.feiInD3/10000)/100;
       const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
+      const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
+      const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
         return (
             <div className="summary">
                 alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -29,7 +31,7 @@ export default class AlUsdSummary extends React.Component {
                 <div className="small-table-3">
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd.png').default } alt="alUsd logo" className="image" />
+                      <img src={ require('./logos/alusd_crv.png').default } alt="alUsd logo" className="image" />
                       <span className="table-text-title">alUSD3Crv</span>
                     </span>
                     <span className="small-table-cell">
@@ -103,6 +105,58 @@ export default class AlUsdSummary extends React.Component {
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${totalD4}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-4">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_beets.png').default } alt="alUsd beets logo" className="image" />
+                      <span className="table-text-title">Fantom Beets</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInBeets/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">USDC</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInBeets/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">DAI</span>
+                      <span className="important-2">${Math.round(this.props.lps.daiInBeets/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalAlUsdBeets}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-4">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
+                      <span className="table-text-title">Optimism Velodrome</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">USDC</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalAlUsdVelodrome}M</span>
                     </span>
                   </div>
                 </div>

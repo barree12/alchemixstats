@@ -14,6 +14,7 @@ import { addresses, abis } from './Constants';
 //const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
+const web3optimism = new Web3('https://mainnet.optimism.io');
 
 export default class App extends React.Component {
 
@@ -83,6 +84,11 @@ export default class App extends React.Component {
     this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
     this.alEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthAddress);
     this.daiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.daiAddress);
+    this.alUsdOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alUsdOptimismContractAddress);
+    this.alEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alEthOptimismContractAddress);
+    this.usdcOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdcOptimismContractAddress);
+    this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
+    this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
   }
 
   componentDidMount() {
@@ -226,7 +232,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD3: 0, fraxInD3: 0, feiInD3: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD3: 0, fraxInD3: 0, feiInD3: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
@@ -240,9 +246,15 @@ export default class App extends React.Component {
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       web3.eth.getBalance(addresses.alEthCrvContractAddress),
       this.wethContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
-      this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call()
+      this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
+      this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
+      this.usdcOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
+      this.alEthOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
+      this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
+      this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
+      this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle]) => {
+    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.alUsdInD3 = alUsdInD3/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
@@ -257,6 +269,14 @@ export default class App extends React.Component {
       lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
       lps.wethInSaddle = wethInSaddle/Math.pow(10, 18);
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
+      lps.alUsdInVelodrome = alUsdInVelodrome/Math.pow(10, 18);
+      lps.usdcInVelodrome = usdcInVelodrome/Math.pow(10, 6);
+      lps.alEthInVelodrome = alEthInVelodrome/Math.pow(10, 18);
+      lps.wethInVelodrome = wethInVelodrome/Math.pow(10, 18);
+      lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
+      lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
+      lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
+      //console.log(lps.daiInBeets)
       this.setState({ lps: lps, lpsLoading: false })
     });
   }
@@ -854,7 +874,7 @@ export default class App extends React.Component {
             <h3>Elixir contents</h3>
               <div className="small-table-inner-3">
                 <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
-                <span className="small-table-row"><img src={ require('./logos/alusd.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
+                <span className="small-table-row"><img src={ require('./logos/alusd_crv.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlEthCrvElixir*100)/100}</span><span className="important-2">${Math.round(elixirCvxAlEthCrvValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" /></span><span className="table-text-title">DAI</span><span className="table-text-bold">{Math.round(this.state.treasury.daiInElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.daiInElixir/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="table-text-title">ETH</span><span className="table-text-bold">{Math.round(this.state.treasury.wethInElixir*100)/100}</span><span className="important-2">${Math.round(wethInElixirUsd/10000)/100}M</span>

@@ -24,7 +24,7 @@ export default class EmissionWeights extends React.Component {
                         <div className="weight-table-column">
                             <span className="table-title">alAsset liquidity (24%)</span>
                             <div className="weight-table-row">
-                            <img src={ require('./logos/alusd.png').default } alt="alUSD" className="image" />
+                            <img src={ require('./logos/alusd_crv.png').default } alt="alUSD" className="image" />
                             <div className="table-item-1">alUSD3CRV</div>
                             <div className="table-item-2">11%</div>
                             </div>
@@ -47,8 +47,8 @@ export default class EmissionWeights extends React.Component {
                         <div className="weight-table-column">
                             <span className="table-title">Fantom (4%)</span>
                             <div className="weight-table-row">
-                            <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC pool" className="image" />
-                            <div className="table-item-1">Beethoven X alUSD/USDC</div>
+                            <img src={ require('./logos/alusd_beets.png').default } alt="alUSD-USDC pool" className="image" />
+                            <div className="table-item-1">Beethoven X alUSD</div>
                             <div className="table-item-2">2.5%</div>
                             </div>
                             <div className="weight-table-row">

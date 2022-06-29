@@ -47,7 +47,16 @@ export const addresses = {
     veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
     sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
     sdtControllerContractAddress: '0x3216d2a52f0094aa860ca090bc5c335de36e6273',
-    ftmAlchemistContractAddress: '0x76b2E3c5a183970AAAD2A48cF6Ae79E3e16D3A0E'
+    ftmAlchemistContractAddress: '0x76b2E3c5a183970AAAD2A48cF6Ae79E3e16D3A0E',
+    alUsdVelodromeContractAddress: '0xe75a3f4bf99882ad9f8aebab2115873315425d00',
+    alEthVelodromeContractAddress: '0x6fd5bee1ddb4dbbb0b7368b080ab99b8ba765902',
+    alUsdOptimismContractAddress: '0xcb8fa9a76b8e203d8c3797bf438d8fb81ea3326a',
+    usdcOptimismContractAddress: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
+    alEthOptimismContractAddress: '0x3e29d3a9316dab217754d13b28646b76607c5f04',
+    wethOptimismContractAddress: '0x4200000000000000000000000000000000000006',
+    beetsVaultContractAddress: '0x20dd72ed959b6147912c2e529f0a0c651c33c9ce',
+    alUsdBeetsPoolId: '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b',
+    beetsYearnUsdPoolId: '0x5ddb92a5340fd0ead3987d3661afcd6104c3b757000000000000000000000187'
 }
 
 export const abis = {
@@ -72,7 +81,7 @@ export const abis = {
         { type: "uint256", name: "something" },
         { type: "uint256", name: "something2" }]
         }],
-    payable: false,
+        payable: false,
         stateMutability: 'view',
         type: 'function'
     },
@@ -87,7 +96,7 @@ export const abis = {
             name: 'rate',
             type: 'uint256'
         }],
-    payable: false,
+        payable: false,
         stateMutability: 'view',
         type: 'function'
     }],
@@ -172,6 +181,38 @@ export const abis = {
     payable: false,
     stateMutability: 'view',
     type: 'function'
-    }]
+    }],
+    beetsVaultAbi: [{
+        constant: true,
+        inputs: [{
+            name: 'poolId',
+            type: 'bytes32'
+        }],
+        name: 'getPoolTokens',
+        outputs: [{
+            name: 'params',
+            type: 'tuple',
+            components: [
+                { type: "tuple", name: "filler", components: [ { type: "uint256", name: "filler1" }, { type: "uint256", name: "filler2" }, { type: "uint256", name: "lastChangeBlock" }, { type: "uint256", name: "ArrayLength" },] },
+                { type: "tuple", name: "tokens", components: [ { type: "address", name: "token1" }, { type: "address", name: "token2" }, { type: "address", name: "token3" }] },
+                { type: "uint256", name: "length" },
+                { type: "tuple", name: "balances", components: [ { type: "uint256", name: "token1Amount" }, { type: "uint256", name: "token2Amount" }, { type: "uint256", name: "token3Amount" }] },]
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+    constant: true,
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{
+        name: 'supply',
+        type: 'uint256'
+        }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function'
+    }],
 
 }

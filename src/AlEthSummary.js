@@ -8,6 +8,8 @@ export default class AlEthSummary extends React.Component {
         const ethInCrvUsd = Math.round(this.props.lps.ethInAlEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const wethInSaddleUsd = Math.round(this.props.lps.wethInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         return (
             <div className="summary">
                 alETH supply grows when people deposit collateral assets and borrow alETH against them.<br/>
@@ -78,6 +80,30 @@ export default class AlEthSummary extends React.Component {
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-5">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/eth_aleth.png').default } alt="alUsd logo" className="image" />
+                      <span className="table-text-title">Optimism Velodrome</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInVelodromeUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInVelodrome)})</i></span>
+                    </span> 
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">ETH</span>
+                      <span className="important-2">${wethInVelodromeUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.wethInVelodrome)})</i></span>
+                    </span>  
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInVelodromeUsd + wethInVelodromeUsd)*100)/100}M</span>
                     </span>
                   </div>
                 </div>
