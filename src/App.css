@@ -205,6 +205,15 @@ h2 {
   text-align: left;
 }
 
+.small-table-inner-11 {
+  display: grid;
+  grid-template-columns: 24% 14% 14% 14% 14% 12%;
+  row-gap: 3px;
+  width: 600px;
+  margin-top: 10px;
+  text-align: left;
+}
+
 .small-table-title-wrap {
   display: grid;
   grid-template-columns: 20% 80%;
@@ -489,6 +498,13 @@ h2 {
   .small-table-inner-8 {
     width: 400px;
     grid-template-columns: 13% 33% 27% 27%;
+  }
+  .small-table-inner-11 {
+    margin-top: 30px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30% 14% 14% 14% 14% 14%;
+    width: 145px;
+    text-align: center;
   }
   .small-table-cell-title {
     flex-direction: column;

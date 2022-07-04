@@ -107,7 +107,9 @@ export default class AlUsdSummary extends React.Component {
                       <span className="important-2">${totalD4}M</span>
                     </span>
                   </div>
-                  <div className="small-table-inner-4">
+                </div>
+                <div className="small-table-3">
+                  <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_beets.png').default } alt="alUsd beets logo" className="image" />
                       <span className="table-text-title">Fantom Beets</span>
@@ -133,7 +135,7 @@ export default class AlUsdSummary extends React.Component {
                       <span className="important-2">${totalAlUsdBeets}M</span>
                     </span>
                   </div>
-                  <div className="small-table-inner-4">
+                  <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
                       <span className="table-text-title">Optimism Velodrome</span>
