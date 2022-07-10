@@ -3,7 +3,7 @@ import React from 'react';
 export default class Overview extends React.Component { 
 
     render(){
-//console.log(this.props.alchemistTvl.yvDai[this.props.alchemistTvl.yvDai.length-31])
+//console.log(this.props.vaultV1Tvls)
         let alUsdLiquidity = Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInD3/10000 + this.props.lps.fraxInD3/10000 + this.props.lps.feiInD3/10000 + this.props.lps.alUsdInD4/10000 + this.props.lps.fraxInD4/10000 + this.props.lps.feiInD4/10000 + this.props.lps.lUsdInD4/10000 + this.props.lps.alUsdInBeets/10000 + this.props.lps.usdcInBeets/10000 + this.props.lps.daiInBeets/10000 + this.props.lps.alUsdInVelodrome/10000 + this.props.lps.usdcInVelodrome/10000)/100;
         let alEthLiquidity = Math.round((this.props.lps.alEthInCrv + this.props.lps.alEthInSaddle + this.props.lps.ethInAlEthCrv + this.props.lps.wethInSaddle + this.props.lps.sEthInSaddle + this.props.lps.alEthInVelodrome + this.props.lps.wethInVelodrome)*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         let stablecoinDeposits = Math.round((this.props.v1DaiTVL + this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL)*100)/100;

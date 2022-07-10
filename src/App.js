@@ -817,7 +817,7 @@ export default class App extends React.Component {
       The service is unofficial.</div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
-      {(this.state.tokenPricesLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.alchemistTvlLoading) ? "Loading..." :
+      {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.alchemistTvlLoading) ? "Loading..." :
       <Overview 
         v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
@@ -872,7 +872,7 @@ export default class App extends React.Component {
                 <span className="small-table-row"><img src={ require('./logos/sd_crv.png').default } alt="sdCrv logo" className="image" /></span><span className="table-text-title">sdCRV</span><span className="table-text-bold">{Math.round(this.state.treasury.sdCrv)}</span><span className="important-2">${Math.round(sdCrvValue/10000)/100}M</span>
                 <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="circle" className="image" /></span><span className="table-text-title">Other</span><span className="table-text-bold"></span><span className="important-2">${Math.round(treasuryOther/10000)/100}M</span>
                 <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round(treasuryTotal/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">-(t)ALCX</span><span className="important-3">${Math.round(treasuryNonAlcx/10000)/100}M</span>
+                <span className="small-table-row-2"></span><span></span><span className="important-3">Non-ALCX</span><span className="important-3">${Math.round(treasuryNonAlcx/10000)/100}M</span>
               </div>
             </div>
             <div className="small-table">
