@@ -603,7 +603,7 @@ export default class App extends React.Component {
   }
 
   calculateAlcxArrays(result){
-    let burnAmount = 478612;
+    //let burnAmount = 478612;
     let alcxData = { 
       //currentSupply: Math.round(result[0].TOTAL-burnAmount),
       currentSupply: Math.round(result.market_caps[result.market_caps.length-1][1]/result.prices[result.prices.length-1][1]),
@@ -660,7 +660,7 @@ export default class App extends React.Component {
         this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, tokePrice, cvxPrice, sdtPrice, crvPrice);
         this.calculateAlUsdArrays(alUsdData);
         this.calculateAlcxArrays(alcxData);
-        console.log(alcxData)
+        //console.log(alcxData)
     })
   }
 

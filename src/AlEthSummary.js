@@ -84,7 +84,7 @@ export default class AlEthSummary extends React.Component {
                   </div>
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/eth_aleth.png').default } alt="alUsd logo" className="image" />
+                      <img src={ require('./logos/aleth_opti.png').default } alt="alEth optimism logo" className="image" />
                       <span className="table-text-title">Optimism Velodrome</span>
                     </span>
                     <span className="small-table-cell">
