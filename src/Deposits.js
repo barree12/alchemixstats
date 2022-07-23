@@ -91,12 +91,10 @@ export default class Deposits extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Alchemist V2 Stablecoin TVL</h3>
-                    {/*<ChartV2AlchemistTVL v2AlchemistTVL={this.props.vaultV2Tvls.alchemist} />*/}
                     <ChartV2AlchemistTVL alchemistTvl={this.props.alchemistTvl} />
                     </div>
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL</h3>
-                    {/*<ChartV2AlchemistEthTVL v2AlchemistEthTVL={this.props.vaultV2Tvls.alchemistEth} />*/}
                     <ChartV2AlchemistEthTVL alchemistTvl={this.props.alchemistTvl} />
                     </div>
                 </div>

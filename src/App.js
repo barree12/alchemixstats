@@ -8,8 +8,10 @@ import AlAssets from './AlAssets';
 import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
+import Debt from './Debt';
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
+import ChartQuartiles from './charts/ChartQuartiles';
 
 //const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
@@ -28,7 +30,6 @@ export default class App extends React.Component {
       alUsdMarketcaps: [],
       alUsdMarketcapDates: [],
       vaultV1Tvls: {},
-      vaultV2Tvls: {},
       tokenPrices: {},
       alcxData: {},
       alUsdPeg: {},
@@ -43,6 +44,7 @@ export default class App extends React.Component {
       alchemistTvl: {},
       ftmTvl: {},
       harvests: {},
+      debt: {},
       alAssetCrvSupply: {},
       tokenPricesLoading: true,
       vaultTvlsLoading: true,
@@ -56,6 +58,7 @@ export default class App extends React.Component {
       ftmTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
+      debtLoading: true
     };
 
     this.alchemistContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistV2Address);
@@ -89,6 +92,7 @@ export default class App extends React.Component {
     this.usdcOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdcOptimismContractAddress);
     this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
     this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
+    this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
   }
 
   componentDidMount() {
@@ -253,8 +257,10 @@ export default class App extends React.Component {
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
+      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPContractAddress).call(),
+      this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPContractAddress).call()
     ])
-    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets]) => {
+    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInSaddleFBP, fbpInSaddleFBP]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.alUsdInD3 = alUsdInD3/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
@@ -276,14 +282,15 @@ export default class App extends React.Component {
       lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
       lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
+      lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
+      lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
       //console.log(lps.daiInBeets)
       this.setState({ lps: lps, lpsLoading: false })
     });
   }
 
-  calculateVaultTVLs(daiAlchemist, daiTransmuter, EthAlchemist, EthTransmuter, AlchemistV2, AlchemistV2Eth){
+  calculateVaultTVLs(daiAlchemist, daiTransmuter, EthAlchemist, EthTransmuter){
     let vaultV1Tvls = { daiTvlDates: [], daiAlchemistTVL: [], daiTransmuterTVL: [], ethTVLDates: [], ethAlchemistTVL: [], ethTransmuterTVL: [] }
-    let vaultV2Tvls = { alchemist: { balance_date: [], dai: [], usdc: [], usdt: [] }, alchemistEth: { balance_date: [], eth: [], reth: [], steth: [] } }
       for(let i=0;i<daiAlchemist.length;i++){
         vaultV1Tvls.daiTvlDates[i] = daiAlchemist[i].BALANCE_DATE;
         vaultV1Tvls.daiAlchemistTVL[i] = Math.round(daiAlchemist[i].TOTAL/10000)/100;
@@ -298,19 +305,7 @@ export default class App extends React.Component {
       for(let i=0;i<EthTransmuter.length;i++){
         vaultV1Tvls.ethTransmuterTVL[i] = Math.round(EthTransmuter[i].TOTAL);
       }
-      for(let i=0;i<AlchemistV2.length;i++){
-        vaultV2Tvls.alchemist.balance_date[i] = AlchemistV2[i].BALANCE_DATE;
-        vaultV2Tvls.alchemist.dai[i] = Math.round(AlchemistV2[i].DAI/10000)/100;
-        vaultV2Tvls.alchemist.usdc[i] = Math.round(AlchemistV2[i].USDC/10000)/100;
-        vaultV2Tvls.alchemist.usdt[i] = Math.round(AlchemistV2[i].USDT/10000)/100;
-      }
-      for(let i=0;i<AlchemistV2Eth.length;i++){
-        vaultV2Tvls.alchemistEth.balance_date[i] = AlchemistV2Eth[i].BALANCE_DATE;
-        vaultV2Tvls.alchemistEth.eth[i] = Math.round(AlchemistV2Eth[i].ETH*100)/100;
-        vaultV2Tvls.alchemistEth.reth[i] = Math.round(AlchemistV2Eth[i].RETH*100)/100;
-        vaultV2Tvls.alchemistEth.steth[i] = Math.round(AlchemistV2Eth[i].STETH*100)/100;
-      }
-      this.setState({ vaultV1Tvls: vaultV1Tvls, vaultV2Tvls: vaultV2Tvls, vaultTvlsLoading: false })
+      this.setState({ vaultV1Tvls: vaultV1Tvls, vaultTvlsLoading: false })
   }
 
   calculateTokenPrices(eth, rEth, wstEth, toke, cvx, sdt, crv){
@@ -605,11 +600,8 @@ export default class App extends React.Component {
   calculateAlcxArrays(result){
     //let burnAmount = 478612;
     let alcxData = { 
-      //currentSupply: Math.round(result[0].TOTAL-burnAmount),
-      currentSupply: Math.round(result.market_caps[result.market_caps.length-1][1]/result.prices[result.prices.length-1][1]),
-      //price: Math.round(result[0].PRICE*100)/100, 
+      currentSupply: Math.round(result.market_caps[result.market_caps.length-1][1]/result.prices[result.prices.length-1][1]), 
       price: Math.round(result.prices[result.prices.length-1][1]*100)/100,
-      //marketcap: Math.round((result[0].TOTAL-burnAmount)*result[0].PRICE/10000)/100
       marketcap: Math.round(result.market_caps[result.market_caps.length-1][1]/10000)/100
     }
     this.setState({ 
@@ -618,7 +610,41 @@ export default class App extends React.Component {
     });
   }
 
-  logCapIncreases(result){
+  calculateGlobalDebt(result){
+    console.log(result)
+    let startDate = new Date(1647385201*1000); //March 16th
+    let today = new Date();
+    let dateTracker = new Date(result[0].block.timestamp*1000);
+    let resultIndex = 0;
+    let debt = { date:[], usd: [], eth: [] };
+    let tempUsd = 0;
+    let tempEth = 0;
+    for(let j=0;startDate<today;j++){
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].block.timestamp*1000);
+        if(tempDate>startDate) break;
+
+        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+        console.log(result[i].alchemist.id === addresses.alchemistV2Address)
+        tempUsd = result[i].alchemist.id === addresses.alchemistV2Address ? result[i].debt/Math.pow(10, 18) : tempUsd;
+        tempEth = result[i].alchemist.id === addresses.alchemistEthV2Address ? result[i].debt/Math.pow(10, 18) : tempEth;
+        resultIndex++;
+      }
+      debt.usd[j] = Math.round(tempUsd/10000)/100;
+      if(j>0 && !tempUsd) debt.usd[j] = debt.usd[j-1];
+      debt.eth[j] = Math.round(tempEth/10000)/100;
+      if(j>0 && !tempEth) debt.eth[j] = debt.eth[j-1];
+      debt.date[j] = formatDate(startDate, 0);
+      startDate.setDate(startDate.getDate() + 1);
+      tempUsd = 0;
+      tempEth = 0;
+    }
+    console.log(debt)
+    this.setState({ debt: debt, debtLoading: false });
+  }
+
+  /*logCapIncreases(result){
     //console.log(result)
     let temp = { yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] }
     for(let i=0;i<result.length;i++){
@@ -629,19 +655,16 @@ export default class App extends React.Component {
       if(result[i].yieldToken === addresses.wstEthAddress) temp.wstEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0663/Math.pow(10, 18) })
       if(result[i].yieldToken === addresses.rEthAddress) temp.rEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0198/Math.pow(10, 18) })
     }
-  }
+  }*/
 
   getFlipsideCryptoData(){
     Promise.all([fetch("https://api.flipsidecrypto.com/api/v2/queries/a29262d6-7878-4c8e-8d4e-a62f414c846f/data/latest").then(res => res.json()),
       fetch("https://api.flipsidecrypto.com/api/v2/queries/6a72370b-6c81-4b3f-9691-cfdb0a3118d3/data/latest").then(res => res.json()),
       fetch("https://api.flipsidecrypto.com/api/v2/queries/925c5328-386f-44c1-bfe9-18a796201fff/data/latest").then(res => res.json()),
       fetch("https://api.flipsidecrypto.com/api/v2/queries/c837204d-27a8-4f0d-b0f0-6d340e5de0e8/data/latest").then(res => res.json()),
-      fetch("https://api.flipsidecrypto.com/api/v2/queries/6f29b174-9b21-43cf-a359-fd82c22fd22a/data/latest").then(res => res.json()),
-      fetch("https://api.flipsidecrypto.com/api/v2/queries/b9235fa9-79a7-454d-a42a-d5d2e294487b/data/latest").then(res => res.json())
     ])
-      .then(([daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl, v2AlchemistTvl, v2AlchemistEthTvl]) => {
-        this.calculateVaultTVLs(daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl, v2AlchemistTvl, v2AlchemistEthTvl);
-        //this.calculateAlcxArrays(alcxArrays);
+      .then(([daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl]) => {
+        this.calculateVaultTVLs(daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl);
     })
   }
   
@@ -754,6 +777,20 @@ export default class App extends React.Component {
       }      
     }`
 
+    const globalDebt = `{
+      alchemistGlobalDebtHistories(
+        first: 1000
+      ){
+        alchemist {
+          id
+        }
+        debt
+        block {
+          timestamp
+        }
+      }
+    }`
+
     Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
@@ -766,14 +803,16 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(depositCapIncreases)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, depositCapIncreases]) => {
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, globalDebt, depositCapIncreases]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
-        this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
+        //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
+        this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.reverse())
     })
   }
 
@@ -813,8 +852,9 @@ export default class App extends React.Component {
 
   return (
     <div className="App">
-      <div className="header-disclaimer">This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
-      The service is unofficial.</div>
+      <div className="header-disclaimer">
+        This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
+      </div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
       {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.alchemistTvlLoading) ? "Loading..." :
@@ -823,7 +863,7 @@ export default class App extends React.Component {
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
-        vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} vaultV2Tvls={this.state.vaultV2Tvls} ftmTvl={this.state.ftmTvl}
+        vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
         alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
@@ -835,7 +875,7 @@ export default class App extends React.Component {
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
           stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
-          vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} vaultV2Tvls={this.state.vaultV2Tvls} ftmTvl={this.state.ftmTvl}
+          vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
           alchemistTvl={this.state.alchemistTvl}
         />}
 
@@ -906,6 +946,10 @@ export default class App extends React.Component {
         </div>
       </div>
       
+      {/*this.state.debtLoading ? "Loading..." :
+      <Debt debt={this.state.debt} ethPrice={this.state.tokenPrices.eth} />
+        */}
+
       {(this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
       <AlAssets 
           alUsdMarketcapDates={this.state.alUsdMarketcapDates} alUsdMarketcaps={this.state.alUsdMarketcaps}

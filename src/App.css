@@ -62,6 +62,11 @@ h2 {
   align-items: center;
 }
 
+.ust {
+  color: white;
+  font-size: 9pt;
+}
+
 .chart-container {
   width: 700px;
   height: 400px;

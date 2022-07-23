@@ -8,6 +8,7 @@ export default class AlUsdSummary extends React.Component {
       const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
       const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
+      const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
         return (
             <div className="summary">
                 alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -133,6 +134,32 @@ export default class AlUsdSummary extends React.Component {
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${totalAlUsdBeets}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_saddle_fbp.png').default } alt="alUSD-SaddleFBP logo" className="image" />
+                      <span className="table-text-title">Saddle FBP</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInSaddleFBP/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">FraxBP</span>
+                      <span className="important-2">${Math.round(this.props.lps.fbpInSaddleFBP/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalSaddleFBP}M</span>
                     </span>
                   </div>
                   <div className="small-table-inner-11">

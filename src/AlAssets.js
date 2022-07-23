@@ -7,7 +7,7 @@ import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch, Button, ButtonGroup } from '@mui/material';
 
-export default class AlAssetsDeposits extends React.Component {
+export default class AlAssets extends React.Component {
     
     constructor(props) {
         super(props);

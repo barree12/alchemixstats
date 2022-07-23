@@ -11,8 +11,8 @@ export const addresses = {
     masterChefAddress: '0xef0881ec094552b2e128cf945ef17a6752b4ec5d',
     alcxEthSlpAddress: '0xc3f279090a47e80990fe3a9c30d24cb117ef91a8',
     abraAlcxCauldronAddress: '0x7b7473a76d6ae86ce19f7352a1e89f6c9dc39020',
-    alchemistEthV2Address: '0x062Bf725dC4cDF947aa79Ca2aaCCD4F385b13b5c',
-    alchemistV2Address: '0x5C6374a2ac4EBC38DeA0Fc1F8716e5Ea1AdD94dd',
+    alchemistEthV2Address: '0x062bf725dc4cdf947aa79ca2aaccd4f385b13b5c',
+    alchemistV2Address: '0x5c6374a2ac4ebc38dea0fc1f8716e5ea1add94dd',
     alUsdAddress: '0xbc6da0fe9ad5f3b0d58160288917aa56653660e9',
     alEthAddress: '0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6',
     daiAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -56,7 +56,9 @@ export const addresses = {
     wethOptimismContractAddress: '0x4200000000000000000000000000000000000006',
     beetsVaultContractAddress: '0x20dd72ed959b6147912c2e529f0a0c651c33c9ce',
     alUsdBeetsPoolId: '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b',
-    beetsYearnUsdPoolId: '0x5ddb92a5340fd0ead3987d3661afcd6104c3b757000000000000000000000187'
+    beetsYearnUsdPoolId: '0x5ddb92a5340fd0ead3987d3661afcd6104c3b757000000000000000000000187',
+    alUsdFBPContractAddress: '0xfb516cf3710fc6901f2266aaeb8834cf5e4e9558',
+    saddleFBPContractAddress: '0x927e6f04609a45b107c789af34ba90ebbf479f7f'
 }
 
 export const abis = {
