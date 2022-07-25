@@ -27,7 +27,7 @@ export default class Emissions extends React.Component {
                     <br/>
                     {this.props.alcxDataLoading ? "Loading..." : 
                     <span>
-                        <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.props.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply (incl. treasury assets): <span className="important">{this.props.alcxData.currentSupply}</span> Circulating Marketcap: <span className="important">${this.props.circulatingMarketcap}M</span> Total Marketcap: <span className="important">${this.props.alcxData.marketcap}M</span>
+                        <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.props.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX circulating supply: <span className="important">{this.props.alcxData.currentSupply}</span> Circulating Marketcap: <span className="important">${this.props.alcxData.marketcap}M</span> Total Marketcap (incl. treasury): <span className="important">${this.props.alcxTotalMarketcap}M</span>
                     </span>
                     }
                     <br/>

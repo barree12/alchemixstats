@@ -842,7 +842,8 @@ export default class App extends React.Component {
   let stakedTAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.tAlcx*this.state.alcxData.price;
   let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
   let stakingSaddleAlEthValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alchemixStaking.saddleAlEth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-  let circulatingMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 - treasuryAlcxValue/10000 - treasuryTAlcxValue/10000)/100;
+  //let circulatingMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 - treasuryAlcxValue/10000 - treasuryTAlcxValue/10000)/100;
+  let alcxTotalMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 + treasuryAlcxValue/10000)/100;
   let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let sdtValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdt * this.state.tokenPrices.sdt[this.state.tokenPrices.sdt.length-1];
   let sdCrvValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdCrv * this.state.tokenPrices.crv[this.state.tokenPrices.crv.length-1];
@@ -868,7 +869,7 @@ export default class App extends React.Component {
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
       />}
-      <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} circulatingMarketcap={circulatingMarketcap} />
+      <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
         <Deposits
           v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
@@ -961,9 +962,9 @@ export default class App extends React.Component {
       <Harvests harvests={this.state.harvests} />
       }
 
-      <div className="footer">
+      {/*<div className="footer">
         With issues or suggestions about the site, find me in the Alchemix Discord (Barree #2314)
-      </div>
+      </div>*/}
     </div>
   );
 }
