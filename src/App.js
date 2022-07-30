@@ -93,6 +93,7 @@ export default class App extends React.Component {
     this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
     this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
     this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
+    this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
   }
 
   componentDidMount() {
@@ -236,14 +237,11 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD3: 0, fraxInD3: 0, feiInD3: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInSaddleFBP: 0, fbpInSaddleFBP: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      this.alUsdContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      this.fraxContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
       this.fraxContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
-      this.feiContract.methods.balanceOf(addresses.d3CrvContractAddress).call(),
       this.feiContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.lUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
@@ -257,17 +255,16 @@ export default class App extends React.Component {
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
-      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPContractAddress).call(),
-      this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPContractAddress).call()
+      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
+      this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
+      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
+      this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD3, alUsdInD4, crv3In3Crv, fraxInD3, fraxInD4, feiInD3, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInSaddleFBP, fbpInSaddleFBP]) => {
+    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInSaddleFBP, fbpInSaddleFBP, alUsdInCurveFBP, fbpInCurveFBP]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
-      lps.alUsdInD3 = alUsdInD3/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
-      lps.fraxInD3 = fraxInD3/Math.pow(10, 18);
       lps.fraxInD4 = fraxInD4/Math.pow(10, 18);
-      lps.feiInD3 = feiInD3/Math.pow(10, 18);
       lps.feiInD4 = feiInD4/Math.pow(10, 18);
       lps.lUsdInD4 = lUsdInD4/Math.pow(10, 18);
       lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
@@ -284,6 +281,8 @@ export default class App extends React.Component {
       lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
       lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
+      lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
+      lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       //console.log(lps.daiInBeets)
       this.setState({ lps: lps, lpsLoading: false })
     });
@@ -626,9 +625,9 @@ export default class App extends React.Component {
         if(tempDate>startDate) break;
 
         if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-        console.log(result[i].alchemist.id === addresses.alchemistV2Address)
+        //console.log(result[i].alchemist.id === addresses.alchemistV2Address)
         tempUsd = result[i].alchemist.id === addresses.alchemistV2Address ? result[i].debt/Math.pow(10, 18) : tempUsd;
-        tempEth = result[i].alchemist.id === addresses.alchemistEthV2Address ? result[i].debt/Math.pow(10, 18) : tempEth;
+        tempEth = result[i].alchemist.id === addresses.alchemistEthV2Address ? result[i].debt/Math.pow(10, 12) : tempEth;
         resultIndex++;
       }
       debt.usd[j] = Math.round(tempUsd/10000)/100;
@@ -780,6 +779,25 @@ export default class App extends React.Component {
     const globalDebt = `{
       alchemistGlobalDebtHistories(
         first: 1000
+        orderBy: timestamp
+        orderDirection: desc
+      ){
+        alchemist {
+          id
+        }
+        debt
+        block {
+          timestamp
+        }
+      }
+    }`
+
+    const globalDebtSkip1000 = `{
+      alchemistGlobalDebtHistories(
+        first: 1000
+        skip: 1000
+        orderBy: timestamp
+        orderDirection: desc
       ){
         alchemist {
           id
@@ -804,15 +822,16 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(depositCapIncreases)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, globalDebt, depositCapIncreases]) => {
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, globalDebt, globalDebtSkip1000, depositCapIncreases]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
-        this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.reverse())
+        this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.concat(globalDebtSkip1000.data.alchemistGlobalDebtHistories).reverse())
     })
   }
 

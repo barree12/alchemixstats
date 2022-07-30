@@ -4,11 +4,11 @@ export default class AlUsdSummary extends React.Component {
 
     render(){
       const totalAlUsd3Crv = Math.round(this.props.lps.alUsdIn3Crv/10000+this.props.lps.crv3In3Crv/10000)/100;
-      const totalD3 = Math.round(this.props.lps.alUsdInD3/10000+this.props.lps.fraxInD3/10000+this.props.lps.feiInD3/10000)/100;
       const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
       const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
       const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
+      const totalCurveFBP = Math.round(this.props.lps.alUsdInCurveFBP/10000+this.props.lps.fbpInCurveFBP/10000)/100;
         return (
             <div className="summary">
                 alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -58,20 +58,20 @@ export default class AlUsdSummary extends React.Component {
                   </div>
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/d3pool.png').default } alt="D3 Cruve pool logo" className="image" />
-                      <span className="table-text-title">d3 Curve</span>
+                      <img src={ require('./logos/frax_crv.png').default } alt="Curve FraxBP pool logo" className="image" />
+                      <span className="table-text-title">FraxBP Curve</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInD3/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInCurveFBP/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">FRAX</span>
-                      <span className="important-2">${Math.round(this.props.lps.fraxInD3/10000)/100}M</span>
+                      <span className="table-text-bold-2">FraxBP</span>
+                      <span className="important-2">${Math.round(this.props.lps.fbpInCurveFBP/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">FEI</span>
-                      <span className="important-2">${Math.round(this.props.lps.feiInD3/10000)/100}M</span>
+                      <span></span>
+                      <span></span>
                     </span>
                     <span className="small-table-cell">
                       <span></span>
@@ -79,7 +79,7 @@ export default class AlUsdSummary extends React.Component {
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalD3}M</span>
+                      <span className="important-2">${totalCurveFBP}M</span>
                     </span>
                   </div>
                   <div className="small-table-inner-4">
@@ -139,7 +139,7 @@ export default class AlUsdSummary extends React.Component {
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_saddle_fbp.png').default } alt="alUSD-SaddleFBP logo" className="image" />
-                      <span className="table-text-title">Saddle FBP</span>
+                      <span className="table-text-title">FraxBP Saddle</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>

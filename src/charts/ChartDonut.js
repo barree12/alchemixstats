@@ -8,7 +8,7 @@ function ChartDonut(){
             data={{
             labels: ['Redirected to Treasury', 'Staking - ALCX/ETH SLP', 'Staking - gALCX', 
             'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Fantom - Beethoven X alUSD/USDC',
-            'alAssets - d3pool', 'alAssets - Saddle alETH', 'Fantom - Spooky gALCX/FTM', 'Fantom - Spirit gALCX/FTM'],
+            'alAssets - FraxBP Curve', 'alAssets - Saddle alETH', 'Fantom - Spooky gALCX/FTM', 'Fantom - Spirit gALCX/FTM'],
             datasets: [{
               label: '',
               data: [39, 20, 13, 11, 9, 2.5, 2, 2, 0.83, 0.66],

@@ -57,8 +57,10 @@ export const addresses = {
     beetsVaultContractAddress: '0x20dd72ed959b6147912c2e529f0a0c651c33c9ce',
     alUsdBeetsPoolId: '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b',
     beetsYearnUsdPoolId: '0x5ddb92a5340fd0ead3987d3661afcd6104c3b757000000000000000000000187',
-    alUsdFBPContractAddress: '0xfb516cf3710fc6901f2266aaeb8834cf5e4e9558',
-    saddleFBPContractAddress: '0x927e6f04609a45b107c789af34ba90ebbf479f7f'
+    alUsdFBPSaddleContractAddress: '0xfb516cf3710fc6901f2266aaeb8834cf5e4e9558',
+    saddleFBPContractAddress: '0x927e6f04609a45b107c789af34ba90ebbf479f7f',
+    alUsdFBPCurveContractAddress: '0xB30dA2376F63De30b42dC055C93fa474F31330A5',
+    curveFBPContractAddress: '0x3175Df0976dFA876431C2E9eE6Bc45b65d3473CC'
 }
 
 export const abis = {
