@@ -11,6 +11,7 @@ import Overview from './Overview';
 import Debt from './Debt';
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
+import { Button, ButtonGroup } from '@mui/material';
 import ChartQuartiles from './charts/ChartQuartiles';
 
 //const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
@@ -58,8 +59,10 @@ export default class App extends React.Component {
       ftmTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
-      debtLoading: true
+      debtLoading: true,
+      activeTab: 'emissions'
     };
+    this.selectTab = this.selectTab.bind(this);
 
     this.alchemistContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistV2Address);
     this.alchemistEthContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistEthV2Address);
@@ -103,6 +106,10 @@ export default class App extends React.Component {
     this.getLPs();
     this.getAlUsdPeg();
     this.getCoinGeckoData();
+  }
+
+  selectTab(active){
+    this.setState({ activeTab: active });
   }
 
   calculateAlUsdArrays(result){
@@ -610,7 +617,6 @@ export default class App extends React.Component {
   }
 
   calculateGlobalDebt(result){
-    console.log(result)
     let startDate = new Date(1647385201*1000); //March 16th
     let today = new Date();
     let dateTracker = new Date(result[0].block.timestamp*1000);
@@ -639,7 +645,6 @@ export default class App extends React.Component {
       tempUsd = 0;
       tempEth = 0;
     }
-    console.log(debt)
     this.setState({ debt: debt, debtLoading: false });
   }
 
@@ -856,7 +861,7 @@ export default class App extends React.Component {
   let treasuryTokeValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.stakedToke*this.state.tokenPrices.toke[this.state.tokenPrices.toke.length-1];
   let treasuryCvxValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.vlCvx*this.state.tokenPrices.cvx[this.state.tokenPrices.cvx.length-1];
   let treasurySlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.treasury.alcxEthSlpOwnedRatio;
-  let treasuryOther = 800000;
+  let treasuryOther = 1000000;
   let stakedAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let stakedTAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.tAlcx*this.state.alcxData.price;
   let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
@@ -888,8 +893,39 @@ export default class App extends React.Component {
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
       />}
+      <div className="button-group-large-screen">
+      <ButtonGroup size="medium">
+        <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>
+        <Button variant={this.state.activeTab === "deposits" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("deposits")}}>Deposits and Staking</Button>
+        <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixirs</Button>
+        <Button variant={this.state.activeTab === "debt" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("debt")}}>User Debt</Button>
+        <Button variant={this.state.activeTab === "alassets" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("alassets")}}>alAssets</Button>
+        <Button variant={this.state.activeTab === "harvests" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("harvests")}}>Harvests</Button>
+      </ButtonGroup>
+      </div>
+      <br/>
+      <div className="button-group-small-screen">
+      <div className="button-group-top">
+        <ButtonGroup size="medium">
+          <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>
+          <Button variant={this.state.activeTab === "deposits" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("deposits")}}>Deposits and Staking</Button>
+          <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixirs</Button>
+        </ButtonGroup>
+      </div>
+      <div className="button-group-lower">
+        <ButtonGroup size="medium">
+          <Button variant={this.state.activeTab === "debt" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("debt")}}>User Debt</Button>
+          <Button variant={this.state.activeTab === "alassets" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("alassets")}}>alAssets</Button>
+          <Button variant={this.state.activeTab === "harvests" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("harvests")}}>Harvests</Button>
+        </ButtonGroup>
+      </div>
+      </div>
+      <br/>
+      <br/>
+      {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
-      {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
+      }
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
         <Deposits
           v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
@@ -897,8 +933,9 @@ export default class App extends React.Component {
           stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
           vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
           alchemistTvl={this.state.alchemistTvl}
-        />}
-
+        />)}
+      {this.state.activeTab !== "treasury" ? "" :
+      <>
       <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />
       <h2>Treasury and Elixirs</h2>
       <div className="section-wrapper">
@@ -965,25 +1002,24 @@ export default class App extends React.Component {
           }
         </div>
       </div>
+      </>}
       
-      {/*this.state.debtLoading ? "Loading..." :
-      <Debt debt={this.state.debt} ethPrice={this.state.tokenPrices.eth} />
-        */}
+      {this.state.activeTab !== "debt" ? "" : (this.state.debtLoading ? "Loading..." :
+      <Debt debt={this.state.debt} ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
+      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} />)
+      }
 
-      {(this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
+      {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
       <AlAssets 
           alUsdMarketcapDates={this.state.alUsdMarketcapDates} alUsdMarketcaps={this.state.alUsdMarketcaps}
           alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-      />
+      />)
       }
 
-      {this.state.harvestsLoading ? "Loading..." :
-      <Harvests harvests={this.state.harvests} />
+      {this.state.activeTab !== "harvests" ? "" : (this.state.harvestsLoading ? "Loading..." :
+      <Harvests harvests={this.state.harvests} />)
       }
 
-      {/*<div className="footer">
-        With issues or suggestions about the site, find me in the Alchemix Discord (Barree #2314)
-      </div>*/}
     </div>
   );
 }

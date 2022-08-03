@@ -70,7 +70,8 @@ export default class EmissionWeights extends React.Component {
                     AIP-34</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0x38c2fb21a39ee061ef5b7113d3cd8b8e4954f0a0388749d62199a8d524e69b17">
                     AIP-42</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xbe4447d9317aa275662d09be1e37236e7f84c57c30c598d13d0dc7f1ce06449a">
                     AIP-49</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0x96325f7f574c52c9ee8f9bec50595c6e6fe7523662b521f799213ead02d2fc3a">
-                    AIP-51a</a></div>
+                    AIP-51a</a>, <a target="_blank" rel="noreferrer" href="https://snapshot.org/#/alchemixstakers.eth/proposal/0xabc7d124a1a3777f6e9dbcf27278249288ca9f26fc9e642b0a4af8685fa6ce0a">
+                    AIP-53</a></div>
                 </div>
             </div>
         );

@@ -37,7 +37,7 @@ export default class ChartDebtEth extends React.Component {
                 displayColors: false,
                 callbacks: {
                   label: function(tooltipItem, data) {
-                    return data.datasets[tooltipItem.datasetIndex].label + ': $' + tooltipItem.value + 'M';
+                    return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' ETH';
                   },
                 },
               },

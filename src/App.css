@@ -219,6 +219,14 @@ h2 {
   text-align: left;
 }
 
+.small-table-inner-12 {
+  display: grid;
+  grid-template-columns: 13% 21% 23% 27% 16%;
+  row-gap: 3px;
+  width: 350px;
+  text-align: left;
+}
+
 .small-table-title-wrap {
   display: grid;
   grid-template-columns: 20% 80%;
@@ -440,6 +448,11 @@ h2 {
   background-color: #F5C09A !important;
 }
 
+.MuiButton-containedSizeMedium {
+  color: #1b2c3b !important;
+  background-color: #F5C09A !important;
+}
+
 .MuiSwitch-switchBase.Mui-checked {
   color: #F5C09A !important;
 }
@@ -460,6 +473,14 @@ h2 {
 .change-negative {
   color: red;
   font-weight: 500;
+}
+
+.button-group-small-screen {
+  display: none;
+}
+
+.button-group-lower {
+  margin-top: 10px;
 }
 
 @media (max-width: 780px) {
@@ -512,6 +533,13 @@ h2 {
     text-align: center;
   }
   .small-table-cell-title {
+    flex-direction: column;
+  }
+  .button-group-large-screen {
+    display: none;
+  }
+  .button-group-small-screen {
+    display: flex;
     flex-direction: column;
   }
 }
