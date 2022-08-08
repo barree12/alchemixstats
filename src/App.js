@@ -12,7 +12,6 @@ import Debt from './Debt';
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
 import { Button, ButtonGroup } from '@mui/material';
-import ChartQuartiles from './charts/ChartQuartiles';
 
 //const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
@@ -45,7 +44,6 @@ export default class App extends React.Component {
       alchemistTvl: {},
       ftmTvl: {},
       harvests: {},
-      debt: {},
       alAssetCrvSupply: {},
       tokenPricesLoading: true,
       vaultTvlsLoading: true,
@@ -59,7 +57,6 @@ export default class App extends React.Component {
       ftmTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
-      debtLoading: true,
       activeTab: 'emissions'
     };
     this.selectTab = this.selectTab.bind(this);
@@ -616,38 +613,6 @@ export default class App extends React.Component {
     });
   }
 
-  calculateGlobalDebt(result){
-    let startDate = new Date(1647385201*1000); //March 16th
-    let today = new Date();
-    let dateTracker = new Date(result[0].block.timestamp*1000);
-    let resultIndex = 0;
-    let debt = { date:[], usd: [], eth: [] };
-    let tempUsd = 0;
-    let tempEth = 0;
-    for(let j=0;startDate<today;j++){
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].block.timestamp*1000);
-        if(tempDate>startDate) break;
-
-        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-        //console.log(result[i].alchemist.id === addresses.alchemistV2Address)
-        tempUsd = result[i].alchemist.id === addresses.alchemistV2Address ? result[i].debt/Math.pow(10, 18) : tempUsd;
-        tempEth = result[i].alchemist.id === addresses.alchemistEthV2Address ? result[i].debt/Math.pow(10, 12) : tempEth;
-        resultIndex++;
-      }
-      debt.usd[j] = Math.round(tempUsd/10000)/100;
-      if(j>0 && !tempUsd) debt.usd[j] = debt.usd[j-1];
-      debt.eth[j] = Math.round(tempEth/10000)/100;
-      if(j>0 && !tempEth) debt.eth[j] = debt.eth[j-1];
-      debt.date[j] = formatDate(startDate, 0);
-      startDate.setDate(startDate.getDate() + 1);
-      tempUsd = 0;
-      tempEth = 0;
-    }
-    this.setState({ debt: debt, debtLoading: false });
-  }
-
   /*logCapIncreases(result){
     //console.log(result)
     let temp = { yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] }
@@ -769,7 +734,7 @@ export default class App extends React.Component {
       }
     }`
 
-    const depositCapIncreases = `{
+    /*const depositCapIncreases = `{
       alchemistMaximumExpectedValueUpdatedEvents(
         orderBy: timestamp
         orderDirection: desc
@@ -779,40 +744,7 @@ export default class App extends React.Component {
         yieldToken
         maximumExpectedValue
       }      
-    }`
-
-    const globalDebt = `{
-      alchemistGlobalDebtHistories(
-        first: 1000
-        orderBy: timestamp
-        orderDirection: desc
-      ){
-        alchemist {
-          id
-        }
-        debt
-        block {
-          timestamp
-        }
-      }
-    }`
-
-    const globalDebtSkip1000 = `{
-      alchemistGlobalDebtHistories(
-        first: 1000
-        skip: 1000
-        orderBy: timestamp
-        orderDirection: desc
-      ){
-        alchemist {
-          id
-        }
-        debt
-        block {
-          timestamp
-        }
-      }
-    }`
+    }`*/
 
     Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
@@ -825,18 +757,14 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(depositCapIncreases)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests, globalDebt, globalDebtSkip1000, depositCapIncreases]) => {
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
-        this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.concat(globalDebtSkip1000.data.alchemistGlobalDebtHistories).reverse())
     })
   }
 
@@ -1004,9 +932,9 @@ export default class App extends React.Component {
       </div>
       </>}
       
-      {this.state.activeTab !== "debt" ? "" : (this.state.debtLoading ? "Loading..." :
-      <Debt debt={this.state.debt} ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
-      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} />)
+      {this.state.activeTab !== "debt" ? "" : 
+      <Debt ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
+      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} />
       }
 
       {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
