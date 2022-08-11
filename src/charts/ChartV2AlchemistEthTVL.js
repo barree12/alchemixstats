@@ -39,6 +39,16 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
+            },
+            {
+              label: 'aWETH',
+              data: this.props.alchemistTvl.aWeth,
+              backgroundColor: 'rgba(115,136,255,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
             }]
           }}
             options={{

@@ -461,11 +461,15 @@ export default class App extends React.Component {
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
     let resultIndex = 0;
-    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] };
+    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [] };
     let tempYvDai = 0;
     let tempYvUsdc = 0;
     let tempYvUsdt = 0;
+    let tempADai = 0;
+    let tempAUsdc = 0;
+    let tempAUsdt = 0;
     let tempYvWeth = 0;
+    let tempAWeth = 0;
     let tempWstEth = 0;
     let tempReth = 0;
     for(let j=0;startDate<today;j++){
@@ -479,7 +483,11 @@ export default class App extends React.Component {
         tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempYvDai;
         tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdc;
         tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdt;
+        tempADai = result[i].token.symbol === "s_aDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempADai;
+        tempAUsdc = result[i].token.symbol === "s_aUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
+        tempAUsdt = result[i].token.symbol === "s_aUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdt;
         tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
+        tempAWeth = result[i].token.symbol === "s_aWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempAWeth;
         tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
         tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
         resultIndex++;
@@ -490,17 +498,25 @@ export default class App extends React.Component {
       if(j>0 && !tempYvUsdc) alchemistTvl.yvUsdc[j] = alchemistTvl.yvUsdc[j-1];
       alchemistTvl.yvUsdt[j] = Math.round(tempYvUsdt/10000)/100;
       if(j>0 && !tempYvUsdt) alchemistTvl.yvUsdt[j] = alchemistTvl.yvUsdt[j-1];
+      alchemistTvl.aDai[j] = Math.round(tempADai/10000)/100;
+      if(j>0 && !tempADai) alchemistTvl.aDai[j] = alchemistTvl.aDai[j-1];
+      alchemistTvl.aUsdc[j] = Math.round(tempAUsdc/10000)/100;
+      if(j>0 && !tempAUsdc) alchemistTvl.aUsdc[j] = alchemistTvl.aUsdc[j-1];
+      alchemistTvl.aUsdt[j] = Math.round(tempAUsdt/10000)/100;
+      if(j>0 && !tempAUsdt) alchemistTvl.aUsdt[j] = alchemistTvl.aUsdt[j-1];
       alchemistTvl.yvWeth[j] = Math.round(tempYvWeth/10000)/100;
       if(j>0 && !tempYvWeth) alchemistTvl.yvWeth[j] = alchemistTvl.yvWeth[j-1];
+      alchemistTvl.aWeth[j] = Math.round(tempAWeth/10000)/100;
+      if(j>0 && !tempAWeth) alchemistTvl.aWeth[j] = alchemistTvl.aWeth[j-1];
       alchemistTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
       if(j>0 && !tempWstEth) alchemistTvl.wstEth[j] = alchemistTvl.wstEth[j-1];
       alchemistTvl.rEth[j] = Math.round(tempReth/10000)/100;
       if(j>0 && !tempReth) alchemistTvl.rEth[j] = alchemistTvl.rEth[j-1];
       alchemistTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
-      tempYvDai = 0;
+      /*tempYvDai = 0;
       tempYvUsdc = 0;
-      tempYvUsdt = 0;
+      tempYvUsdt = 0;*/
     }
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }

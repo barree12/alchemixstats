@@ -53,12 +53,12 @@ export default class EmissionWeights extends React.Component {
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alcx_ftm.png').default } alt="gALCX-FTM LP" className="image" />
-                            <div className="table-item-1">Spooky Swap gALCX/FTM LP</div>
+                            <div className="table-item-1">SpookySwap gALCX/FTM</div>
                             <div className="table-item-2">0.83%</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alcx_ftm.png').default } alt="gALCX-FTM LP" className="image" />
-                            <div className="table-item-1">Spirit Swap gALCX/FTM LP</div>
+                            <div className="table-item-1">SpiritSwap gALCX/FTM</div>
                             <div className="table-item-2">0.66%</div>
                             </div>
                         </div>

@@ -27,6 +27,7 @@ export default class AlEthSummary extends React.Component {
                 Currently supported general yield options:
                 <div className="small-table-2">
                 <div className="tokens"><img src={ require('./logos/yearn_weth.png').default } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
+                <div className="tokens"><img src={ require('./logos/aave_eth.png').default } alt="aave weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&marketName=proto_mainnet">Aave WETH</a></div>
                 <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" /><a target="_blank" rel="noreferrer" href="https://lido.fi/ethereum">wstETH</a></div>
                 </div>
                 The transmuter always exchanges 1 alETH for 1 ETH<br/>
