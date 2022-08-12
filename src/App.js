@@ -1,4 +1,5 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Web3 from 'web3';
 import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
@@ -851,7 +852,7 @@ export default class App extends React.Component {
       </div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
-      {(this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.alchemistTvlLoading) ? "Loading..." :
+      
       <Overview 
         v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
@@ -862,7 +863,10 @@ export default class App extends React.Component {
         alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
-      />}
+        vaultTvlsLoading={this.state.vaultTvlsLoading} tokenPricesLoading={this.state.tokenPricesLoading}
+        alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
+        lpsLoading={this.state.lpsLoading}
+      />
       <div className="button-group-large-screen">
       <ButtonGroup size="medium">
         <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>

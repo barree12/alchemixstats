@@ -1,6 +1,7 @@
 import React from 'react';
 import ChartDebtUsd from './charts/ChartDebtUsd';
 import ChartDebtEth from './charts/ChartDebtEth';
+import LoadingComponent from './LoadingComponent';
 import { addresses } from './Constants';
 import { formatDate, datesEqual} from './Functions';
 
@@ -126,7 +127,7 @@ export default class Debt extends React.Component {
                     The table and charts below only show V2 metrics, as V1 is being sunset soon.
                     <div className="small-table">
                     <h3>Current V2 global debt</h3>
-                    {this.state.debtLoading ? "Loading..." :
+                    {this.state.debtLoading ? <LoadingComponent /> :
                     <div className="small-table-inner-12">
                         <span className="small-table-row"></span><span></span><span className="table-text-title">Amount</span><span className="table-text-title">USD value</span><span className="table-text-title">LTV</span>
                         <span className="small-table-row"><img src={ require('./logos/alusd.png').default } alt="alusd logo" className="image" /></span><span className="table-text-title">alUSD</span><span className="table-text-bold">{Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">${Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">{stableLtv}%</span>
@@ -139,12 +140,12 @@ export default class Debt extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alUSD Alchemist debt</h3>
-                        {this.state.debtLoading ? "Loading..." :
+                        {this.state.debtLoading ? <LoadingComponent /> :
                         <ChartDebtUsd debt={this.state.debt} toggle={this.state.ethCurrencyToggle} />}
                         </div>
                     <div className="chart-title">
                         <h3>alETH Alchemist debt</h3>
-                        {this.state.debtLoading ? "Loading..." :
+                        {this.state.debtLoading ? <LoadingComponent /> :
                         <ChartDebtEth debt={this.state.debt} />}
                     </div>
                 </div>

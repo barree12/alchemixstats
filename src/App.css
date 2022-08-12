@@ -1,10 +1,21 @@
-html {
+* {
+  box-sizing: content-box;
+}
+
+body {
   background: linear-gradient(355deg, #1b2c3b 0%, #181e28 28%);
   color: #F5C09A;
-  font-family: "Montserrat", "Work Sans",sans-serif
+  font-family: "Montserrat", "Work Sans",sans-serif;
+  margin: 8px;
+  line-height: 1.5;
+  box-sizing: content-box;
 }
 
 a {
+  color: #fff;
+}
+
+a:hover{
   color: #fff;
 }
 
@@ -14,12 +25,25 @@ a {
 
 h1, h2, h3 {
   color: #F5C09A;
-  font-family: "Montserrat", "Reem Kufi",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+  font-family: "Montserrat", "Reem Kufi",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  margin-top: 25px;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.9rem;
 }
 
 h2 {
   margin-top: 0px;
   margin-bottom: 30px;
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
 }
 
 .section-wrapper {
