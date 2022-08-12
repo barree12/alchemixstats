@@ -135,9 +135,9 @@ export default class App extends React.Component {
   } 
 
   aggregateWeb3Calls(){
-    let v2Caps = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0 }
-    let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0 }
-    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0 }
+    let v2Caps = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
+    let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
+    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
 
     Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdcAddress).call(),
@@ -153,9 +153,17 @@ export default class App extends React.Component {
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.rEthAddress).call(),
       this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvDaiAddress).call(),
       this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvUsdcAddress).call(),
-      this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvUsdtAddress).call()
+      this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvUsdtAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
+      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams]) => {
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.ftmDai = ftmDaiParams[4]/Math.pow(10, ftmDaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -165,18 +173,30 @@ export default class App extends React.Component {
         v2Caps.eth = ethParams[4]/Math.pow(10, ethParams[0]);
         v2Caps.wstEth = wstEthParams[4]/Math.pow(10, wstEthParams[0]);
         v2Caps.rEth = rEthParams[4]/Math.pow(10, rEthParams[0]);
+        v2Caps.aDai = aDaiParams[4]/Math.pow(10, aDaiParams[0]);
+        v2Caps.aUsdc = aUsdcParams[4]/Math.pow(10, aUsdcParams[0]);
+        v2Caps.aUsdt = aUsdtParams[4]/Math.pow(10, aUsdtParams[0]);
+        v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
         tokensPerShare.dai = daiTokens/Math.pow(10, 18);
         tokensPerShare.usdc = usdcTokens/Math.pow(10, 6);
         tokensPerShare.usdt = usdtTokens/Math.pow(10, 6);
         tokensPerShare.eth = ethTokens/Math.pow(10, 18);
         tokensPerShare.wstEth = wstEthTokens/Math.pow(10, 18);
         tokensPerShare.rEth = rEthTokens/Math.pow(10, 18);
+        tokensPerShare.aDai = aDaiTokens/Math.pow(10, 18);
+        tokensPerShare.aUsdc = aUsdcTokens/Math.pow(10, 6);
+        tokensPerShare.aUsdt = aUsdtTokens/Math.pow(10, 6);
+        tokensPerShare.aWeth = aWethTokens/Math.pow(10, 18);
         deposit.dai = daiParams[8]/Math.pow(10, 24);
         deposit.usdc = usdcParams[8]/Math.pow(10, 12);
         deposit.usdt = usdtParams[8]/Math.pow(10, 12);
         deposit.eth = ethParams[8]/Math.pow(10, 18);
         deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
         deposit.rEth = rEthParams[8]/Math.pow(10, 18);
+        deposit.aDai = aDaiParams[8]/Math.pow(10, 24);
+        deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
+        deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
+        deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     });
   }
@@ -792,11 +812,16 @@ export default class App extends React.Component {
   let v2DaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.dai*this.state.tokensPerShare.dai*100)/100;
   let v2UsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdc*this.state.tokensPerShare.usdc*100)/100;
   let v2UsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdt*this.state.tokensPerShare.usdt*100)/100;
+  let v2aDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aDai*this.state.tokensPerShare.aDai*100)/100;
+  let v2aUsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdc*this.state.tokensPerShare.aUsdc*100)/100;
+  let v2aUsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdt*this.state.tokensPerShare.aUsdt*100)/100;
   let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
   let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
-  let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth*100)/100;
+  let v2aWethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aWeth*this.state.tokensPerShare.aWeth);
+  let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
-  let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth*100)/100;
+  let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
   let treasuryAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.alcx*this.state.alcxData.price;
   let treasuryTAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.tAlcx*this.state.alcxData.price;
@@ -831,6 +856,7 @@ export default class App extends React.Component {
         v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
+        v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
         stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
         vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
         alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
@@ -873,7 +899,8 @@ export default class App extends React.Component {
         <Deposits
           v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
-          v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
+          v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
+          v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
           stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
           vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
           alchemistTvl={this.state.alchemistTvl}
@@ -950,7 +977,8 @@ export default class App extends React.Component {
       
       {this.state.activeTab !== "debt" ? "" : 
       <Debt ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
-      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} />
+      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
+      v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} />
       }
 
       {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdLoading || this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :

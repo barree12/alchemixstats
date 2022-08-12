@@ -108,9 +108,9 @@ export default class Debt extends React.Component {
     render(){
         const ethAlchemistUsd = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const totalDebt = this.state.debtLoading ? 0 : Math.round((this.state.debt.usd[this.state.debt.usd.length-1]+ethAlchemistUsd)*100)/100;
-        const ethTvl = this.props.v2EthTVL + this.props.v2StethTVL + this.props.v2RethTVL;
+        const ethTvl = this.props.v2EthTVL + this.props.v2aWethTVL + this.props.v2StethTVL + this.props.v2RethTVL;
         const ethLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]/ethTvl*10000)/100;
-        const stableTvl = this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL;
+        const stableTvl = this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL;
         const stableLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.usd[this.state.debt.usd.length-1]/stableTvl*10000)/100;
         console.log(stableTvl)
         return (
