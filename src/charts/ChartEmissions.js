@@ -1,17 +1,14 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { calculateEmissionScheduleChart, createDateArray } from '../Functions';
 
-/*function createLabels() {
-  let labels = [];
-  for(let i=0;i<350;i++) labels[i]=i;
-  return labels;
-}*/
 
 function ChartEmissions(){
+  
     return (
       <div className="chart-container-2">
-        <Line 
+        <Chart
+          type='line' 
           data={{
             labels: createDateArray(),
             datasets: [{
@@ -45,71 +42,57 @@ function ChartEmissions(){
                 mode: 'nearest',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'nearest',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'index',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
+                }
               },
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
               scales: {
-                xAxes: [
-                  {
-                    gridLines: {
-                      color: 'rgba(0, 0, 0, 0.0)',
-                      tickMarkLength: 10,
-                    },
-                    ticks: {
-                      maxTicksLimit: 10,
-                    },
+                emissions: {
+                  position: 'left',
+                  type: 'linear',
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.0)',
+                    tickMarkLength: 10,
+                  }
+                },
+                supply: {
+                  position: 'right',
+                  type: 'linear',
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.0)',
+                    tickMarkLength: 10,
+                  }
+                },
+                xScale: {
+                  axis: 'x',
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.0)',
+                    tickMarkLength: 10,
                   },
-                ],
-                yAxes: [
-                  {
-                    position: 'left',
-                    id: 'emissions',
-                    gridLines: {
-                      color: 'rgba(0, 0, 0, 0.0)',
-                      tickMarkLength: 10,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                    },
-                    scaleLabel: {
-                      display: false,
-                      labelString: 'Total Supply',
-                    },
-                  },
-                  {
-                    position: 'right',
-                    id: 'supply',
-                    gridLines: {
-                      color: 'rgba(0, 0, 0, 0.0)',
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                    },
-                    scaleLabel: {
-                      display: false,
-                      labelString: 'Weekly Emissions',
-                    },
-                  },
-                ],
-              },
+                  ticks: {
+                    maxTicksLimit: 10
+                  }
+                }
+              }
             }}
 
         />

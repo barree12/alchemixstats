@@ -77,7 +77,7 @@ export default class AlAssets extends React.Component {
                         <div className="toggle-text">
                             ETH<Switch onChange={this.toggleAlEthPeg} checked={this.state.alEthPegToggle} />%
                         </div>
-                        <ChartAlEthPrice data={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />
+                        <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />
                     </div>
                 </div>
             </>

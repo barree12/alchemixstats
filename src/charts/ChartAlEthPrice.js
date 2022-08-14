@@ -1,18 +1,20 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 
 export default class ChartAlEthPrice extends React.Component {
 
   render(){  
-  let dates = [...this.props.data.date];
-  let values = [...this.props.data.peg];
-  let valuesPerc = [...this.props.data.pegPerc];
-  let values5k = [...this.props.data.peg5k];
-  let values5kPerc = [...this.props.data.peg5kPerc];
+  let dates = [...this.props.alEthPeg.date];
+  let values = [...this.props.alEthPeg.peg];
+  let valuesPerc = [...this.props.alEthPeg.pegPerc];
+  let values5k = [...this.props.alEthPeg.peg5k];
+  let values5kPerc = [...this.props.alEthPeg.peg5kPerc];
   const helperPointer = this;
   return (
       <div className="chart-container-3">
-        <Line 
+        <Chart 
+          type='line'
           data={{
             labels: dates,
             datasets: [{
@@ -42,62 +44,67 @@ export default class ChartAlEthPrice extends React.Component {
                 mode: 'index',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'index',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false,
-                /*callbacks: {
-                  label: function(tooltipItem, data) {
-                    if(helperPointer.props.toggle) return (Math.round(tooltipItem.value*10000)/10000) + '%';
-                    else return '$' + Math.round(tooltipItem.value*10000)/10000;
-                  },
-                },*/
-                callbacks: {
-                  label: function(tooltipItem, data) {
-                    if(helperPointer.props.toggle) return data.datasets[tooltipItem.datasetIndex].label + ': ' + (Math.round(tooltipItem.value*10000)/10000) + '%';
-                    else return data.datasets[tooltipItem.datasetIndex].label + ': ' + Math.round(tooltipItem.value*10000)/10000 + ' ETH';
-                  },
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'index',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                  callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += Math.round(context.parsed.y*10000)/10000;
+                            if(helperPointer.props.toggle) label += '%';
+                            else label += ' ETH';
+                        }
+                        return label;
+                    }
+                }
+                },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
                 },
               },
+              
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
+              
               scales: {
-                xAxes: [
-                  {
-                    gridLines: {
+                xAxes: {
+                    type: 'time',
+                    time: {
+                      tooltipFormat: "yyyy-MM-dd",
+                    },
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
                     ticks: {
                       maxTicksLimit: 10,
                     },
-                  },
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
+                },
+                yAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    ticks: {
-                      beginAtZero: false,
-                    },
+                    beginAtZero: false,
                   }
-                ],
               }
             }}
         />

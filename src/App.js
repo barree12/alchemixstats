@@ -13,6 +13,20 @@ import Debt from './Debt';
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
 import { Button, ButtonGroup } from '@mui/material';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
 
 //const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
@@ -359,24 +373,18 @@ export default class App extends React.Component {
   }
 
   calculateAlEthPeg(result, result5k){
-    //let alEthDate = new Date();
-    let index = 0;
     let alEthPeg = { date: [], peg: [], pegPerc: [], peg5k: [], peg5kPerc: [] }
     for(let i=0;i<result.length;i++){
       try {
-        let tempDate = new Date(result[i].timestamp*1000);
-        //if(!datesEqual(tempDate, alEthDate)){
-          alEthPeg.date[index] = formatDate(tempDate, 0); 
-          alEthPeg.peg[index] = result[i].outputAmount/Math.pow(10, 18)/500;
-          alEthPeg.pegPerc[index] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
-          if(result.length === result5k.length){
-            alEthPeg.peg5k[index] = result5k[i].outputAmount/Math.pow(10, 19)/500;
-            alEthPeg.peg5kPerc[index] = (1-result5k[i].outputAmount/Math.pow(10, 19)/500)*(-100);
-          }
-          index++;
-          //alEthDate = tempDate;
+        //alEthPeg.date[index] = formatDate(tempDate, 0);
+        alEthPeg.date[i] = Number(result[i].timestamp*1000); 
+        alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
+        alEthPeg.pegPerc[i] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
+        if(result.length === result5k.length){
+          alEthPeg.peg5k[i] = result5k[i].outputAmount/Math.pow(10, 19)/500;
+          alEthPeg.peg5kPerc[i] = (1-result5k[i].outputAmount/Math.pow(10, 19)/500)*(-100);
         }
-      //}
+      }
       catch (err) {
         console.log(err);
       }
@@ -385,20 +393,13 @@ export default class App extends React.Component {
   }
 
   calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
-    //let daiDate = new Date();
-    //let usdcDate = new Date();
-    //let usdtDate = new Date();
     let daiIndex = 0;
     let usdcIndex = 0;
     let usdtIndex = 0;
     let alUsdPeg = {dai: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdc: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdt: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }};
     for(let i=0;i<daiPeg.length;i++){
       try {
-        let tempDaiDate = new Date(daiPeg[i].timestamp*1000);
-        let tempUsdcDate = new Date(usdcPeg[i].timestamp*1000);
-        let tempUsdtDate = new Date(usdtPeg[i].timestamp*1000);
-        //if(!datesEqual(tempDaiDate, daiDate)){
-          alUsdPeg.dai.date[daiIndex] = formatDate(tempDaiDate, 0); 
+          alUsdPeg.dai.date[daiIndex] = Number(daiPeg[i].timestamp*1000);
           alUsdPeg.dai.peg[daiIndex] = daiPeg[i].outputAmount/Math.pow(10, 24);
           alUsdPeg.dai.pegPerc[daiIndex] = (1-daiPeg[i].outputAmount/Math.pow(10, 24))*(-100);
           if(daiPeg.length === dai10mPeg.length){
@@ -406,10 +407,8 @@ export default class App extends React.Component {
             alUsdPeg.dai.peg10mPerc[daiIndex] = (1-dai10mPeg[i].outputAmount/Math.pow(10, 25))*(-100);
           }
           daiIndex++;
-          //daiDate = tempDaiDate;
-        //}
-        //if(!datesEqual(tempUsdcDate, usdcDate)){
-          alUsdPeg.usdc.date[usdcIndex] = formatDate(tempUsdcDate, 0); 
+
+          alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
           alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           if(usdcPeg.length === usdc10mPeg.length){
@@ -417,10 +416,8 @@ export default class App extends React.Component {
             alUsdPeg.usdc.peg10mPerc[usdcIndex] = (1-usdc10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
           }
           usdcIndex++;
-          //usdcDate = tempUsdcDate;
-        //}
-        //if(!datesEqual(tempUsdtDate, usdtDate)){
-          alUsdPeg.usdt.date[usdtIndex] = formatDate(tempUsdtDate, 0); 
+
+          alUsdPeg.usdt.date[usdtIndex] = Number(usdtPeg[i].timestamp*1000);
           alUsdPeg.usdt.peg[usdtIndex] = usdtPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdt.pegPerc[usdtIndex] = (1-usdtPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           if(usdtPeg.length === usdt10mPeg.length){
@@ -428,8 +425,6 @@ export default class App extends React.Component {
             alUsdPeg.usdt.peg10mPerc[usdtIndex] = (1-usdt10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
           }
           usdtIndex++;
-          //usdtDate = tempUsdtDate;
-        //}
       }
       catch (err) {
         console.log(err)
@@ -541,53 +536,6 @@ export default class App extends React.Component {
     }
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
-
-  /*calculateAlchemistTvlTemp(result){
-    //console.log(result)
-    let startDate = new Date(1647385201*1000); //March 16th
-    let today = new Date();
-    let dateTracker = new Date(result[0].timestamp*1000);
-    let resultIndex = 0;
-    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] };
-    let tempYvDai = 0;
-    let tempYvUsdc = 0;
-    let tempYvUsdt = 0;
-    let tempYvWeth = 0;
-    let tempWstEth = 0;
-    let tempReth = 0;
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].timestamp*1000);
-
-
-        tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvDai;
-        tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdc;
-        tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 0) : tempYvUsdt;
-        tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
-        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
-        tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
-
-  
-      alchemistTvl.yvDai[i] = Math.round(tempYvDai/10000)/100;
-      if(i>0 && !tempYvDai) alchemistTvl.yvDai[i] = alchemistTvl.yvDai[i-1];
-      alchemistTvl.yvUsdc[i] = Math.round(tempYvUsdc/10000)/100;
-      if(i>0 && !tempYvUsdc) alchemistTvl.yvUsdc[i] = alchemistTvl.yvUsdc[i-1];
-      alchemistTvl.yvUsdt[i] = Math.round(tempYvUsdt/10000)/100;
-      if(i>0 && !tempYvUsdt) alchemistTvl.yvUsdt[i] = alchemistTvl.yvUsdt[i-1];
-      alchemistTvl.yvWeth[i] = Math.round(tempYvWeth/10000)/100;
-      if(i>0 && !tempYvWeth) alchemistTvl.yvWeth[i] = alchemistTvl.yvWeth[i-1];
-      alchemistTvl.wstEth[i] = Math.round(tempWstEth/10000)/100;
-      if(i>0 && !tempWstEth) alchemistTvl.wstEth[i] = alchemistTvl.wstEth[i-1];
-      alchemistTvl.rEth[i] = Math.round(tempReth/10000)/100;
-      if(i>0 && !tempReth) alchemistTvl.rEth[i] = alchemistTvl.rEth[i-1];
-      alchemistTvl.date[i] = tempDate;
-      tempYvDai = 0;
-      tempYvUsdc = 0;
-      tempYvUsdt = 0;
-    }
-    console.log(alchemistTvl)
-    this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
-  }*/
 
   calculateHarvests(result){
     //console.log(result)
@@ -845,6 +793,20 @@ export default class App extends React.Component {
   let treasuryNonAlcx = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
   let wethInElixirUsd = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.wethInElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
 
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    TimeScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+  )
+
   return (
     <div className="App">
       <div className="header-disclaimer">
@@ -852,7 +814,6 @@ export default class App extends React.Component {
       </div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
-      
       <Overview 
         v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}

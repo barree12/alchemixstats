@@ -17,7 +17,7 @@ export default class EmissionWeights extends React.Component {
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image" />
-                            <div className="table-item-1">gALCX</div>
+                            <div className="table-item-1">ALCX</div>
                             <div className="table-item-2">13%</div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@ export default class EmissionWeights extends React.Component {
                             <span className="table-title">Fantom (4%)</span>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alusd_beets.png').default } alt="alUSD-USDC pool" className="image" />
-                            <div className="table-item-1">Beethoven X alUSD</div>
+                            <div className="table-item-1">Beets alUSD</div>
                             <div className="table-item-2">2.5%</div>
                             </div>
                             <div className="weight-table-row">

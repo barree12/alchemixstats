@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 
 export default class ChartEthTVL extends React.Component {
 
@@ -31,13 +31,14 @@ export default class ChartEthTVL extends React.Component {
   }
 
   render(){  
-  
+    
   const helperPointer = this;
 
   return (
       <div className="chart-container-3">
         {this.state.chartLoading ? "Loading..." :
-        <Line 
+        <Chart
+          type='line' 
           data={{
             labels: this.props.ethTVLDates,
             datasets: [{
@@ -66,37 +67,43 @@ export default class ChartEthTVL extends React.Component {
                 mode: 'nearest',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'index',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false,
-                callbacks: {
-                  label: function(tooltipItem, data) {
-                    if(helperPointer.props.toggle) return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' ETH';
-                    else return data.datasets[tooltipItem.datasetIndex].label + ': $' + tooltipItem.value + 'M';
-                  },
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'index',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                  callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (context.parsed.y !== null) {
+                          if(helperPointer.props.toggle) label += ': ' + context.parsed.y + ' ETH';
+                          else label += ': $' + context.parsed.y + 'M';
+                        }
+                        return label;
+                    }
+                  }
+                },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
                 },
               },
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
+              
               scales: {
-                xAxes: [
-                  {
-                    gridLines: {
+                xAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
@@ -104,19 +111,14 @@ export default class ChartEthTVL extends React.Component {
                       maxTicksLimit: 10,
                     },
                   },
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
+                yAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                    beginAtZero: true,
                     stacked: true
                   }
-                ],
               }
             }}
         /> }

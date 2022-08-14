@@ -1,13 +1,15 @@
 import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 
 function ChartDonut(){
+  
     return (
       <div className="chart-container">
-        <Doughnut 
+        <Chart
+            type='doughnut' 
             data={{
             labels: ['Redirected to Treasury', 'Staking - ALCX/ETH SLP', 'Staking - gALCX', 
-            'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Fantom - Beethoven X alUSD/USDC',
+            'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Fantom - Beets alUSD/USDC',
             'alAssets - FraxBP Curve', 'alAssets - Saddle alETH', 'Fantom - Spooky gALCX/FTM', 'Fantom - Spirit gALCX/FTM'],
             datasets: [{
               label: '',
@@ -33,23 +35,29 @@ function ChartDonut(){
             options={{
             responsive: true,
             maintainAspectRatio: false,
-            legend: {
-              display: true,
-              position: 'right',
-              labels: {
-                fontColor: '#F5C09A',
-                usePointStyle: true,
-                pointStyle: 'circle'
-              }
-            },
-            tooltips: {
-              callbacks: {
-                label: function(tooltipItem, data) {
-                  return data.labels[tooltipItem.index] + ': ' + data.datasets[0].data[tooltipItem.index] + '%';
-                },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                  color: '#F5C09A',
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
               },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                      let label = context.label || '';
+                      if (context.parsed.y !== null) {
+                        label += ': ' + context.parsed + '%';
+                      }
+                      return label;
+                  }
+                }
+              }
             }
-            }}
+          }}
         />
       </div>
     )

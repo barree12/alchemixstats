@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 
 export default class ChartCrvPoolRatios extends React.Component {
 
@@ -10,7 +10,8 @@ export default class ChartCrvPoolRatios extends React.Component {
 
   return (
       <div className="chart-container-3">
-        <Bar 
+        <Chart
+          type='bar' 
           data={{
             labels: ["alUsd3Crv", "alEthCrv"],
             datasets: [{
@@ -45,39 +46,46 @@ export default class ChartCrvPoolRatios extends React.Component {
                 mode: 'index',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'index',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false,
-                callbacks: {
-                  label: function(tooltipItem, data) {
-                    return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + '% - $' +
-                    ((tooltipItem.datasetIndex === 0 && tooltipItem.label === "alUsd3Crv") ? (Math.round((helperPointer.props.alUsd3CrvTreasury + helperPointer.props.alUsd3CrvElixir)/10000)/100 + "M") : "") +
-                    ((tooltipItem.datasetIndex === 1 && tooltipItem.label === "alUsd3Crv") ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.alUsd3CrvTreasury - helperPointer.props.alUsd3CrvElixir)/10000)/100 + "M") : "") +
-                    ((tooltipItem.datasetIndex === 0 && tooltipItem.label === "alEthCrv") ? (Math.round((helperPointer.props.alEthCrvTreasury + helperPointer.props.alEthCrvElixir)/10000)/100 + "M") : "") +
-                    ((tooltipItem.datasetIndex === 1 && tooltipItem.label === "alEthCrv") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.alEthCrvTreasury - helperPointer.props.alEthCrvElixir)/10000)/100 + "M") : "")
-                  },
+                plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'index',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                  callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (context.parsed.y !== null) {
+                            label += ': ' + context.parsed.y + '% - $';
+                            label +=
+                            ((context.dataset.label === 'Owned' && context.label === 'alUsd3Crv') ? (Math.round((helperPointer.props.alUsd3CrvTreasury + helperPointer.props.alUsd3CrvElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === 'alUsd3Crv') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.alUsd3CrvTreasury - helperPointer.props.alUsd3CrvElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "alEthCrv") ? (Math.round((helperPointer.props.alEthCrvTreasury + helperPointer.props.alEthCrvElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "alEthCrv") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.alEthCrvTreasury - helperPointer.props.alEthCrvElixir)/10000)/100 + "M") : "")
+                          }
+                        return label;
+                    }
+                  }
                 },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
+                }
               },
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
+              
               scales: {
-                xAxes: [
-                  {
+                xAxes: {
                     gridLines: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
@@ -87,19 +95,14 @@ export default class ChartCrvPoolRatios extends React.Component {
                     },
                     stacked: true
                   },
-                ],
-                yAxes: [
-                  {
+                yAxes: {
                     gridLines: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                    beginAtZero: true,
                     stacked: true
                   }
-                ],
               }
             }}
         />

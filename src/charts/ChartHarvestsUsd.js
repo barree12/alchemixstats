@@ -1,13 +1,14 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 
 export default class ChartHarvestsUsd extends React.Component {
 
   render(){  
-  
+    
   return (
       <div className="chart-container-3">
-        <Bar 
+        <Chart 
+          type='bar'
           data={{
             labels: this.props.harvests.date,
             datasets: [{
@@ -46,31 +47,33 @@ export default class ChartHarvestsUsd extends React.Component {
                 mode: 'index',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'index',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false,
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'index',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
+                }
               },
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
+              
               scales: {
-                xAxes: [
-                  {
-                    gridLines: {
+                xAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
@@ -79,19 +82,14 @@ export default class ChartHarvestsUsd extends React.Component {
                     },
                     stacked: true
                   },
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
+                yAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                    beginAtZero: true,
                     stacked: true
                   }
-                ],
               }
             }}
         />

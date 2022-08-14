@@ -1,11 +1,13 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { calculateEmissionScheduleChart, createDateArray } from '../Functions';
 
 function ChartInflation(){
+
     return (
       <div className="chart-container-2">
-        <Line 
+        <Chart 
+          type='line'
           data={{
             labels: createDateArray(),
             datasets: [{
@@ -24,36 +26,43 @@ function ChartInflation(){
                 mode: 'nearest',
                 intersect: false,
               },
-              tooltips: {
-                enabled: true,
-                intersect: false,
-                mode: 'nearest',
-                cornerRadius: 1,
-                caretPadding: 5,
-                caretSize: 10,
-                position: 'nearest',
-                displayColors: false,
-                callbacks: {
-                  label: function(tooltipItem, data) {
-                    return tooltipItem.value + '%';
-                  },
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  intersect: false,
+                  mode: 'nearest',
+                  cornerRadius: 1,
+                  caretPadding: 5,
+                  caretSize: 10,
+                  position: 'nearest',
+                  displayColors: false,
+                  callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (context.parsed.y !== null) {
+                          label = context.parsed.y + '%';
+                        }
+                        return label;
+                    }
+                  }
+                },
+                legend: {
+                  display: false,
+                  position: 'top',
+                  labels: {
+                    color: '#F5C09A',
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
                 },
               },
+              
               responsive: true,
               maintainAspectRatio: false,
-              legend: {
-                display: false,
-                position: 'top',
-                labels: {
-                  fontColor: '#F5C09A',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
+              
               scales: {
-                xAxes: [
-                  {
-                    gridLines: {
+                xAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
@@ -61,18 +70,13 @@ function ChartInflation(){
                       maxTicksLimit: 10,
                     },
                   },
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
+                yAxes: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                    beginAtZero: true
                   }
-                ],
               }
             }}
         />
