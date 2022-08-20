@@ -86,7 +86,7 @@ export default class ChartCrvPoolRatios extends React.Component {
               
               scales: {
                 xAxes: {
-                    gridLines: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
@@ -96,7 +96,7 @@ export default class ChartCrvPoolRatios extends React.Component {
                     stacked: true
                   },
                 yAxes: {
-                    gridLines: {
+                    grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },

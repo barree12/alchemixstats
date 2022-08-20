@@ -3,7 +3,7 @@
 }
 
 body {
-  background: linear-gradient(355deg, #1b2c3b 0%, #181e28 28%);
+  background-color: #181e28;
   color: #F5C09A;
   font-family: "Montserrat", "Work Sans",sans-serif;
   margin: 8px;
@@ -505,6 +505,58 @@ h3 {
 
 .button-group-lower {
   margin-top: 10px;
+}
+
+.earn-summary {
+  width: 50%;
+}
+
+.earn-yield-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.earn-yield {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.earn-yield-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.earn-yield-alasset {
+  width: 100px;
+}
+
+.earn-yield-strat {
+  width: 200px;
+}
+
+.earn-yield-yield {
+  width: 80px;
+}
+
+.earn-yield-reward {
+  width: 110px;
+}
+
+.earn-yield-chain {
+  width: 80px;
+}
+
+.earn-yield-protocol-name {
+  width: 100%;
+  padding-left: 20px;
+  text-align: left;
+  font-size: 20px;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 @media (max-width: 780px) {
