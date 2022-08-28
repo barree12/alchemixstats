@@ -108,6 +108,9 @@ export default class EarnSaddle extends Component {
     .then(([subgraphResponse, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice]) => {
       this.calculateApr(subgraphResponse.data.liquidityPoolDailySnapshots, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice);
     })
+    .catch(function(err) {
+      console.log(err.message);
+    });
   }
 
 

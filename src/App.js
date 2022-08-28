@@ -89,7 +89,6 @@ export default class App extends React.Component {
     this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.alcxEthSlpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxEthSlpAddress);
     this.wethContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.wethAddress);
-    //this.abraAlcxCauldronContract = new web3.eth.Contract(abis.abraCauldronAbi, addresses.abraAlcxCauldronAddress);
     this.saddleAlEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleAlEthContractAddress);
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
     this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
@@ -214,6 +213,9 @@ export default class App extends React.Component {
         deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
+    })
+    .catch(function(err) {
+      console.log(err.message);
     });
   }
 
@@ -273,6 +275,9 @@ export default class App extends React.Component {
       treasury.daiInElixir = daiInElixir/Math.pow(10, 18);
       treasury.wethInElixir = wethInElixir/Math.pow(10, 18);
       this.setState({ treasury: treasury, alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, treasuryLoading: false })
+    })
+    .catch(function(err) {
+      console.log(err.message);
     });
   }
 
@@ -325,6 +330,9 @@ export default class App extends React.Component {
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       //console.log(lps.daiInBeets)
       this.setState({ lps: lps, lpsLoading: false })
+    })
+    .catch(function(err) {
+      console.log(err.message);
     });
   }
 
@@ -621,6 +629,9 @@ export default class App extends React.Component {
       .then(([daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl]) => {
         this.calculateVaultTVLs(daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl);
     })
+    .catch(function(err) {
+      console.log(err.message);
+    });
   }
   
   getCoinGeckoData(){
@@ -638,8 +649,10 @@ export default class App extends React.Component {
         this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, tokePrice, cvxPrice, sdtPrice, crvPrice);
         this.calculateAlUsdArrays(alUsdData);
         this.calculateAlcxArrays(alcxData);
-        //console.log(alcxData)
     })
+    .catch(function(err) {
+      console.log(err.message);
+    });
   }
 
   getPegQuery(alAsset, collateralToken, tradeSize){
@@ -752,6 +765,9 @@ export default class App extends React.Component {
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
+    .catch(function(err) {
+      console.log(err.message);
+    });
   }
 
   render() {

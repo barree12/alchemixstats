@@ -68,6 +68,9 @@ export default class EarnPremia extends Component {
     .then(([subgraphCallPool, subgraphPutPool, premiaPerYear, totalAllocationPoints, callPoolWeight, putPoolWeight, premiaPrice]) => {
       this.calculateApr(subgraphCallPool.data.pool, subgraphPutPool.data.pool, premiaPerYear, totalAllocationPoints, callPoolWeight, putPoolWeight, premiaPrice);
     })
+    .catch(function(err) {
+      console.log(err.message);
+    });
   }
   
   render() {
