@@ -43,7 +43,7 @@ export default class EarnConvex extends Component {
     return (
       <div>
         <div className="earn-yield-protocol-name">
-            <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" />Convex
+            <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" /> Convex
           </div>
 
           <div className="earn-yield-row">
@@ -64,6 +64,9 @@ export default class EarnConvex extends Component {
             </div>
             <div className="earn-yield-yield">
               {this.state.aprLoading ? "0" : Math.round(this.state.apr3Crv*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://curve.fi/alusd" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 
@@ -86,6 +89,9 @@ export default class EarnConvex extends Component {
             <div className="earn-yield-yield">
               {this.state.aprLoading ? "0" : Math.round(this.state.aprFrax*100)/100}%
             </div>
+            <div className="earn-yield-link">
+              <a href="https://curve.fi/factory/147" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
           </div>
           
           <div className="earn-yield-row">
@@ -106,6 +112,9 @@ export default class EarnConvex extends Component {
             </div>
             <div className="earn-yield-yield">
               {this.state.aprLoading ? "0" : Math.round(this.state.aprAlEth*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://curve.fi/factory/38" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
       </div>);

@@ -535,28 +535,76 @@ h3 {
 }
 
 .earn-yield-strat {
+  display: flex;
+  align-items: center;
   width: 200px;
+  text-align: left;
 }
 
 .earn-yield-yield {
   width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .earn-yield-reward {
   width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .earn-yield-chain {
   width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.earn-yield-link {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+div.earn-yield-link a {
+  text-decoration: none;
 }
 
 .earn-yield-protocol-name {
   width: 100%;
-  padding-left: 20px;
   text-align: left;
   font-size: 20px;
   margin-bottom: 15px;
   margin-top: 15px;
+}
+
+.protocol-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.protocol-inner {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.description-all {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 100%;
+}
+
+.switcher {
+  font-size: 15pt;
+  color: #fff;
 }
 
 @media (max-width: 780px) {

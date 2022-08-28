@@ -42,8 +42,7 @@ export default class EarnTokemak extends Component {
     return (
       <div>
         <div className="earn-yield-protocol-name">
-          <img src={ require('../logos/tokemak.png').default } alt="Tokemak logo" className="image" />
-          Tokemak
+          <img src={ require('../logos/tokemak.png').default } alt="Tokemak logo" className="image" /> Tokemak
         </div>
 
         <div className="earn-yield-row">
@@ -62,6 +61,9 @@ export default class EarnTokemak extends Component {
           </div>
           <div className="earn-yield-yield">
             {this.state.aprLoading ? "0" : Math.round(this.state.apr*10000)/100}%
+          </div>
+          <div className="earn-yield-link">
+              <a href="https://app.tokemak.xyz/" target="_blank" rel="noreferrer">Deposit</a>
           </div>
         </div>
       </div>);

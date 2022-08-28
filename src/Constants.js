@@ -42,11 +42,11 @@ export const addresses = {
     sEthAddress: '0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb',
     alchemixStakingAddress: '0xab8e74017a8cc7c15ffccd726603790d26d7deca',
     saddleAlEthContractAddress: '0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368',
-    saddleAlEthPoolContractAddress: '0xa6018520EAACC06C30fF2e1B3ee2c7c22e64196a',
+    saddleAlEthPoolContractAddress: '0xa6018520eaacc06c30ff2e1b3ee2c7c22e64196a',
     saddleStakingContractAddress: '0x691ef79e40d909c715be5e9e93738b3ff7d58534',
     alUsd3CrvContractAddress: '0x43b4fdfd4ff969587185cdb6f0bd875c5fc83f8c',
     d3CrvContractAddress: '0xbaaa1f5dba42c3389bdbc2c9d2de134f5cd0dc89',
-    saddled4ContractAddress: '0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6',
+    saddled4ContractAddress: '0xc69ddcd4dfef25d8a793241834d4cc4b3668ead6',
     alEthCrvContractAddress: '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e',
     veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
     sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
@@ -64,7 +64,11 @@ export const addresses = {
     alUsdFBPSaddleContractAddress: '0xfb516cf3710fc6901f2266aaeb8834cf5e4e9558',
     saddleFBPContractAddress: '0x927e6f04609a45b107c789af34ba90ebbf479f7f',
     alUsdFBPCurveContractAddress: '0xB30dA2376F63De30b42dC055C93fa474F31330A5',
-    curveFBPContractAddress: '0x3175Df0976dFA876431C2E9eE6Bc45b65d3473CC'
+    curveFBPContractAddress: '0x3175Df0976dFA876431C2E9eE6Bc45b65d3473CC',
+    saddled4LPToken: '0xd48cf4d7fb0824cc8bae055df3092584d0a1726a',
+    saddleAlUsdFraxbpLPToken: '0x3cF7b9479a01eeB3bbfC43581fa3bb21cd888e2A',
+    premiaAlEthPoolAddress: '0x9998Ca8EA9E39D5C84a171ECB3303674E666Ef9c',
+    premiaMiningProxyAddress: '0x9aBB27581c2E46A114F8C367355851e0580e9703'
 }
 
 export const abis = {
@@ -222,5 +226,119 @@ export const abis = {
     stateMutability: 'view',
     type: 'function'
     }],
-
+    saddleGaugeAbi: [{
+        constant: true,
+        inputs: [],
+        name: 'inflation_rate',
+        outputs: [{
+            name: 'inflation',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }],
+    saddleGaugeControllerAbi: [{
+        constant: true,
+        inputs: [{
+            name: 'addr',
+            type: 'address'
+        }],
+        name: 'gauge_relative_weight',
+        outputs: [{
+            name: 'weight',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [],
+        name: 'get_total_weight',
+        outputs: [{
+            name: 'weight',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }],
+    alchemixStakingAbi: [{
+        constant: true,
+        inputs: [{
+            name: '_poolId',
+            type: 'uint256'
+        }],
+        name: 'getPoolRewardRate',
+        outputs: [{
+            name: 'rewardRate',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [{
+            name: '_poolId',
+            type: 'uint256'
+        }],
+        name: 'getPoolTotalDeposited',
+        outputs: [{
+            name: 'totalDeposited',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }],
+    premiaMiningAbi: [{
+        constant: true,
+        inputs: [{
+            name: 'pool',
+            type: 'address'
+        },
+        {
+            name: 'isCallPool',
+            type: 'bool'
+        }],
+        name: 'getPoolInfo',
+        outputs: [{
+            name: 'poolInfo',
+            type: 'tuple',
+            components: [
+                { type: "uint256", name: "allocationShare" }
+            ]
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [],
+        name: 'getPremiaPerYear',
+        outputs: [{
+            name: 'premiaPerYear',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [],
+        name: 'getTotalAllocationPoints',
+        outputs: [{
+            name: 'allocationPoints',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }]
 }

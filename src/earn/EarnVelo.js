@@ -46,8 +46,7 @@ export default class EarnVelo extends Component {
     return (
       <div>
         <div className="earn-yield-protocol-name">
-            <img src={ require('../logos/velo_round.png').default } alt="Velodrome logo" className="image" />
-            Velodrome
+            <img src={ require('../logos/velo_round.png').default } alt="Velodrome logo" className="image" /> Velodrome
           </div>
 
           <div className="earn-yield-row">
@@ -68,6 +67,9 @@ export default class EarnVelo extends Component {
             <div className="earn-yield-yield">
               {this.state.aprLoading ? "0" : Math.round(this.state.aprStable*100)/100}%
             </div>
+            <div className="earn-yield-link">
+              <a href="https://app.velodrome.finance/liquidity/manage?address=0xe75a3f4bf99882ad9f8aebab2115873315425d00" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
           </div>
           
           <div className="earn-yield-row">
@@ -87,6 +89,9 @@ export default class EarnVelo extends Component {
             </div>
             <div className="earn-yield-yield">
               {this.state.aprLoading ? "0" : Math.round(this.state.aprEth*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://app.velodrome.finance/liquidity/manage?address=0x6fd5bee1ddb4dbbb0b7368b080ab99b8ba765902" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
       </div>);

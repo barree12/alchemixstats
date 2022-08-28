@@ -10,6 +10,7 @@ import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
 import Debt from './Debt';
+import { Link } from "react-router-dom";
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
 import { Button, ButtonGroup } from '@mui/material';
@@ -814,6 +815,12 @@ export default class App extends React.Component {
       </div>
       <h1>Alchemix Statistics</h1>
       <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
+      <Link to="/earn" style={{ textDecoration: 'none' }}>
+        <div className="switcher">
+          Switch to Alchemix Earn <img className="image2" src={ require('./logos/arrow.png').default } alt="arrow" /><br/>
+        </div>
+      </Link>
+      <br/>
       <Overview 
         v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}

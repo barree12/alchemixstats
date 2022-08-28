@@ -51,8 +51,7 @@ export default class EarnBeets extends Component {
     return (
       <div>
         <div className="earn-yield-protocol-name">
-          <img src={ require('../logos/beets_round.png').default } alt="Beets logo" className="image" />
-          Beethoven X
+          <img src={ require('../logos/beets_round.png').default } alt="Beets logo" className="image" /> Beethoven X
         </div>
 
         <div className="earn-yield-row">
@@ -73,6 +72,9 @@ export default class EarnBeets extends Component {
           </div>
           <div className="earn-yield-yield">
             {this.state.aprLoading ? "0" : Math.round(this.state.apr*10000)/100}%
+          </div>
+          <div className="earn-yield-link">
+              <a href="https://beets.fi/pool/0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b" target="_blank" rel="noreferrer">Deposit</a>
           </div>
         </div>
       </div>);
