@@ -22,6 +22,16 @@ export default class ChartHarvestsEth extends React.Component {
               fill: true,
             },
             {
+              label: 'aWETH',
+              data: this.props.harvests.aWeth,
+              backgroundColor: 'rgba(115,136,255,0.9)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
               label: 'wstETH',
               data: this.props.harvests.wstEth,
               backgroundColor: 'rgba(255,204,75,0.7)',

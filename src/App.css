@@ -607,6 +607,10 @@ div.earn-yield-link a {
   color: #fff;
 }
 
+.multifarm-wrapper {
+  width: 1000px;
+}
+
 @media (max-width: 780px) {
   .chart-container {
     width: 600px;

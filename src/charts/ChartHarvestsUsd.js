@@ -40,6 +40,36 @@ export default class ChartHarvestsUsd extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
+            },
+            {
+              label: 'aDAI',
+              data: this.props.harvests.aDai,
+              backgroundColor: 'rgba(102,102,102,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'aUSDC',
+              data: this.props.harvests.aUsdc,
+              backgroundColor: 'rgba(115,136,255,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'aUSDT',
+              data: this.props.harvests.aUsdt,
+              backgroundColor: 'rgba(255,204,75,0.7)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
             }]
           }}
             options={{
