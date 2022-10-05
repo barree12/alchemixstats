@@ -13,6 +13,8 @@ export const addresses = {
     abraAlcxCauldronAddress: '0x7b7473a76d6ae86ce19f7352a1e89f6c9dc39020',
     alchemistEthV2Address: '0x062bf725dc4cdf947aa79ca2aaccd4f385b13b5c',
     alchemistV2Address: '0x5c6374a2ac4ebc38dea0fc1f8716e5ea1add94dd',
+    alchemistOptiAddress: '0x10294d57a419c8eb78c648372c5baa27fd1484af',
+    alchemistEthOptiAddress: '0xe04bb5b4de60fa2fba69a93ade13a8b3b569d5b4',
     alUsdAddress: '0xbc6da0fe9ad5f3b0d58160288917aa56653660e9',
     alEthAddress: '0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6',
     daiAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -68,7 +70,11 @@ export const addresses = {
     saddled4LPToken: '0xd48cf4d7fb0824cc8bae055df3092584d0a1726a',
     saddleAlUsdFraxbpLPToken: '0x3cF7b9479a01eeB3bbfC43581fa3bb21cd888e2A',
     premiaAlEthPoolAddress: '0x9998Ca8EA9E39D5C84a171ECB3303674E666Ef9c',
-    premiaMiningProxyAddress: '0x9aBB27581c2E46A114F8C367355851e0580e9703'
+    premiaMiningProxyAddress: '0x9aBB27581c2E46A114F8C367355851e0580e9703',
+    optiADaiAddress: '0x43A502D7e947c8A2eBBaf7627E104Ddcc253aBc6',
+    optiAUsdcAddress: '0x4186Eb285b1efdf372AC5896a08C346c7E373cC4',
+    optiAUsdtAddress: '0x2680b58945A31602E4B6122C965c2849Eb76Dd3B',
+    optiAWethAddress: '0x337B4B933d60F40CB57DD19AE834Af103F049810'
 }
 
 export const abis = {

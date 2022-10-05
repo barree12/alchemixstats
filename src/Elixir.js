@@ -1,8 +1,9 @@
 import React from 'react';
 import { MultifarmProvider, Dashboard } from "@multifarm/widget";
 import "@multifarm/widget/dist/alchemix.css";
+import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
 
-export default class Treasury extends React.Component {
+export default class Elixir extends React.Component {
 
     render(){
         let strategyTypesObject = {
@@ -41,6 +42,20 @@ export default class Treasury extends React.Component {
                     strategyTypesConfig={strategyTypesObject}>
                     <Dashboard />
                 </MultifarmProvider>
+                <div className="section-wrapper">
+                <div className="chart-title">
+                <h3>Curve Pool Ownership</h3>
+                {this.props.treasuryLoading ? "Loading..." :
+                        <ChartCrvPoolRatios 
+                            alAssetCrvSupply={this.props.alAssetCrvSupply} 
+                            alUsd3CrvTreasury={this.props.alUsd3CrvTreasury}
+                            alUsd3CrvElixir={this.props.alUsd3CrvElixir}
+                            alEthCrvTreasury={this.props.alEthCrvTreasury}
+                            alEthCrvElixir={this.props.alEthCrvElixir}
+                            alEthCrvTotalValue={this.props.alEthCrvTotalValue}
+                        />}
+                    </div>
+                </div>
             </div>
             </>
         );

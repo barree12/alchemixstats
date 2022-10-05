@@ -4,8 +4,11 @@ import ChartEthTVL from './charts/ChartEthTVL';
 import ChartV2AlchemistTVL from './charts/ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './charts/ChartV2AlchemistEthTVL';
 import ChartV2AlchemistFtmTVL from './charts/ChartV2AlchemistFtmTVL';
+import ChartOptiAlchemistTVL from './charts/ChartOptiAlchemistTVL';
+import ChartOptiAlchemistEthTVL from './charts/ChartOptiAlchemistEthTVL';
 import FtmSummary from './FtmSummary';
 import { Switch } from '@mui/material';
+import OptiSummary from './OptiSummary';
 
 export default class Deposits extends React.Component {
     
@@ -70,10 +73,8 @@ export default class Deposits extends React.Component {
                             <div className="small-table-inner-3">
                             <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
                             <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcx)}</span><span className="important-2">${Math.round(this.props.stakedAlcxValue/10000)/100}M</span>
-                            <span className="small-table-row"><img src={ require('./logos/talcx.png').default } alt="tALCX logo" className="image" /></span><span className="table-text-title">tALCX</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.tAlcx)}</span><span className="important-2">${Math.round(this.props.stakedTAlcxValue/10000)/100}M</span>
                             <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX/ETH SLP" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
-                            <span className="small-table-row"><img src={ require('./logos/aleth_saddle.png').default } alt="Saddle alETH" className="image" /></span><span className="table-text-title">Saddle alETH</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.saddleAlEth)}</span><span className="important-2">${Math.round(this.props.stakingSaddleAlEthValue/10000)/100}M</span>
-                            <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakedTAlcxValue + this.props.stakingSlpValue + this.props.stakingSaddleAlEthValue)/10000)/100}M</span>
+                            <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
                             </div>
                         </div>
                         </div>
@@ -100,6 +101,18 @@ export default class Deposits extends React.Component {
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL</h3>
                     <ChartV2AlchemistEthTVL alchemistTvl={this.props.alchemistTvl} />
+                    </div>
+                </div>
+                <OptiSummary v2Caps={this.props.v2Caps} optiTvl={this.props.optiTvl}
+                    optiAWethTVL={this.props.optiAWethTVL} optiAWethUsdTVL={this.props.optiAWethUsdTVL} />
+                <div className="section-wrapper">
+                    <div className="chart-title">
+                    <h3>Optimism Stablecoin TVL</h3>
+                    <ChartOptiAlchemistTVL optiTvl={this.props.optiTvl} />
+                    </div>
+                    <div className="chart-title">
+                    <h3>Optimism Eth TVL</h3>
+                    <ChartOptiAlchemistEthTVL optiTvl={this.props.optiTvl} />
                     </div>
                 </div>
                 <div className="section-wrapper">

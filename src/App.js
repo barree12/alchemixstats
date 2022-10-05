@@ -10,6 +10,8 @@ import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
 import Debt from './Debt';
+import Treasury from './Treasury';
+import Elixir from './Elixir';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual} from './Functions';
 import { addresses, abis } from './Constants';
@@ -29,10 +31,10 @@ import {
   Filler
 } from 'chart.js';
 
-//const web3 = new Web3('https://mainnet.strongblock.com/acffa3b1546d7f2fa9e6e4d974497e331f2f82d7');
 const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
-const web3optimism = new Web3('https://mainnet.optimism.io');
+//const web3optimism = new Web3('https://mainnet.optimism.io');
+const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 
 export default class App extends React.Component {
 
@@ -59,6 +61,7 @@ export default class App extends React.Component {
       alchemixStaking: {},
       alchemistTvl: {},
       ftmTvl: {},
+      optiTvl: {},
       harvests: {},
       alAssetCrvSupply: {},
       tokenPricesLoading: true,
@@ -71,6 +74,7 @@ export default class App extends React.Component {
       alcxDataLoading: true,
       alchemistTvlLoading: true,
       ftmTvlLoading: true,
+      optiTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
       activeTab: 'emissions'
@@ -80,6 +84,8 @@ export default class App extends React.Component {
     this.alchemistContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistV2Address);
     this.alchemistEthContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistEthV2Address);
     this.alchemistFtmContract = new web3ftm.eth.Contract(abis.alchemistAbi, addresses.ftmAlchemistContractAddress);
+    this.alchemistOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistOptiAddress);
+    this.alchemistEthOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistEthOptiAddress);
     this.cvxAlUsd3CrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlUsd3CrvStakingContractAddress);
     this.cvxAlEthCrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlEthCrvStakingContractAddress);
     this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
@@ -150,7 +156,7 @@ export default class App extends React.Component {
   } 
 
   aggregateWeb3Calls(){
-    let v2Caps = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
+    let v2Caps = {}
     let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
     let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
 
@@ -176,15 +182,23 @@ export default class App extends React.Component {
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call()
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
+      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
+      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
+      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
+      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
+      //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens]) => {
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.ftmDai = ftmDaiParams[4]/Math.pow(10, ftmDaiParams[0]);
+        v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
         v2Caps.ftmUsdc = ftmUsdcParams[4]/Math.pow(10, ftmUsdcParams[0]);
+        v2Caps.optiAUsdc = optiAUsdcParams[4]/Math.pow(10, optiAUsdcParams[0]);
         v2Caps.usdt = usdtParams[4]/Math.pow(10, usdtParams[0]);
         v2Caps.ftmUsdt = ftmUsdtParams[4]/Math.pow(10, ftmUsdtParams[0]);
+        v2Caps.optiAUsdt = optiAUsdtParams[4]/Math.pow(10, optiAUsdtParams[0]);
         v2Caps.eth = ethParams[4]/Math.pow(10, ethParams[0]);
         v2Caps.wstEth = wstEthParams[4]/Math.pow(10, wstEthParams[0]);
         v2Caps.rEth = rEthParams[4]/Math.pow(10, rEthParams[0]);
@@ -192,6 +206,7 @@ export default class App extends React.Component {
         v2Caps.aUsdc = aUsdcParams[4]/Math.pow(10, aUsdcParams[0]);
         v2Caps.aUsdt = aUsdtParams[4]/Math.pow(10, aUsdtParams[0]);
         v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
+        v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
         tokensPerShare.dai = daiTokens/Math.pow(10, 18);
         tokensPerShare.usdc = usdcTokens/Math.pow(10, 6);
         tokensPerShare.usdt = usdtTokens/Math.pow(10, 6);
@@ -202,6 +217,7 @@ export default class App extends React.Component {
         tokensPerShare.aUsdc = aUsdcTokens/Math.pow(10, 6);
         tokensPerShare.aUsdt = aUsdtTokens/Math.pow(10, 6);
         tokensPerShare.aWeth = aWethTokens/Math.pow(10, 18);
+        //tokensPerShare.optiAWeth = optiAWethTokens/Math.pow(10, 18);
         deposit.dai = daiParams[8]/Math.pow(10, 24);
         deposit.usdc = usdcParams[8]/Math.pow(10, 12);
         deposit.usdt = usdtParams[8]/Math.pow(10, 12);
@@ -212,6 +228,7 @@ export default class App extends React.Component {
         deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
         deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
+        //console.log(tokensPerShare.optiAWeth)
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     })
     .catch(function(err) {
@@ -222,10 +239,10 @@ export default class App extends React.Component {
   getTreasury(){
     let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, sdt: 0, sdCrv: 0, wethInElixir: 0, daiInElixir: 0 }
     let alcxEthSlp = { alcx: 0, weth: 0 }
-    let alchemixStaking = { alcx: 0, tAlcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0, saddleAlEth: 0 }
+    let alchemixStaking = { alcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0 }
     let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0 };
     Promise.all([this.tAlcxContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      this.tAlcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
+      //this.tAlcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.alcxContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
       this.alcxContract.methods.balanceOf(addresses.treasuryWallet2Address).call(),
       this.alcxContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
@@ -244,12 +261,12 @@ export default class App extends React.Component {
       this.masterChefContract.methods.userInfo('0', addresses.treasuryWallet1Address).call(),
       this.alcxEthSlpContract.methods.totalSupply().call(),
       this.alcxEthSlpContract.methods.balanceOf(addresses.masterChefAddress).call(),
-      this.saddleAlEthContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
-      this.saddleAlEthContract.methods.balanceOf(addresses.saddleStakingContractAddress).call(),
+      //this.saddleAlEthContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
+      //this.saddleAlEthContract.methods.balanceOf(addresses.saddleStakingContractAddress).call(),
       this.veSdtContract.methods.balanceOf(addresses.sdtControllerContractAddress).call(),
       this.sdCrvContract.methods.balanceOf(addresses.sdtControllerContractAddress).call()
     ])
-    .then(([tAlcx, stakedTAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, wethInElixir, daiInElixir, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, stakedSaddleAlEthAlchemix, stakedSaddleAlEthSaddle, sdt, sdCrv]) => {
+    .then(([tAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, wethInElixir, daiInElixir, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, sdt, sdCrv]) => {
       treasury.tAlcx = tAlcx/Math.pow(10, 18);
       treasury.alcx = Math.round(alcx1/Math.pow(10, 18) + alcx2/Math.pow(10, 18));
       // + abraAlcx/Math.pow(10, 18));
@@ -266,10 +283,10 @@ export default class App extends React.Component {
       treasury.sdt = sdt/Math.pow(10, 18);
       treasury.sdCrv = sdCrv/Math.pow(10, 18);
       alchemixStaking.alcx = stakedAlcx/Math.pow(10, 18);
-      alchemixStaking.tAlcx = stakedTAlcx/Math.pow(10, 18);
+      //alchemixStaking.tAlcx = stakedTAlcx/Math.pow(10, 18);
       alchemixStaking.alcxEthSlp = stakedAlcxEth/Math.pow(10, 18);
       alchemixStaking.alcxEthSlpStakingRatio = stakedAlcxEth/alcxEthSlpTotalSupply;
-      alchemixStaking.saddleAlEth = stakedSaddleAlEthAlchemix/Math.pow(10, 18) + stakedSaddleAlEthSaddle/Math.pow(10, 18);
+      //alchemixStaking.saddleAlEth = stakedSaddleAlEthAlchemix/Math.pow(10, 18) + stakedSaddleAlEthSaddle/Math.pow(10, 18);
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
       treasury.daiInElixir = daiInElixir/Math.pow(10, 18);
@@ -480,6 +497,48 @@ export default class App extends React.Component {
     this.setState({ ftmTvl: ftmTvl, ftmTvlLoading: false });
   }
 
+  calculateOptiTvl(result){
+    //console.log(result)
+    let startDate = new Date(1664365762*1000); //Sept 28th
+    let today = new Date();
+    let dateTracker = new Date(result[0].timestamp*1000);
+    let resultIndex = 0;
+    let optiTvl = { date:[], aDai: [], aUsdc: [], aUsdt: [], aWeth: [] };
+    let tempaDai = 0;
+    let tempaUsdc = 0;
+    let tempaUsdt = 0;
+    let tempaWeth = 0;
+    for(let j=0;startDate<today;j++){
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].timestamp*1000);
+        if(tempDate>startDate) break;
+
+        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+
+        tempaDai = result[i].token.symbol === "s_aOptDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempaDai;
+        tempaUsdc = result[i].token.symbol === "s_aOptUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdc;
+        tempaUsdt = result[i].token.symbol === "s_aOptUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdt;
+        tempaWeth = result[i].token.symbol === "s_aOptWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempaWeth;
+        resultIndex++;
+      }
+      optiTvl.aDai[j] = Math.round(tempaDai/10000)/100;
+      if(j>0 && !tempaDai) optiTvl.aDai[j] = optiTvl.aDai[j-1];
+      optiTvl.aUsdc[j] = Math.round(tempaUsdc/10000)/100;
+      if(j>0 && !tempaUsdc) optiTvl.aUsdc[j] = optiTvl.aUsdc[j-1];
+      optiTvl.aUsdt[j] = Math.round(tempaUsdt/10000)/100;
+      if(j>0 && !tempaUsdt) optiTvl.aUsdt[j] = optiTvl.aUsdt[j-1];
+      optiTvl.aWeth[j] = Math.round(tempaWeth/10000)/100;
+      if(j>0 && !tempaWeth) optiTvl.aWeth[j] = optiTvl.aWeth[j-1];
+      optiTvl.date[j] = formatDate(startDate, 0);
+      startDate.setDate(startDate.getDate() + 1);
+      /*tempaDai = 0;
+      tempaUsdc = 0;
+      tempaUsdt = 0;*/
+    }
+    this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
+  }
+
   calculateAlchemistTvl(result){
     //console.log(result)
     let startDate = new Date(1647385201*1000); //March 16th
@@ -623,19 +682,6 @@ export default class App extends React.Component {
     });
   }
 
-  /*logCapIncreases(result){
-    //console.log(result)
-    let temp = { yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [] }
-    for(let i=0;i<result.length;i++){
-      if(result[i].yieldToken === addresses.yvDaiAddress) temp.yvDai.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 18) })
-      if(result[i].yieldToken === addresses.yvUsdcAddress) temp.yvUsdc.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 6) })
-      if(result[i].yieldToken === addresses.yvUsdtAddress) temp.yvUsdt.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/Math.pow(10, 6) })
-      if(result[i].yieldToken === addresses.yvWethAddress) temp.yvWeth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0031/Math.pow(10, 18) })
-      if(result[i].yieldToken === addresses.wstEthAddress) temp.wstEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0663/Math.pow(10, 18) })
-      if(result[i].yieldToken === addresses.rEthAddress) temp.rEth.push({ date: new Date(result[i].timestamp*1000), value: result[i].maximumExpectedValue/1.0198/Math.pow(10, 18) })
-    }
-  }*/
-
   getFlipsideCryptoData(){
     Promise.all([fetch("https://api.flipsidecrypto.com/api/v2/queries/a29262d6-7878-4c8e-8d4e-a62f414c846f/data/latest").then(res => res.json()),
       fetch("https://api.flipsidecrypto.com/api/v2/queries/6a72370b-6c81-4b3f-9691-cfdb0a3118d3/data/latest").then(res => res.json()),
@@ -749,18 +795,6 @@ export default class App extends React.Component {
       }
     }`
 
-    /*const depositCapIncreases = `{
-      alchemistMaximumExpectedValueUpdatedEvents(
-        orderBy: timestamp
-        orderDirection: desc
-      ){
-        id
-        timestamp
-        yieldToken
-        maximumExpectedValue
-      }      
-    }`*/
-
     Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
@@ -772,12 +806,14 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, harvests]) => {
+      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, optiAlchemistTvl, harvests]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
+        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
@@ -801,6 +837,8 @@ export default class App extends React.Component {
   let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2aWethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aWeth*this.state.tokensPerShare.aWeth);
   let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aWeth[this.state.optiTvl.aWeth.length-1]*100)/100;
+  let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
@@ -814,10 +852,7 @@ export default class App extends React.Component {
   let treasurySlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.treasury.alcxEthSlpOwnedRatio;
   let treasuryOther = 1000000;
   let stakedAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
-  let stakedTAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.tAlcx*this.state.alcxData.price;
   let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
-  let stakingSaddleAlEthValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alchemixStaking.saddleAlEth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-  //let circulatingMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 - treasuryAlcxValue/10000 - treasuryTAlcxValue/10000)/100;
   let alcxTotalMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 + treasuryAlcxValue/10000)/100;
   let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let sdtValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdt * this.state.tokenPrices.sdt[this.state.tokenPrices.sdt.length-1];
@@ -858,7 +893,7 @@ export default class App extends React.Component {
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
-        stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
+        stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
         vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
         alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
         treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
@@ -899,15 +934,15 @@ export default class App extends React.Component {
       {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading) ? "Loading..." :
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) ? "Loading..." :
         <Deposits
           v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
-          stakedAlcxValue={stakedAlcxValue} stakedTAlcxValue={stakedTAlcxValue} stakingSlpValue={stakingSlpValue} stakingSaddleAlEthValue={stakingSaddleAlEthValue}
+          stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
           vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
-          alchemistTvl={this.state.alchemistTvl}
+          alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
         />)}
       {this.state.activeTab !== "treasury" ? "" :
       <>
@@ -977,6 +1012,15 @@ export default class App extends React.Component {
           }
         </div>
       </div>
+      {/*<Elixir
+        alAssetCrvSupply={this.state.alAssetCrvSupply} 
+        alUsd3CrvTreasury={this.state.treasury.cvxAlUsd3CrvTreasury}
+        alUsd3CrvElixir={this.state.treasury.cvxAlUsd3CrvElixir}
+        alEthCrvTreasury={treasuryCvxAlEthCrvValue}
+        alEthCrvElixir={elixirCvxAlEthCrvValue}
+        alEthCrvTotalValue={alEthCrvTotalValue}
+        treasuryLoading={this.state.treasuryLoading}
+        />*/}
       </>}
       
       {this.state.activeTab !== "debt" ? "" : 

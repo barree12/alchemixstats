@@ -69,14 +69,10 @@ export default class Overview extends React.Component {
                                 <span>Amount</span><span>USD Value</span>
                                 <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span>
                                 <span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcx)}</span><span className="important-2">${Math.round(this.props.stakedAlcxValue/10000)/100}M</span>
-                                <span className="small-table-row"><img src={ require('./logos/talcx.png').default } alt="tALCX logo" className="image" /></span><span className="table-text-title">tALCX</span>
-                                <span className="table-text-bold">{Math.round(this.props.alchemixStaking.tAlcx)}</span><span className="important-2">${Math.round(this.props.stakedTAlcxValue/10000)/100}M</span>
                                 <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX/ETH SLP" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span>
                                 <span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
-                                <span className="small-table-row"><img src={ require('./logos/aleth_saddle.png').default } alt="Saddle alETH" className="image" /></span><span className="table-text-title">Saddle alETH</span>
-                                <span className="table-text-bold">{Math.round(this.props.alchemixStaking.saddleAlEth)}</span><span className="important-2">${Math.round(this.props.stakingSaddleAlEthValue/10000)/100}M</span>
                                 <span className="small-table-row-2"></span><span></span>
-                                <span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakedTAlcxValue + this.props.stakingSlpValue + this.props.stakingSaddleAlEthValue)/10000)/100}M</span>
+                                <span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
                             </div>
                         </div>
                         <div className="small-table-4">
