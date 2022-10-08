@@ -31,7 +31,8 @@ import {
   Filler
 } from 'chart.js';
 
-const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
+//const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
+const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
 const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
@@ -419,6 +420,7 @@ export default class App extends React.Component {
   }
 
   calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
+    console.log(daiPeg)
     let daiIndex = 0;
     let usdcIndex = 0;
     let usdtIndex = 0;
@@ -717,15 +719,35 @@ export default class App extends React.Component {
     });
   }
 
-  getPegQuery(alAsset, collateralToken, tradeSize){
+  getPegQuery(alAsset, collateralToken, tradeSize, skip){
     return `{
       poolHistoricalRates(
         first: 1000
+        skip: ` + skip + `
         where: {inputToken: "` + alAsset + `", outputToken: "` + collateralToken + `", inputAmount: "` + tradeSize.toLocaleString('fullwide', {useGrouping:false}) + `"}
         orderBy: timestamp
         orderDirection: desc
       ) {
         outputAmount
+        timestamp
+      }
+    }`
+  }
+
+  getAlchemistTvlQuery(skip){
+    return `{
+      alchemistTVLHistories(
+        first: 1000
+        skip: ` + skip + `
+        orderBy: timestamp
+        orderDirection: desc
+      )
+      {
+        token
+          {
+            symbol
+          }
+        amount
         timestamp
       }
     }`
@@ -740,14 +762,23 @@ export default class App extends React.Component {
   }
 
   getAlUsdPeg(){
-    const daiPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24))
-    const daiPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25))
-    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24))
-    const usdcPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25))
-    const usdtPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24))
-    const usdtPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25))
-    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5)
-    const alEthPeg5kQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5)
+    const daiPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24), 0)
+    const daiPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24), 1000)
+    const daiPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25), 0)
+    const daiPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25), 1000)
+    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0)
+    const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 1000)
+    const usdcPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25), 0)
+    const usdcPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25), 1000)
+    const usdtPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24), 0)
+    const usdtPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24), 1000)
+    const usdtPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25), 0)
+    const usdtPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25), 1000)
+    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0)
+    const alEthPeg5kQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5, 0)
+    const alchemistTvl = this.getAlchemistTvlQuery(0)
+    const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
+    const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
     const harvestsQuery = `{
       alchemistHarvestEvents(
         first: 1000
@@ -762,59 +793,34 @@ export default class App extends React.Component {
         }
       }
     }`
-    const alchemistTvl = `{
-      alchemistTVLHistories(
-        first: 1000
-        orderBy: timestamp
-        orderDirection: desc
-      )
-      {
-        token
-          {
-            symbol
-          }
-        amount
-        timestamp
-      }
-    }`
-
-    const alchemistTvlSkip = `{
-      alchemistTVLHistories(
-        first: 1000
-        skip: 1000
-        orderBy: timestamp
-        orderDirection: desc
-      )
-      {
-        token
-          {
-            symbol
-          }
-        amount
-        timestamp
-      }
-    }`
 
     Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPeg10mQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPegQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPegQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuery)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuerySkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPeg5kQuery)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, dai10mPeg, usdcPeg, usdc10mPeg, usdtPeg, usdt10mPeg, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip, ftmAlchemistTvl, optiAlchemistTvl, harvests]) => {
-        this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.reverse(), usdcPeg.data.poolHistoricalRates.reverse(), usdtPeg.data.poolHistoricalRates.reverse(), dai10mPeg.data.poolHistoricalRates.reverse(), usdc10mPeg.data.poolHistoricalRates.reverse(), usdt10mPeg.data.poolHistoricalRates.reverse())
+      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, ftmAlchemistTvl, optiAlchemistTvl, harvests]) => {
+        this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.concat(daiPegSkip1000.data.poolHistoricalRates).reverse(), usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse(), usdtPeg.data.poolHistoricalRates.concat(usdtPegSkip1000.data.poolHistoricalRates).reverse(), dai10mPeg.data.poolHistoricalRates.concat(dai10mPegSkip1000.data.poolHistoricalRates).reverse(), usdc10mPeg.data.poolHistoricalRates.concat(usdc10mPegSkip1000.data.poolHistoricalRates).reverse(), usdt10mPeg.data.poolHistoricalRates.concat(usdt10mPegSkip1000.data.poolHistoricalRates).reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
-        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip.data.alchemistTVLHistories).reverse())
+        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories)).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
     .catch(function(err) {
