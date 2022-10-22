@@ -159,7 +159,7 @@ export default class App extends React.Component {
   aggregateWeb3Calls(){
     let v2Caps = {}
     let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
-    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
+    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, daiInMigrate: 0, wethInMigrate: 0 }
 
     Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdcAddress).call(),
@@ -188,9 +188,11 @@ export default class App extends React.Component {
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
       this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
+      this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
+      this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams]) => {
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.ftmDai = ftmDaiParams[4]/Math.pow(10, ftmDaiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
@@ -229,6 +231,8 @@ export default class App extends React.Component {
         deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
         deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
+        deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
+        deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
         //console.log(tokensPerShare.optiAWeth)
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
     })
@@ -250,7 +254,9 @@ export default class App extends React.Component {
       this.alcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.wethContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.wethContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
+      //this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
       this.daiContract.methods.balanceOf(addresses.elixirAddress).call(),
+      //this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
       this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.elixirAddress).call(),
       this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
       //this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
@@ -420,7 +426,6 @@ export default class App extends React.Component {
   }
 
   calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
-    console.log(daiPeg)
     let daiIndex = 0;
     let usdcIndex = 0;
     let usdtIndex = 0;
@@ -866,7 +871,7 @@ export default class App extends React.Component {
   let treasuryTotal = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
   let treasuryNonAlcx = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
   let wethInElixirUsd = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.wethInElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-
+  let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/Math.pow(10,6);
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -906,7 +911,8 @@ export default class App extends React.Component {
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
         vaultTvlsLoading={this.state.vaultTvlsLoading} tokenPricesLoading={this.state.tokenPricesLoading}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
-        lpsLoading={this.state.lpsLoading}
+        lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
+        v2CurrentLoading={this.state.v2CurrentLoading}
       />
       <div className="button-group-large-screen">
       <ButtonGroup size="medium">
@@ -946,11 +952,12 @@ export default class App extends React.Component {
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
-          stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
+          stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue} v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
           vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
         />)}
       {this.state.activeTab !== "treasury" ? "" :
+      <>
       <>
       <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />
       <h2>Treasury and Elixirs</h2>
@@ -1018,7 +1025,8 @@ export default class App extends React.Component {
           }
         </div>
       </div>
-      {/*<Elixir
+        </>
+      {/*<Treasury
         alAssetCrvSupply={this.state.alAssetCrvSupply} 
         alUsd3CrvTreasury={this.state.treasury.cvxAlUsd3CrvTreasury}
         alUsd3CrvElixir={this.state.treasury.cvxAlUsd3CrvElixir}

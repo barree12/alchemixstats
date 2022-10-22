@@ -11,7 +11,7 @@ export default class ChartAlusdPrice extends React.Component {
   let valuesPerc = this.props.active.dai ? [...this.props.data.dai.pegPerc] : (this.props.active.usdc ? [...this.props.data.usdc.pegPerc] : [...this.props.data.usdt.pegPerc]);
   let values10m = this.props.active.dai ? [...this.props.data.dai.peg10m] : (this.props.active.usdc ? [...this.props.data.usdc.peg10m] : [...this.props.data.usdt.peg10m]);
   let values10mPerc = this.props.active.dai ? [...this.props.data.dai.peg10mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.peg10mPerc] : [...this.props.data.usdt.peg10mPerc]);
-  console.log(values)
+  //console.log(values)
   const helperPointer = this;
   
   return (

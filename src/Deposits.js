@@ -30,22 +30,22 @@ export default class Deposits extends React.Component {
                 <img src={ require('./logos/safe.png').default } alt="Vault logo" className="image3" />
                 <h2>Deposits and Staking</h2>
                 <div className="summary">
-                        In Alchemix V1 only one collateral type is accepted both for alUSD and alETH, DAI and ETH.<br/>
-                        Both the Alchemist and the Transmuter deploy their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
-                        Alchemix V2 introduces additional collateral types and yield sources.<br/>
+                        In Alchemix V1, both the Alchemist and the Transmuter deployed their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
+                        Alchemix V2 introduced additional collateral types and yield sources.<br/>
                         <span>In V2, the transmuters hold a very little amount of assets and the Elixirs (Alchemix AMOs) own the funds that were previously controlled by the transmuters.<br/>The contents of the Elixirs are shown in the <i>Treasury and Elixirs</i> section.</span>
                         Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
-                        *Please note that for wstETH and rETH the deposit cap is set in ETH, not wstETH and rETH.<br/>
-                        This is different from V1, where debt caps were set, but no deposit caps, meaning that someone could deposit collateral and not be able to take out a loan on that if the system was already at maximum debt cap.<br/>
-                        **The Staking table shows assets that are directly incentivized by ALCX emissions. Please note that technically the whole ALCX/ETH SLP and a part of the Saddle alETH pool are not staked in Alchemix contracts, but Sushiswap and Saddle contracts.<br/>
+                        *Please note that the deposit caps are set in ETH, not the token of the underlying vault.<br/>
+                        As of 2022 October, V1 contracts have been deprecated.<br/>
+                        All remaining funds were moved into a temporary migration contract where users can manually migrate to V2.<br/>
+                        Thus, V1 metrics are no longer covered, only the remaining contents of the migration contract.
                         <div className="tvl-tables-2">
                         {this.props.tokenPricesLoading ? "Loading..." :
                         <div className="small-table">
-                            <h3>V1 Deposits</h3>
+                            <h3>V1 Migrate Contract</h3>
                             <div className="small-table-inner">
-                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />yvDAI</span><span className="important-2">${this.props.v1DaiTVL}M</span>
-                            <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />yvWETH</span><span className="important-2">${this.props.v1EthUsdTVL}M&nbsp;<i>({this.props.v1EthTVL} ETH)</i></span>
-                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${Math.round((this.props.v1DaiTVL + this.props.v1EthUsdTVL)*100)/100}M</span>
+                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${Math.round(this.props.v2Deposit.daiInMigrate*100)/100}M</span>
+                            <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />WETH</span><span className="important-2">${Math.round(this.props.wethInMigrateUsd*100)/100}M&nbsp;<i>({Math.round(this.props.v2Deposit.wethInMigrate)} ETH)</i></span>
+                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${Math.round((this.props.v2Deposit.daiInMigrate + this.props.wethInMigrateUsd)*100)/100}M</span>
                             </div>
                         </div>
                         }
@@ -69,7 +69,7 @@ export default class Deposits extends React.Component {
                             </div>
                         </div>
                         <div className="small-table">
-                            <h3>Staking TVL**</h3>
+                            <h3>Staking TVL</h3>
                             <div className="small-table-inner-3">
                             <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
                             <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcx)}</span><span className="important-2">${Math.round(this.props.stakedAlcxValue/10000)/100}M</span>
@@ -79,7 +79,7 @@ export default class Deposits extends React.Component {
                         </div>
                         </div>
                 </div>
-                <div className="section-wrapper">
+                {/*<div className="section-wrapper">
                     <div className="chart-title">
                     <h3>DAI TVL V1</h3>
                     <ChartDaiTVL tvlDates={this.props.vaultV1Tvls.daiTvlDates} daiAlchemistTVL={this.props.vaultV1Tvls.daiAlchemistTVL} daiTransmuterTVL={this.props.vaultV1Tvls.daiTransmuterTVL} />
@@ -91,7 +91,7 @@ export default class Deposits extends React.Component {
                     </div>
                     <ChartEthTVL toggle={this.state.ethCurrencyToggle} ethTVLDates={this.props.vaultV1Tvls.ethTVLDates} ethAlchemistTVL={[...this.props.vaultV1Tvls.ethAlchemistTVL]} ethTransmuterTVL={[...this.props.vaultV1Tvls.ethTransmuterTVL]} ethPricesForTVL={this.props.tokenPrices.eth} />
                     </div>
-                </div>
+                    </div>*/}
 
                 <div className="section-wrapper">
                     <div className="chart-title">
