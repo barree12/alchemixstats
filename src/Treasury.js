@@ -56,6 +56,7 @@ export default class Treasury extends React.Component {
                 <Button variant={this.state.activeTab === "elixir" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("elixir")}}>Elixir</Button>
             </ButtonGroup>
             </div>
+            <br/>
             <div className="multifarm-wrapper">
                 <MultifarmProvider
                     token={this.state.activeTab === 'treasury' ? apiKey.treasury : apiKey.elixirs}

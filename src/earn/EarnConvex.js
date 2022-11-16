@@ -18,10 +18,15 @@ export default class EarnConvex extends Component {
   }
     
   parseResult(result){
-    let apr3Crv = (result.apys.alusd.baseApy + result.apys.alusd.crvApy) * result.apys.alusd.crvPrice;
-    let aprAlEth = (result.apys.aleth.baseApy + result.apys.aleth.crvApy) * result.apys.alusd.crvPrice;
-    let aprFrax = (result.apys.alusdfraxbp.baseApy + result.apys.alusdfraxbp.crvApy) * result.apys.alusd.crvPrice;
-    this.setState({ aprLoading: false, apr3Crv: apr3Crv, aprAlEth: aprAlEth, aprFrax: aprFrax });
+    console.log(result)
+    let apr3Crv = result.apys["37"].baseApy + result.apys["37"].crvApy;
+    let aprAlEth = result.apys["factory-v2-38"].baseApy + result.apys["factory-v2-38"].crvApy;
+    let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;
+    this.setState({ aprLoading: false, 
+      apr3Crv: apr3Crv, 
+      aprAlEth: aprAlEth, 
+      aprFrax: aprFrax 
+    });
   }
 
   getData() {

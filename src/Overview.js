@@ -62,7 +62,7 @@ export default class Overview extends React.Component {
                                 <span className="small-table-title-wrap"><span className="small-table-row"></span><span className="important-4">Total</span></span>
                                 <span className="small-table-content-wrap"><span className="important-3">${deposits1mAgo}M</span><span className="important-3">${deposits}M</span><span className="important-3">{depositsChange >= 0 ? <span className="change-positive">+{depositsChange}%</span> : <span className="change-negative">{depositsChange}%</span>}</span></span>
                             </div>
-                            <div className="small-table-inner-8">
+                            {/*<div className="small-table-inner-8">
                                 <span className="small-table-row"></span><span className="important-4"></span>
                                 <span className="table-text-bold"></span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-bold">Staking TVL</span>
@@ -73,7 +73,7 @@ export default class Overview extends React.Component {
                                 <span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
                                 <span className="small-table-row-2"></span><span></span>
                                 <span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
-                            </div>
+        </div>*/}
                         </div>
                         <div className="small-table-4">
                             <h3>Treasury and Elixirs</h3>
