@@ -34,7 +34,7 @@ export default class Deposits extends React.Component {
                         Alchemix V2 introduced additional collateral types and yield sources.<br/>
                         <span>In V2, the transmuters hold a very little amount of assets and the Elixirs (Alchemix AMOs) own the funds that were previously controlled by the transmuters.<br/>The contents of the Elixirs are shown in the <i>Treasury and Elixirs</i> section.</span>
                         Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
-                        *Please note that the deposit caps are set in ETH, not the token of the underlying vault.<br/>
+                        *Please note that the deposit caps are set in USD and ETH, not the token of the underlying vault.<br/>
                         As of 2022 October, V1 contracts have been deprecated.<br/>
                         All remaining funds were moved into a temporary migration contract where users can manually migrate to V2.<br/>
                         Thus, V1 metrics are no longer covered, only the remaining contents of the migration contract.

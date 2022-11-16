@@ -32,7 +32,8 @@ import {
 } from 'chart.js';
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
-const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
+//const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
+const web3 = new Web3('https://rpc.ankr.com/eth');
 const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
@@ -48,7 +49,6 @@ export default class App extends React.Component {
       volumes: [],
       alUsdMarketcaps: [],
       alUsdMarketcapDates: [],
-      vaultV1Tvls: {},
       tokenPrices: {},
       alcxData: {},
       alUsdPeg: {},
@@ -56,7 +56,6 @@ export default class App extends React.Component {
       v2Caps: {},
       v2Deposit: {},
       tokensPerShare: {},
-      treasury: {},
       lps: {},
       alcxEthSlp: {},
       alchemixStaking: {},
@@ -65,10 +64,10 @@ export default class App extends React.Component {
       optiTvl: {},
       harvests: {},
       alAssetCrvSupply: {},
+      multifarmData: {},
       tokenPricesLoading: true,
-      vaultTvlsLoading: true,
       v2CurrentLoading: true,
-      treasuryLoading: true,
+      stakingLoading: true,
       lpsLoading: true,
       alUsdPegLoading: true,
       alEthPegLoading: true,
@@ -78,7 +77,8 @@ export default class App extends React.Component {
       optiTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
-      activeTab: 'emissions'
+      multifarmDataLoading: true,
+      activeTab: 'treasury'
     };
     this.selectTab = this.selectTab.bind(this);
 
@@ -119,12 +119,12 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getFlipsideCryptoData();
     this.aggregateWeb3Calls();
     this.getTreasury();
     this.getLPs();
     this.getAlUsdPeg();
     this.getCoinGeckoData();
+    this.getMultifarmData();
   }
 
   selectTab(active){
@@ -242,63 +242,27 @@ export default class App extends React.Component {
   }
 
   getTreasury(){
-    let treasury = {tAlcx : 0, alcx: 0, cvxAlUsd3CrvElixir: 0, cvxAlUsd3CrvTreasury: 0, cvxAlEthCrvTreasury: 0, vlCvx: 0, alcxEthSlpOwned: 0, alcxEthSlpOwnedRatio: 0, sdt: 0, sdCrv: 0, wethInElixir: 0, daiInElixir: 0 }
     let alcxEthSlp = { alcx: 0, weth: 0 }
     let alchemixStaking = { alcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0 }
     let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0 };
-    Promise.all([this.tAlcxContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      //this.tAlcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
-      this.alcxContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      this.alcxContract.methods.balanceOf(addresses.treasuryWallet2Address).call(),
+    Promise.all([
       this.alcxContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.alcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.wethContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
-      this.wethContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
-      //this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
-      this.daiContract.methods.balanceOf(addresses.elixirAddress).call(),
-      //this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
-      this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.elixirAddress).call(),
-      this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.elixirAlEthAddress).call(),
-      //this.cvxAlUsd3CrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      this.cvxAlEthCrvStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
       this.alUsd3CrvContract.methods.totalSupply().call(),
       this.alEthCrvContract.methods.totalSupply().call(),
-      this.vlCvxTrackerContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      this.tokeStakingContract.methods.balanceOf(addresses.treasuryWallet1Address).call(),
-      this.masterChefContract.methods.userInfo('0', addresses.treasuryWallet1Address).call(),
       this.alcxEthSlpContract.methods.totalSupply().call(),
       this.alcxEthSlpContract.methods.balanceOf(addresses.masterChefAddress).call(),
-      //this.saddleAlEthContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
-      //this.saddleAlEthContract.methods.balanceOf(addresses.saddleStakingContractAddress).call(),
-      this.veSdtContract.methods.balanceOf(addresses.sdtControllerContractAddress).call(),
-      this.sdCrvContract.methods.balanceOf(addresses.sdtControllerContractAddress).call()
     ])
-    .then(([tAlcx, alcx1, alcx2, alcxInSlp, stakedAlcx, wethInSlp, wethInElixir, daiInElixir, cvxAlUsd3CrvElixir, cvxAlEthCrvElixir, cvxAlEthCrvTreasury, alUsd3CrvSupply, alEthCrvSupply, vlCvx, stakedToke, alcxEthSlpOwned, alcxEthSlpTotalSupply, stakedAlcxEth, sdt, sdCrv]) => {
-      treasury.tAlcx = tAlcx/Math.pow(10, 18);
-      treasury.alcx = Math.round(alcx1/Math.pow(10, 18) + alcx2/Math.pow(10, 18));
-      // + abraAlcx/Math.pow(10, 18));
-      treasury.cvxAlUsd3CrvElixir = cvxAlUsd3CrvElixir/Math.pow(10, 18);
-      treasury.cvxAlEthCrvElixir = cvxAlEthCrvElixir/Math.pow(10, 18);
-      //treasury.cvxAlUsd3CrvTreasury = cvxAlUsd3CrvTreasury/Math.pow(10, 18);
-      treasury.cvxAlEthCrvTreasury = cvxAlEthCrvTreasury/Math.pow(10, 18);
-      treasury.vlCvx = vlCvx/Math.pow(10, 18);
-      treasury.stakedToke = stakedToke/Math.pow(10, 18);
-      treasury.alcxEthSlpOwned = alcxEthSlpOwned[0]/Math.pow(10, 18);
-      treasury.alcxEthSlpOwnedRatio = alcxEthSlpOwned[0]/alcxEthSlpTotalSupply;
+    .then(([alcxInSlp, stakedAlcx, wethInSlp, alUsd3CrvSupply, alEthCrvSupply, alcxEthSlpTotalSupply, stakedAlcxEth]) => {
       alcxEthSlp.alcx = alcxInSlp/Math.pow(10, 18);
       alcxEthSlp.weth = wethInSlp/Math.pow(10, 18);
-      treasury.sdt = sdt/Math.pow(10, 18);
-      treasury.sdCrv = sdCrv/Math.pow(10, 18);
       alchemixStaking.alcx = stakedAlcx/Math.pow(10, 18);
-      //alchemixStaking.tAlcx = stakedTAlcx/Math.pow(10, 18);
       alchemixStaking.alcxEthSlp = stakedAlcxEth/Math.pow(10, 18);
       alchemixStaking.alcxEthSlpStakingRatio = stakedAlcxEth/alcxEthSlpTotalSupply;
-      //alchemixStaking.saddleAlEth = stakedSaddleAlEthAlchemix/Math.pow(10, 18) + stakedSaddleAlEthSaddle/Math.pow(10, 18);
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
-      treasury.daiInElixir = daiInElixir/Math.pow(10, 18);
-      treasury.wethInElixir = wethInElixir/Math.pow(10, 18);
-      this.setState({ treasury: treasury, alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, treasuryLoading: false })
+      this.setState({ alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, stakingLoading: false })
     })
     .catch(function(err) {
       console.log(err.message);
@@ -358,25 +322,6 @@ export default class App extends React.Component {
     .catch(function(err) {
       console.log(err.message);
     });
-  }
-
-  calculateVaultTVLs(daiAlchemist, daiTransmuter, EthAlchemist, EthTransmuter){
-    let vaultV1Tvls = { daiTvlDates: [], daiAlchemistTVL: [], daiTransmuterTVL: [], ethTVLDates: [], ethAlchemistTVL: [], ethTransmuterTVL: [] }
-      for(let i=0;i<daiAlchemist.length;i++){
-        vaultV1Tvls.daiTvlDates[i] = daiAlchemist[i].BALANCE_DATE;
-        vaultV1Tvls.daiAlchemistTVL[i] = Math.round(daiAlchemist[i].TOTAL/10000)/100;
-      }
-      for(let i=0;i<daiTransmuter.length;i++){
-        vaultV1Tvls.daiTransmuterTVL[i] = Math.round(daiTransmuter[i].TOTAL/10000)/100;
-      }
-      for(let i=0;i<EthAlchemist.length;i++){
-        vaultV1Tvls.ethTVLDates[i] = EthAlchemist[i].BALANCE_DATE;
-        vaultV1Tvls.ethAlchemistTVL[i] = Math.round(EthAlchemist[i].TOTAL);
-      }
-      for(let i=0;i<EthTransmuter.length;i++){
-        vaultV1Tvls.ethTransmuterTVL[i] = Math.round(EthTransmuter[i].TOTAL);
-      }
-      this.setState({ vaultV1Tvls: vaultV1Tvls, vaultTvlsLoading: false })
   }
 
   calculateTokenPrices(eth, rEth, wstEth, toke, cvx, sdt, crv){
@@ -688,20 +633,6 @@ export default class App extends React.Component {
       alcxDataLoading: false 
     });
   }
-
-  getFlipsideCryptoData(){
-    Promise.all([fetch("https://api.flipsidecrypto.com/api/v2/queries/a29262d6-7878-4c8e-8d4e-a62f414c846f/data/latest").then(res => res.json()),
-      fetch("https://api.flipsidecrypto.com/api/v2/queries/6a72370b-6c81-4b3f-9691-cfdb0a3118d3/data/latest").then(res => res.json()),
-      fetch("https://api.flipsidecrypto.com/api/v2/queries/925c5328-386f-44c1-bfe9-18a796201fff/data/latest").then(res => res.json()),
-      fetch("https://api.flipsidecrypto.com/api/v2/queries/c837204d-27a8-4f0d-b0f0-6d340e5de0e8/data/latest").then(res => res.json()),
-    ])
-      .then(([daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl]) => {
-        this.calculateVaultTVLs(daiAlchemistTvl, daiTransmuterTvl, ethAlchemistTvl, ethTransmuterTvl);
-    })
-    .catch(function(err) {
-      console.log(err.message);
-    });
-  }
   
   getCoinGeckoData(){
     Promise.all([fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
@@ -722,6 +653,67 @@ export default class App extends React.Component {
     .catch(function(err) {
       console.log(err.message);
     });
+  }
+
+  calculateMultifarmData(treasury, elixir){
+    let totalTreasury = 0;
+    let alcxInTreasury = 0;
+    let totalElixir = 0;
+    let alEthCrvInElixir = 0;
+    let alUsdCrvInElixir = 0;
+    let alEthCrvInTreasury = 0;
+    let alUsdCrvInTreasury = 0;
+    let tempMultifarmCalc = {}
+    for(let i=0;i<treasury.data.length;i++){
+      if(treasury.data[i].active) totalTreasury += treasury.data[i].positionSizeUsd;
+      if(treasury.data[i].asset === 'ALCX' || treasury.data[i].asset === 'tALCX') alcxInTreasury += treasury.data[i].positionSizeUsd;
+      if(treasury.data[i].asset === 'ETH / alETH') alEthCrvInTreasury = treasury.data[i].positionSizeUsd;
+      if(treasury.data[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInTreasury = treasury.data[i].positionSizeUsd;
+    }
+    for(let i=0;i<elixir.data.length;i++){
+      if(elixir.data[i].active) totalElixir += elixir.data[i].positionSizeUsd;
+      if(elixir.data[i].asset === 'ETH / alETH') alEthCrvInElixir = elixir.data[i].positionSizeUsd;
+      if(elixir.data[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir.data[i].positionSizeUsd;
+    }
+    tempMultifarmCalc = {
+      totalTreasury: totalTreasury,
+      totalElixir: totalElixir,
+      nonAlcxTreasury: totalTreasury - alcxInTreasury,
+      alcxInTreasury: alcxInTreasury,
+      alEthCrvInElixir: alEthCrvInElixir,
+      alUsdCrvInElixir: alUsdCrvInElixir,
+      alEthCrvInTreasury: alEthCrvInTreasury,
+      alUsdCrvInTreasury: alUsdCrvInTreasury,
+    }
+    this.setState({ multifarmDataLoading: false, multifarmData: tempMultifarmCalc })
+    console.log(tempMultifarmCalc)
+  }
+
+  getMultifarmData(){
+    let requestHeaderElixir = {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'multifarm-api-token': 'rBs3Kau4a_AQegm2LJQ2ldRBrvCoFfQb'
+        }
+    }
+    let requestHeaderTreasury = {
+      method: 'GET',
+      headers: { 
+        'Content-Type': 'application/json',
+        'multifarm-api-token': 'di50relXm_XAKKAUKvZ9Igd9pVzk2gm1'
+      }
+    }
+
+    Promise.all([fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderElixir).then(res => res.json()),
+      fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderTreasury).then(res => res.json())
+    ])
+      .then(([elixir, treasury]) => {
+          this.calculateMultifarmData(treasury, elixir)
+          console.log(elixir)
+          console.log(treasury)
+      })
+      .catch(function(err) { console.log(err) });
   }
 
   getPegQuery(alAsset, collateralToken, tradeSize, skip){
@@ -835,9 +827,6 @@ export default class App extends React.Component {
 
   render() {
 
-  let v1DaiTVL = (this.state.vaultTvlsLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.vaultV1Tvls.daiAlchemistTVL[this.state.vaultV1Tvls.daiAlchemistTVL.length-1]+this.state.vaultV1Tvls.daiTransmuterTVL[this.state.vaultV1Tvls.daiTransmuterTVL.length-1])*100*this.state.tokensPerShare.dai)/100;
-  let v1EthTVL = (this.state.vaultTvlsLoading || this.state.v2CurrentLoading) ? 0 : Math.round((this.state.vaultV1Tvls.ethAlchemistTVL[this.state.vaultV1Tvls.ethAlchemistTVL.length-1]+this.state.vaultV1Tvls.ethTransmuterTVL[this.state.vaultV1Tvls.ethTransmuterTVL.length-1])*this.state.tokensPerShare.eth);
-  let v1EthUsdTVL = (this.state.vaultTvlsLoading || this.state.tokenPricesLoading) ? 0 : Math.round(v1EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2DaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.dai*this.state.tokensPerShare.dai*100)/100;
   let v2UsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdc*this.state.tokensPerShare.usdc*100)/100;
   let v2UsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.usdt*this.state.tokensPerShare.usdt*100)/100;
@@ -854,23 +843,10 @@ export default class App extends React.Component {
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
-  let treasuryAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.alcx*this.state.alcxData.price;
-  let treasuryTAlcxValue = (this.state.alcxDataLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.tAlcx*this.state.alcxData.price;
-  let treasuryCvxAlEthCrvValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvTreasury*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-  let elixirCvxAlEthCrvValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.cvxAlEthCrvElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];  
-  let treasuryTokeValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.stakedToke*this.state.tokenPrices.toke[this.state.tokenPrices.toke.length-1];
-  let treasuryCvxValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.treasury.vlCvx*this.state.tokenPrices.cvx[this.state.tokenPrices.cvx.length-1];
-  let treasurySlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.treasury.alcxEthSlpOwnedRatio;
-  let treasuryOther = 1000000;
-  let stakedAlcxValue = (this.state.treasuryLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
-  let stakingSlpValue = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
-  let alcxTotalMarketcap = this.state.alcxDataLoading ? 0 : Math.round(this.state.alcxData.marketcap*100 + treasuryAlcxValue/10000)/100;
-  let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.treasuryLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-  let sdtValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdt * this.state.tokenPrices.sdt[this.state.tokenPrices.sdt.length-1];
-  let sdCrvValue = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.sdCrv * this.state.tokenPrices.crv[this.state.tokenPrices.crv.length-1];
-  let treasuryTotal = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryAlcxValue+treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTAlcxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
-  let treasuryNonAlcx = (this.state.treasuryLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : treasuryCvxAlEthCrvValue+treasuryCvxValue+treasuryTokeValue+treasurySlpValue+sdtValue+sdCrvValue+treasuryOther+this.state.treasury.cvxAlUsd3CrvTreasury;
-  let wethInElixirUsd = (this.state.treasuryLoading || this.state.tokenPricesLoading) ? 0 : this.state.treasury.wethInElixir*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
+  let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
+  let stakingSlpValue = (this.state.stakingLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
+  let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.multifarmDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.multifarmData.alcxInTreasury/10000)/100;
+  let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/Math.pow(10,6);
   ChartJS.register(
     CategoryScale,
@@ -900,25 +876,24 @@ export default class App extends React.Component {
       </Link>
       <br/>
       <Overview 
-        v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
+        v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
         stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
-        vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
-        alchemistTvl={this.state.alchemistTvl} elixirCvxAlEthCrvValue={elixirCvxAlEthCrvValue} treasury={this.state.treasury}
-        treasuryTotal={treasuryTotal} treasuryNonAlcx={treasuryNonAlcx} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} wethInElixirUsd={wethInElixirUsd}
-        vaultTvlsLoading={this.state.vaultTvlsLoading} tokenPricesLoading={this.state.tokenPricesLoading}
+        tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
+        alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
+        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg}
+        tokenPricesLoading={this.state.tokenPricesLoading} multifarmData={this.state.multifarmData}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
         lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
-        v2CurrentLoading={this.state.v2CurrentLoading}
+        v2CurrentLoading={this.state.v2CurrentLoading} multifarmDataLoading={this.state.multifarmDataLoading}
       />
       <div className="button-group-large-screen">
       <ButtonGroup size="medium">
+        <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixir</Button>
         <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>
         <Button variant={this.state.activeTab === "deposits" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("deposits")}}>Deposits and Staking</Button>
-        <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixirs</Button>
         <Button variant={this.state.activeTab === "debt" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("debt")}}>User Debt</Button>
         <Button variant={this.state.activeTab === "alassets" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("alassets")}}>alAssets</Button>
         <Button variant={this.state.activeTab === "harvests" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("harvests")}}>Harvests</Button>
@@ -946,96 +921,23 @@ export default class App extends React.Component {
       {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.vaultTvlsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) ? "Loading..." :
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.ftmTvlLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) ? "Loading..." :
         <Deposits
-          v1DaiTVL={v1DaiTVL} v1EthUsdTVL={v1EthUsdTVL} v1EthTVL={v1EthTVL} v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
+          v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
           stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue} v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
-          vaultV1Tvls={this.state.vaultV1Tvls} tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
+          tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
         />)}
       {this.state.activeTab !== "treasury" ? "" :
-      <>
-      <>
-      <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />
-      <h2>Treasury and Elixirs</h2>
-      <div className="section-wrapper">
-      <div className="summary">
-          There are 2 main treasury addresses of the Alchemix protocol, plus 2 addresses for the alUSD and alETH Elixirs.<br/>
-          The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
-          The funds in the Elixirs should generally grow, but the protocol can utilize and effectively spend the funds for peg stabilization purposes.<br/>
-          Other than the big items listed below, the wallets hold roughly another ${Math.round(treasuryOther/10000)/100}M of various stablecoins and multiple other assets.<br/>
-          These are mostly just leftovers, strategically unimportant for the protocol.
-          <span>
-            <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
-              Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x8392f6669292fa56123f71949b52d883ae57e225">
-              Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x3216d2a52f0094aa860ca090bc5c335de36e6273">
-              sdCRV Controller</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
-              alUSD Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0xe761bf731a06fe8259fee05897b2687d56933110">
-              alETH Elixir</a><br/>
-          </span>
-          {this.state.treasuryLoading ? "Loading..." :
-          <div className="tvl-tables">
-            <div className="small-table">
-            <h3>Treasury contents</h3>
-              <div className="small-table-inner-3">
-                <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
-                <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span><span className="table-text-bold">{Math.round(this.state.treasury.alcx*100)/100}</span><span className="important-2">${Math.round(treasuryAlcxValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/cvx.png').default } alt="CVX logo" className="image" /></span><span className="table-text-title">vlCVX</span><span className="table-text-bold">{Math.round(this.state.treasury.vlCvx)}</span><span className="important-2">${Math.round(treasuryCvxValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/talcx.png').default } alt="tALCX logo" className="image" /></span><span className="table-text-title">tALCX</span><span className="table-text-bold">{Math.round(this.state.treasury.tAlcx*100)/100}</span><span className="important-2">${Math.round(treasuryTAlcxValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/tokemak.png').default } alt="TOKE logo" className="image" /></span><span className="table-text-title">TOKE</span><span className="table-text-bold">{Math.round(this.state.treasury.stakedToke)}</span><span className="important-2">${Math.round(treasuryTokeValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlEthCrvTreasury*100)/100}</span><span className="important-2">${Math.round(treasuryCvxAlEthCrvValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="alcxethslp logo" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span><span className="table-text-bold">{Math.round(this.state.treasury.alcxEthSlpOwned*100)/100}</span><span className="important-2">${Math.round(treasurySlpValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/stakedao.png').default } alt="sdt logo" className="image" /></span><span className="table-text-title">StakeDAO</span><span className="table-text-bold">{Math.round(this.state.treasury.sdt)}</span><span className="important-2">${Math.round(sdtValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/sd_crv.png').default } alt="sdCrv logo" className="image" /></span><span className="table-text-title">sdCRV</span><span className="table-text-bold">{Math.round(this.state.treasury.sdCrv)}</span><span className="important-2">${Math.round(sdCrvValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="circle" className="image" /></span><span className="table-text-title">Other</span><span className="table-text-bold"></span><span className="important-2">${Math.round(treasuryOther/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round(treasuryTotal/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Non-ALCX</span><span className="important-3">${Math.round(treasuryNonAlcx/10000)/100}M</span>
-              </div>
-            </div>
-            <div className="small-table">
-            <h3>Elixir contents</h3>
-              <div className="small-table-inner-3">
-                <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
-                <span className="small-table-row"><img src={ require('./logos/alusd_crv.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.state.treasury.cvxAlEthCrvElixir*100)/100}</span><span className="important-2">${Math.round(elixirCvxAlEthCrvValue/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" /></span><span className="table-text-title">DAI</span><span className="table-text-bold">{Math.round(this.state.treasury.daiInElixir/10000)/100}M</span><span className="important-2">${Math.round(this.state.treasury.daiInElixir/10000)/100}M</span>
-                <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="table-text-title">ETH</span><span className="table-text-bold">{Math.round(this.state.treasury.wethInElixir*100)/100}</span><span className="important-2">${Math.round(wethInElixirUsd/10000)/100}M</span>
-                <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((elixirCvxAlEthCrvValue+this.state.treasury.cvxAlUsd3CrvElixir+this.state.treasury.daiInElixir+wethInElixirUsd)/10000)/100}M</span>
-              </div>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-      <div className="section-wrapper">
-        <div className="chart-title">
-          <h3>Curve Pool Ownership</h3>
-          {this.state.treasuryLoading ? "Loading..." :
-            <ChartCrvPoolRatios 
-              alAssetCrvSupply={this.state.alAssetCrvSupply} 
-              alUsd3CrvTreasury={this.state.treasury.cvxAlUsd3CrvTreasury}
-              alUsd3CrvElixir={this.state.treasury.cvxAlUsd3CrvElixir}
-              alEthCrvTreasury={treasuryCvxAlEthCrvValue}
-              alEthCrvElixir={elixirCvxAlEthCrvValue}
-              alEthCrvTotalValue={alEthCrvTotalValue}
-            />
-          }
-        </div>
-      </div>
-        </>
-      {/*<Treasury
-        alAssetCrvSupply={this.state.alAssetCrvSupply} 
-        alUsd3CrvTreasury={this.state.treasury.cvxAlUsd3CrvTreasury}
-        alUsd3CrvElixir={this.state.treasury.cvxAlUsd3CrvElixir}
-        alEthCrvTreasury={treasuryCvxAlEthCrvValue}
-        alEthCrvElixir={elixirCvxAlEthCrvValue}
+      <Treasury
+        alAssetCrvSupply={this.state.alAssetCrvSupply}
+        multifarmData={this.state.multifarmData}
+        multifarmDataLoading={this.state.multifarmDataLoading}
         alEthCrvTotalValue={alEthCrvTotalValue}
-        treasuryLoading={this.state.treasuryLoading}
-        />*/}
-      </>}
+        />}
       
       {this.state.activeTab !== "debt" ? "" : 
       <Debt ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}

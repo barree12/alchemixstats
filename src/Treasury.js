@@ -1,7 +1,7 @@
 import React from 'react';
 import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
 import { Button, ButtonGroup } from '@mui/material';
-import { MultifarmProvider, Dashboard, DASHBOARD_TABS_VARIANTS, extendTheme, defaultTheme } from "@multifarm/widget";
+import { MultifarmProvider, Dashboard, DASHBOARD_TABS_VARIANTS } from "@multifarm/widget";
 import "@multifarm/widget/dist/alchemix.css";
 
 export default class Treasury extends React.Component {
@@ -53,7 +53,7 @@ export default class Treasury extends React.Component {
             <div>
             <ButtonGroup size="medium">
                 <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury</Button>
-                <Button variant={this.state.activeTab === "elixir" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("elixir")}}>Elixirs</Button>
+                <Button variant={this.state.activeTab === "elixir" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("elixir")}}>Elixir</Button>
             </ButtonGroup>
             </div>
             <div className="multifarm-wrapper">
@@ -61,7 +61,7 @@ export default class Treasury extends React.Component {
                     token={this.state.activeTab === 'treasury' ? apiKey.treasury : apiKey.elixirs}
                     theme="alchemix"
                     provider="alchemix"
-                    themeColors="light"
+                    themeColors="dark"
                     badgePlacement="bottom"
                     strategyTypesConfig={strategyTypesObject}
                     dashboardTabs={[DASHBOARD_TABS_VARIANTS.PORTFOLIO_ALLOCATION, DASHBOARD_TABS_VARIANTS.STRATEGIES_PERFORMANCE]}>
@@ -71,13 +71,10 @@ export default class Treasury extends React.Component {
                 <div className="section-wrapper">
                 <div className="chart-title">
                 <h3>Curve Pool Ownership</h3>
-                {this.props.treasuryLoading ? "Loading..." :
+                {this.props.multifarmDataLoading ? "Loading..." :
                         <ChartCrvPoolRatios 
-                            alAssetCrvSupply={this.props.alAssetCrvSupply} 
-                            alUsd3CrvTreasury={this.props.alUsd3CrvTreasury}
-                            alUsd3CrvElixir={this.props.alUsd3CrvElixir}
-                            alEthCrvTreasury={this.props.alEthCrvTreasury}
-                            alEthCrvElixir={this.props.alEthCrvElixir}
+                            alAssetCrvSupply={this.props.alAssetCrvSupply}
+                            multifarmData={this.props.multifarmData}
                             alEthCrvTotalValue={this.props.alEthCrvTotalValue}
                         />}
                     </div>

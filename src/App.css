@@ -607,8 +607,9 @@ div.earn-yield-link a {
   color: #fff;
 }
 
-.multifarm-wrapper {
-  
+.multifarm-widget-powered-by-badge {
+  background-color: #181e28 !important;
+  color: white !important;
 }
 
 @media (max-width: 780px) {
