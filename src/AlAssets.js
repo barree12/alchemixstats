@@ -40,8 +40,10 @@ export default class AlAssets extends React.Component {
     render(){
         return (
             <>
-                <img src={ require('./logos/alusd.png').default } alt="alUSD logo" className="image3" />
-                <h2>alUSD</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/alusd.svg').default } alt="alUSD logo" className="image3" />
+                    <h2>alUSD</h2>
+                </div>
                 <AlUsdSummary lps={this.props.lps} />
                 <div className="section-wrapper">
                     <div className="chart-title">
@@ -63,9 +65,10 @@ export default class AlAssets extends React.Component {
                         <ChartAlusdPrice data={this.props.alUsdPeg} active={this.state.alUsdPegActive} toggle={this.state.alUsdPegToggle} />
                     </div>
                 </div>
-
-                <img src={ require('./logos/aleth.png').default } alt="alETH logo" className="image3" />
-                <h2>alETH</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/aleth_blue.svg').default } alt="alETH logo" className="image3" />
+                    <h2>alETH</h2>
+                </div>
                 <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} />
                 <div className="section-wrapper">
                     <div className="chart-title">

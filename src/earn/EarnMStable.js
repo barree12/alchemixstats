@@ -19,7 +19,7 @@ export default class EarnMStable extends Component {
             </div>
             
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/mstable_round.png').default } alt="mStable logo" className="image" />

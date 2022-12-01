@@ -16,7 +16,7 @@ export default class Elixir extends React.Component {
         }
         return (
             <>
-            <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />
+            <img src={ require('./logos/treasury_thin.svg').default } alt="Treasury logo" className="image3" />
             <h2>Treasury and Elixirs</h2>
             <div className="section-wrapper">
             <div className="summary">

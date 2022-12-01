@@ -130,7 +130,7 @@ export default class EarnSaddle extends Component {
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
             </div>
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/saddle.png').default } alt="Saddle logo" className="image" />
@@ -152,7 +152,7 @@ export default class EarnSaddle extends Component {
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
             </div>
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/saddle.png').default } alt="Saddle logo" className="image" />
@@ -174,7 +174,7 @@ export default class EarnSaddle extends Component {
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
             </div>
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/aleth.png').default } alt="alETH logo" className="image" />
+              <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/alcx_logo.png').default } alt="Alchemix logo" className="image" />

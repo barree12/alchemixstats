@@ -21,23 +21,25 @@ import { Link } from 'react-router-dom';
 export default class Earn extends Component {
   render() {
     return <div className="App">
-      <div className="header-disclaimer">
-        This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
-      </div>
-      <h1>Alchemix Earn</h1>
-      <img className="header-image" src={ require('../logos/alcx_logo.png').default } alt="ALCX logo" /><br/>
-      <Link to="/" style={{ textDecoration: 'none' }}>
-        <div className="switcher">
-          Switch to Alchemix Stats <img className="image2" src={ require('../logos/arrow.png').default } alt="arrow" /><br/>
+      <div className="header-container">
+        <div className="header-style">
+          <img className="alchemix-logo" src={ require('../logos/alchemix-earn-logo.svg').default } alt="ALCX earn logo" />
         </div>
-      </Link>
-      <br/>
+        <div className="header-switcher">
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <img className="header-button" src={ require('../logos/stats_inactive.svg').default } alt="stats button" />
+          </Link>
+          <Link to="/earn" style={{ textDecoration: 'none' }}>
+            <img className="header-button" src={ require('../logos/earn_active.svg').default } alt="earn button" />
+          </Link>
+        </div>
+      </div>
+      <div className="earn-top">
         Have you wondered what to do with your alUSD or alETH loan after using the Alchemix vaults?<br />
         While swapping to other assets is always an option, there are plenty of opportunities to earn yield on alAssets directly.<br />
-        These opportunities in most cases provide good potential returns.<br />
-      <br/>
+        These opportunities in most cases provide good potential returns.
+      </div>
       <div className="earn-yield-wrapper">
-        <br/>
         <h2>
           Standard Liquidity Pools
         </h2>
@@ -58,7 +60,7 @@ export default class Earn extends Component {
               <b>Chain</b>
             </div>
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />/<img src={ require('../logos/aleth.png').default } alt="alETH logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />/<img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <b>Rewards</b>
@@ -95,7 +97,7 @@ export default class Earn extends Component {
               <b>Chain</b>
             </div>
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />/<img src={ require('../logos/aleth.png').default } alt="alETH logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />/<img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <b>Rewards</b>

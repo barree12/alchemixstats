@@ -90,7 +90,7 @@ export default class EarnPremia extends Component {
             </div>
             
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/aleth.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/aleth_blue.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
             <img src={ require('../logos/premia.png').default } alt="Premia logo" className="image" />
@@ -113,7 +113,7 @@ export default class EarnPremia extends Component {
             </div>
             
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alETH logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alETH logo" className="image" />
             </div>
             <div className="earn-yield-reward">
             <img src={ require('../logos/premia.png').default } alt="Premia logo" className="image" />

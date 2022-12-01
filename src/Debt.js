@@ -116,8 +116,10 @@ export default class Debt extends React.Component {
         console.log(stableTvl)
         return (
             <>
-                <img src={ require('./logos/debt.png').default } alt="debt logo" className="image3" />
-                <h2>User debt</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image3" />
+                    <h2>User debt</h2>
+                </div>
                 <div className="summary">
                     This section shows global user debt across all alchemists.<br/>
                     LTV (Loan-to-Value) is set to a maximum of 50% across the system.<br/>
@@ -130,8 +132,8 @@ export default class Debt extends React.Component {
                     {this.state.debtLoading ? <LoadingComponent /> :
                     <div className="small-table-inner-12">
                         <span className="small-table-row"></span><span></span><span className="table-text-title">Amount</span><span className="table-text-title">USD value</span><span className="table-text-title">LTV</span>
-                        <span className="small-table-row"><img src={ require('./logos/alusd.png').default } alt="alusd logo" className="image" /></span><span className="table-text-title">alUSD</span><span className="table-text-bold">{Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">${Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">{stableLtv}%</span>
-                        <span className="small-table-row"><img src={ require('./logos/aleth.png').default } alt="aleth logo" className="image" /></span><span className="table-text-title">alETH</span><span className="table-text-bold">{Math.round(this.state.debt.eth[this.state.debt.eth.length-1])}</span><span className="important-2">${ethAlchemistUsd}M</span><span className="important-2">{ethLtv}%</span>
+                        <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alusd logo" className="image" /></span><span className="table-text-title">alUSD</span><span className="table-text-bold">{Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">${Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">{stableLtv}%</span>
+                        <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="aleth logo" className="image" /></span><span className="table-text-title">alETH</span><span className="table-text-bold">{Math.round(this.state.debt.eth[this.state.debt.eth.length-1])}</span><span className="important-2">${ethAlchemistUsd}M</span><span className="important-2">{ethLtv}%</span>
                         {/*<span className="small-table-row"><img src={ require('./logos/alusd_ftm.png').default } alt="alusd ftm logo" className="image" /></span><span className="table-text-title">alUSD FTM</span><span className="table-text-bold">{}M</span><span className="important-2">${}M</span>*/}
                         <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${totalDebt}M</span>
                     </div>}

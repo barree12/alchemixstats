@@ -33,11 +33,11 @@ export default class Overview extends React.Component {
                         <div className="small-table-4">
                             <h3>alAsset Liquidity and Pegs</h3>
                             <div className="small-table-inner-7">
-                                <span className="small-table-row"><img src={ require('./logos/alusd.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alUSD</span><span className="table-text-bold"></span>
+                                <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alUSD</span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alUsdLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alUSD peg</span><span className="important-5">{Math.round(this.props.alUsdPeg.dai.peg[this.props.alUsdPeg.dai.peg.length-1]*10000)/10000}</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
-                                <span className="small-table-row"><img src={ require('./logos/aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
+                                <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alEthLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alETH peg</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
                             </div>
@@ -79,11 +79,11 @@ export default class Overview extends React.Component {
                             <h3>Treasury and Elixirs</h3>
                             <div className="small-table-inner-9">
                                 <span className="small-table-row"></span><span className="table-text-bold">Treasury</span><span>USD value</span><span></span>
-                                <span className="small-table-row"><img src={ require('./logos/treasury.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.totalTreasury/10000)/100}M</span><span></span>
+                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.totalTreasury/10000)/100}M</span><span></span>
                                 <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.nonAlcxTreasury/10000)/100}M</span><span></span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-bold">Elixirs</span><span>USD value</span><span></span>
-                                <span className="small-table-row"><img src={ require('./logos/treasury.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.multifarmData.totalElixir/10000)/100}M</span><span></span>
+                                <span className="small-table-row"><img src={ require('./logos/transmuter.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.multifarmData.totalElixir/10000)/100}M</span><span></span>
 
                                 {/*<span className="small-table-row"><img src={ require('./logos/alusd_crv.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
                                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlEthCrvElixir)}</span><span className="important-2">${Math.round(this.props.elixirCvxAlEthCrvValue/10000)/100}M</span>

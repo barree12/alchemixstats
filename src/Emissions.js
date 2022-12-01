@@ -10,8 +10,12 @@ export default class Emissions extends React.Component {
     render(){
         return (
             <>
-                <img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image3" />
-                <h2>ALCX Emissions</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="ALCX logo" className="image3" />
+                    <h2>ALCX Emissions</h2>
+                </div>
+                {/*<img src={ require('./logos/alcx_logo_only.svg').default } alt="ALCX logo" className="image3" />
+                <h2>ALCX Emissions</h2>*/}
                 <div className="summary">
                     <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
                     <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>

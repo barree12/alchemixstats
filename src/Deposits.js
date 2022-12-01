@@ -27,8 +27,10 @@ export default class Deposits extends React.Component {
     render(){
         return (
             <>
-                <img src={ require('./logos/safe.png').default } alt="Vault logo" className="image3" />
-                <h2>Deposits and Staking</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/vaults.svg').default } alt="Vault logo" className="image3" />
+                    <h2>Deposits and Staking</h2>
+                </div>
                 <div className="summary">
                         In Alchemix V1, both the Alchemist and the Transmuter deployed their DAI and ETH balance into the Yearn DAI and Yearn WETH strategies.<br/>
                         Alchemix V2 introduced additional collateral types and yield sources.<br/>

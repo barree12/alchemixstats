@@ -864,16 +864,19 @@ export default class App extends React.Component {
 
   return (
     <div className="App">
-      <div className="header-disclaimer">
-        This service provides statistics for the Alchemix dApp (<a target="_blank" rel="noreferrer" href="https://alchemix.fi">alchemix.fi</a>) and associated crypto tokens.
-      </div>
-      <h1>Alchemix Statistics</h1>
-      <img className="header-image" src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" />
-      <Link to="/earn" style={{ textDecoration: 'none' }}>
-        <div className="switcher">
-          Switch to Alchemix Earn <img className="image2" src={ require('./logos/arrow.png').default } alt="arrow" /><br/>
+      <div className="header-container">
+        <div className="header-style">
+          <img className="alchemix-logo" src={ require('./logos/alchemix-stats-logo.svg').default } alt="ALCX logo" />
         </div>
-      </Link>
+        <div className="header-switcher">
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <img className="header-button" src={ require('./logos/stats_active.svg').default } alt="stats button" />
+          </Link>
+          <Link to="/earn" style={{ textDecoration: 'none' }}>
+            <img className="header-button" src={ require('./logos/earn_inactive.svg').default } alt="earn button" />
+          </Link>
+        </div>
+      </div>
       <br/>
       <Overview 
         v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
@@ -890,31 +893,132 @@ export default class App extends React.Component {
         v2CurrentLoading={this.state.v2CurrentLoading} multifarmDataLoading={this.state.multifarmDataLoading}
       />
       <div className="button-group-large-screen">
-      <ButtonGroup size="medium">
-        <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixir</Button>
-        <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>
-        <Button variant={this.state.activeTab === "deposits" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("deposits")}}>Deposits and Staking</Button>
-        <Button variant={this.state.activeTab === "debt" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("debt")}}>User Debt</Button>
-        <Button variant={this.state.activeTab === "alassets" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("alassets")}}>alAssets</Button>
-        <Button variant={this.state.activeTab === "harvests" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("harvests")}}>Harvests</Button>
-      </ButtonGroup>
+      <div className="multifarm-switcher-container">
+    
+            <div className="menu-switcher">
+                {this.state.activeTab === "treasury" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                </div>}
+                {this.state.activeTab === "emissions" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
+                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
+                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                </div>}
+                {this.state.activeTab === "deposits" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                </div>}
+                {this.state.activeTab === "debt" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("debt")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                </div>}
+                {this.state.activeTab === "alassets" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
+                    <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
+                    <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                </div>}
+                {this.state.activeTab === "harvests" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                </div>}
+            </div>
+          </div>
       </div>
       <br/>
       <div className="button-group-small-screen">
-      <div className="button-group-top">
-        <ButtonGroup size="medium">
-          <Button variant={this.state.activeTab === "emissions" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("emissions")}}>ALCX Emissions</Button>
-          <Button variant={this.state.activeTab === "deposits" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("deposits")}}>Deposits and Staking</Button>
-          <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury and Elixirs</Button>
-        </ButtonGroup>
-      </div>
-      <div className="button-group-lower">
-        <ButtonGroup size="medium">
-          <Button variant={this.state.activeTab === "debt" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("debt")}}>User Debt</Button>
-          <Button variant={this.state.activeTab === "alassets" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("alassets")}}>alAssets</Button>
-          <Button variant={this.state.activeTab === "harvests" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("harvests")}}>Harvests</Button>
-        </ButtonGroup>
-      </div>
+          <div className="multifarm-switcher-container">
+    
+            <div className="menu-switcher">
+                {this.state.activeTab === "treasury" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                </div>}
+                {this.state.activeTab === "emissions" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
+                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
+                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                </div>}
+                {this.state.activeTab === "deposits" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                </div>}
+              </div>
+            </div>
+          <div className="multifarm-switcher-container">
+              <div className="menu-switcher">
+                {this.state.activeTab === "debt" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("debt")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                </div>}
+                {this.state.activeTab === "alassets" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
+                    <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
+                    <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                </div>}
+                {this.state.activeTab === "harvests" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                </div>}
+            </div>
+          </div>
+
       </div>
       <br/>
       <br/>

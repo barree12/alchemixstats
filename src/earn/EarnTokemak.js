@@ -54,7 +54,7 @@ export default class EarnTokemak extends Component {
           </div>
           
           <div className="earn-yield-alasset">
-            <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+            <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
           </div>
           <div className="earn-yield-reward">
           <img src={ require('../logos/tokemak.png').default } alt="TOKE logo" className="image" />

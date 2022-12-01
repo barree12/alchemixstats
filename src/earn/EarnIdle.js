@@ -81,7 +81,7 @@ export default class EarnIdle extends Component {
             </div>
             
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/crv.png').default } alt="Curve logo" className="image" />
@@ -105,7 +105,7 @@ export default class EarnIdle extends Component {
             </div>
             
             <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.png').default } alt="alUSD logo" className="image" />
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
             </div>
             <div className="earn-yield-reward">
               <img src={ require('../logos/crv.png').default } alt="Curve logo" className="image" />

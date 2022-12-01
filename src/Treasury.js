@@ -33,8 +33,11 @@ export default class Treasury extends React.Component {
         }
         return (
             <>
-            <img src={ require('./logos/treasury.png').default } alt="Treasury logo" className="image3" />
-            <h2>Treasury and Elixirs</h2>
+                <div className="section-header">
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="Treasury logo" className="image3" />
+                    <h2>Treasury and Elixir</h2>
+                </div>
+
             <div className="section-wrapper">
             <div className="summary">
                 There are 2 main treasury addresses of the Alchemix protocol, plus 2 addresses for the alUSD and alETH Elixirs.<br/>
@@ -50,11 +53,28 @@ export default class Treasury extends React.Component {
             </div>
             
             </div>
-            <div>
-            <ButtonGroup size="medium">
-                <Button variant={this.state.activeTab === "treasury" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("treasury")}}>Treasury</Button>
-                <Button variant={this.state.activeTab === "elixir" ? "contained" : "outlined"} color="inherit" onClick={() => {this.selectTab("elixir")}}>Elixir</Button>
-            </ButtonGroup>
+            <div className="multifarm-switcher-container">
+    
+            <div className="multifarm-switcher">
+                {this.state.activeTab === "treasury" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-sub-inside">Treasury</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
+                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-sub-inside">Treasury</div>
+                </div>}
+                {this.state.activeTab === "elixir" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-sub-inside">Elixir</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-sub-inside">Elixir</div>
+                </div>}
+            </div>
             </div>
             <br/>
             <div className="multifarm-wrapper">
