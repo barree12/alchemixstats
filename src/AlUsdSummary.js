@@ -32,7 +32,7 @@ export default class AlUsdSummary extends React.Component {
                     <div className="tokens"><img src={ require('./logos/aave_usdc.png').default } alt="aave usdc token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&marketName=proto_mainnet">Aave USDC</a></div>
                 </div>
                 The protocol assumes every alUSD is worth $1 and the transmuter exchanges alUSD for $1 worth of any collateral asset.<br/>
-                Thus it is the primary goal of the protocol to maintain the peg ($1 value) for alUSD.<br/>
+                Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   <div className="small-table-inner-4">

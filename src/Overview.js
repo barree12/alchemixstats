@@ -31,15 +31,15 @@ export default class Overview extends React.Component {
                     {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.multifarmDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">
                         <div className="small-table-4">
-                            <h3>alAsset Liquidity and Pegs</h3>
+                            <h3>alAsset Liquidity and Prices</h3>
                             <div className="small-table-inner-7">
                                 <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alUSD</span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alUsdLiquidity}M</span>
-                                <span className="small-table-row"></span><span className="table-text-title-margin">alUSD peg</span><span className="important-5">{Math.round(this.props.alUsdPeg.dai.peg[this.props.alUsdPeg.dai.peg.length-1]*10000)/10000}</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">alUSD price</span><span className="important-5">{Math.round(this.props.alUsdPeg.dai.peg[this.props.alUsdPeg.dai.peg.length-1]*10000)/10000}</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
                                 <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alEthLiquidity}M</span>
-                                <span className="small-table-row"></span><span className="table-text-title-margin">alETH peg</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">alETH price</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
                             </div>
                         </div>
                         <div className="small-table-4">

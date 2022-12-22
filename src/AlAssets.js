@@ -51,7 +51,7 @@ export default class AlAssets extends React.Component {
                         <ChartAlusdSupply marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
                         </div>
                     <div className="chart-title">
-                        <h3>alUSD Peg</h3>
+                        <h3>alUSD Price</h3>
                         <div className="button-container">
                             <ButtonGroup size="small">
                             <Button variant={this.state.alUsdPegActive.dai ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("dai")}}>DAI</Button>
@@ -76,7 +76,7 @@ export default class AlAssets extends React.Component {
                         <ChartAlethSupply />
                     </div>
                     <div className="chart-title">
-                        <h3>alETH Peg</h3>
+                        <h3>alETH Price</h3>
                         <div className="toggle-text">
                             ETH<Switch onChange={this.toggleAlEthPeg} checked={this.state.alEthPegToggle} />%
                         </div>
