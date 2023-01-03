@@ -25,6 +25,11 @@ export default class Overview extends React.Component {
             <>
                 <h2>Protocol Summary</h2>
                 <div className="overview">
+                    <span className="flex-row">
+                        <span>Total Protocol TVL:&nbsp;</span>
+                        <div className="important">${Math.round(deposits*100+this.props.multifarmData.totalElixir/10000)/100}M</div>
+                    </span>
+                    <br/>
                     <span>
                         The Q3 2022 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a>
                     </span>
@@ -46,7 +51,7 @@ export default class Overview extends React.Component {
                             <h3>Deposits and Staking</h3>
                             <div className="small-table-inner-10">
                                 <span className="small-table-title-wrap"><span className="cell-disappear"></span><span className="table-text-bold">Deposits</span></span>
-                                <span className="small-table-content-wrap"><span>({new Date().getMonth()}/{new Date().getDate()})</span><span>({new Date().getMonth()+1}/{new Date().getDate()})</span><span>MoM change %</span></span>
+                                <span className="small-table-content-wrap"><span>({new Date().getMonth()===0?"12":new Date().getMonth()}/{new Date().getDate()})</span><span>({new Date().getMonth()+1}/{new Date().getDate()})</span><span>MoM change %</span></span>
                                 <span className="small-table-title-wrap"><span className="cell-disappear"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" /></span><span className="table-text-title">Stablecoin Vaults</span></span>
                                 <span className="small-table-content-wrap"><span className="important-5">${stablecoinDeposits1mAgo}M</span><span className="important-5">${stablecoinDeposits}M</span><span className="important-5">{stablecoinVaultChange >= 0 ? <span className="change-positive">+{stablecoinVaultChange}%</span> : <span className="change-negative">{stablecoinVaultChange}%</span>}</span></span>
                                 <span className="cell-disappear"><span className="cell-disappear"></span><span className="important"></span></span>

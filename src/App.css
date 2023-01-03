@@ -67,6 +67,11 @@ h3 {
   justify-content: center;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .header-style {
   width: 49%;
   display: flex;
