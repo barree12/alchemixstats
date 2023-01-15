@@ -65,44 +65,35 @@ export default class Debt extends React.Component {
         }
       }
 
+      getDebtQuery(skip){
+        return `{
+          alchemistGlobalDebtHistories(
+            first: 1000
+            skip: ` + skip + `
+            orderBy: timestamp
+            orderDirection: desc
+          ){
+            alchemist {
+              id
+            }
+            debt
+            block {
+              timestamp
+            }
+          }
+        }`
+      }
+
       getGlobalDebt(){
-        const globalDebt = `{
-          alchemistGlobalDebtHistories(
-            first: 1000
-            orderBy: timestamp
-            orderDirection: desc
-          ){
-            alchemist {
-              id
-            }
-            debt
-            block {
-              timestamp
-            }
-          }
-        }`
-    
-        const globalDebtSkip1000 = `{
-          alchemistGlobalDebtHistories(
-            first: 1000
-            skip: 1000
-            orderBy: timestamp
-            orderDirection: desc
-          ){
-            alchemist {
-              id
-            }
-            debt
-            block {
-              timestamp
-            }
-          }
-        }`
+        const globalDebt = this.getDebtQuery(0);
+        const globalDebtSkip1000 = this.getDebtQuery(1000);
+        const globalDebtSkip2000 = this.getDebtQuery(2000);
     
         Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json()),
-          fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip1000)).then(res => res.json())])
-          .then(([globalDebt, globalDebtSkip1000]) => {
-            this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.concat(globalDebtSkip1000.data.alchemistGlobalDebtHistories).reverse())
+          fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip1000)).then(res => res.json()),
+          fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip2000)).then(res => res.json())])
+          .then(([globalDebt, globalDebtSkip1000, globalDebtSkip2000]) => {
+            this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.concat(globalDebtSkip1000.data.alchemistGlobalDebtHistories.concat(globalDebtSkip2000.data.alchemistGlobalDebtHistories)).reverse())
         })
       }
 

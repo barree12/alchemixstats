@@ -19,13 +19,13 @@ export default class Emissions extends React.Component {
                 <div className="summary">
                     <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
                     <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
-                    <span>Current inflation is <span className="important">{currentStats().currentInflation}%/week <i>({Math.round(currentStats().currentInflation*61)/100}%/week*)</i></span> - {currentStats().currentInflationAnnual}%/year <i>({Math.round(currentStats().currentInflationAnnual*61)/100}%/year*)</i></span>
-                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({formatDate(new Date(), 1)}): <span className="important">{futureInflation(1).totalInflation}% <i>({Math.round(futureInflation(1).totalInflation*61)/100}%*)</i></span><br/>
-                    Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}% <i>({Math.round(futureInflation(1).forwardInflation*61)/100}%*)</i></span></span>
-                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({formatDate(new Date(), 2)}): <span className="important">{futureInflation(2).totalInflation}% <i>({Math.round(futureInflation(2).totalInflation*61)/100}%*)</i></span><br/>
-                    Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}% <i>({Math.round(futureInflation(2).forwardInflation*61)/100}%*)</i></span></span>
-                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({formatDate(new Date(), 3)}): <span className="important">{futureInflation(3).totalInflation}% <i>({Math.round(futureInflation(3).totalInflation*61)/100}%*)</i></span><br/>
-                    Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}% <i>({Math.round(futureInflation(3).forwardInflation*61)/100}%*)</i></span></span>
+                    <span>Current inflation is <span className="important">{currentStats().currentInflationAnnual}%/year <i>({Math.round(currentStats().currentInflationAnnual*61)/100}%/year*)</i></span></span>
+                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({formatDate(new Date(), 1)}): <span className="important">{futureInflation(1).totalInflation}%</span><br/>
+                    Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
+                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({formatDate(new Date(), 2)}): <span className="important">{futureInflation(2).totalInflation}%</span><br/>
+                    Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
+                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({formatDate(new Date(), 3)}): <span className="important">{futureInflation(3).totalInflation}%</span><br/>
+                    Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}%</span></span>
                     <br/>
                     <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/alchemix-finance/token-distribution/alcx-monetary-policy">ALCX Monetary Policy</a></span>
                     <br/>

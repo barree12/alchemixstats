@@ -143,7 +143,7 @@ export default class EarnSaddle extends Component {
             </div>
           </div>
 
-          <div className="earn-yield-row">
+          {/*<div className="earn-yield-row">
             
             <div className="earn-yield-strat">
               alUSDFraxBP
@@ -163,7 +163,7 @@ export default class EarnSaddle extends Component {
             <div className="earn-yield-link">
               <a href="https://saddle.exchange/#/pools/FRAXBP-alUSD/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
-          </div>
+    </div>*/}
           
           <div className="earn-yield-row">
             

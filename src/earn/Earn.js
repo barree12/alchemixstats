@@ -110,9 +110,9 @@ export default class Earn extends Component {
             </div>
           </div>
           <EarnPremia />
-          <EarnTokemak />
+          {/*<EarnTokemak />*/}
           <EarnIdle />
-          <EarnElement />
+          {/*<EarnElement />*/}
         </div>
       </div>
       <br/>

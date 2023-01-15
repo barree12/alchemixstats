@@ -1,11 +1,12 @@
 import React from 'react';
 import LoadingComponent from './LoadingComponent';
+import { formatDateNumber } from './Functions';
 
 export default class Overview extends React.Component { 
 
     render(){
 //console.log(this.props.vaultV1Tvls)
-        let alUsdLiquidity = this.props.lpsLoading ? 0 : Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInD4/10000 + this.props.lps.fraxInD4/10000 + this.props.lps.feiInD4/10000 + this.props.lps.lUsdInD4/10000 + this.props.lps.alUsdInBeets/10000 + this.props.lps.usdcInBeets/10000 + this.props.lps.daiInBeets/10000 + this.props.lps.alUsdInVelodrome/10000 + this.props.lps.usdcInVelodrome/10000 + this.props.lps.alUsdInSaddleFBP/10000 + this.props.lps.fbpInSaddleFBP/10000 + this.props.lps.alUsdInCurveFBP/10000 + this.props.lps.fbpInCurveFBP/10000)/100
+        let alUsdLiquidity = this.props.lpsLoading ? 0 : Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInD4/10000 + this.props.lps.fraxInD4/10000 + this.props.lps.feiInD4/10000 + this.props.lps.lUsdInD4/10000 + this.props.lps.alUsdInBeets/10000 + this.props.lps.usdcInBeets/10000 + this.props.lps.daiInBeets/10000 + this.props.lps.alUsdInVelodrome/10000 + this.props.lps.usdcInVelodrome/10000 + this.props.lps.alUsdInCurveFBP/10000 + this.props.lps.fbpInCurveFBP/10000)/100
         let alEthLiquidity = (this.props.lpsLoading || this.props.tokenPricesLoading) ? 0 : Math.round((this.props.lps.alEthInCrv + this.props.lps.alEthInSaddle + this.props.lps.ethInAlEthCrv + this.props.lps.wethInSaddle + this.props.lps.sEthInSaddle + this.props.lps.alEthInVelodrome + this.props.lps.wethInVelodrome)*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.props.v2Deposit.daiInMigrate + this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL)*100)/100;
         let ethDeposits = this.props.v2CurrentLoading ? 0 : Math.round(this.props.v2Deposit.wethInMigrate + this.props.v2EthTVL + this.props.v2aWethTVL + this.props.v2StethTVL + this.props.v2RethTVL);
@@ -20,7 +21,9 @@ export default class Overview extends React.Component {
         let ethVaultUsdChange = Math.round((ethDepositsUsd/ethDepositsUsd1mAgo-1)*10000)/100;
         let depositsChange = Math.round((deposits/deposits1mAgo-1)*10000)/100;
         let ethPriceChange = this.props.tokenPricesLoading ? 0 : Math.round((this.props.ethPrice[this.props.ethPrice.length-1]/this.props.ethPrice[this.props.ethPrice.length-31]-1)*10000)/100;
-        
+        let alUsdCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.multifarmData.alUsdCrvInElixir + this.props.multifarmData.daiInElixir) / (this.props.alAssetSupply.alUsd - this.props.multifarmData.alUsdInElixir);
+        let alEthCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.multifarmData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.multifarmData.alEthInElixir);
+        console.log(this.props.multifarmData.alEthCrvInElixir)
         return (
             <>
                 <h2>Protocol Summary</h2>
@@ -36,22 +39,24 @@ export default class Overview extends React.Component {
                     {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.multifarmDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">
                         <div className="small-table-4">
-                            <h3>alAsset Liquidity and Prices</h3>
+                            <h3>alAssets</h3>
                             <div className="small-table-inner-7">
                                 <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alUSD</span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alUsdLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alUSD price</span><span className="important-5">{Math.round(this.props.alUsdPeg.dai.peg[this.props.alUsdPeg.dai.peg.length-1]*10000)/10000}</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{Math.round(alUsdCollateralRatio*100)}%</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
                                 <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alEthLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alETH price</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{Math.round(alEthCollateralRatio*100)}%</span>
                             </div>
                         </div>
                         <div className="small-table-4">
-                            <h3>Deposits and Staking</h3>
+                            <h3>Deposits</h3>
                             <div className="small-table-inner-10">
                                 <span className="small-table-title-wrap"><span className="cell-disappear"></span><span className="table-text-bold">Deposits</span></span>
-                                <span className="small-table-content-wrap"><span>({new Date().getMonth()===0?"12":new Date().getMonth()}/{new Date().getDate()})</span><span>({new Date().getMonth()+1}/{new Date().getDate()})</span><span>MoM change %</span></span>
+                                <span className="small-table-content-wrap"><span>({formatDateNumber(new Date().getMonth())}/{formatDateNumber(new Date().getDate())})</span><span>({formatDateNumber(new Date().getMonth()+1)}/{formatDateNumber(new Date().getDate())})</span><span>MoM change %</span></span>
                                 <span className="small-table-title-wrap"><span className="cell-disappear"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" /></span><span className="table-text-title">Stablecoin Vaults</span></span>
                                 <span className="small-table-content-wrap"><span className="important-5">${stablecoinDeposits1mAgo}M</span><span className="important-5">${stablecoinDeposits}M</span><span className="important-5">{stablecoinVaultChange >= 0 ? <span className="change-positive">+{stablecoinVaultChange}%</span> : <span className="change-negative">{stablecoinVaultChange}%</span>}</span></span>
                                 <span className="cell-disappear"><span className="cell-disappear"></span><span className="important"></span></span>
@@ -83,12 +88,12 @@ export default class Overview extends React.Component {
                         <div className="small-table-4">
                             <h3>Treasury and Elixirs</h3>
                             <div className="small-table-inner-9">
-                                <span className="small-table-row"></span><span className="table-text-bold">Treasury</span><span>USD value</span><span></span>
-                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.totalTreasury/10000)/100}M</span><span></span>
-                                <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.nonAlcxTreasury/10000)/100}M</span><span></span>
-                                <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span><span></span>
-                                <span className="small-table-row"></span><span className="table-text-bold">Elixirs</span><span>USD value</span><span></span>
-                                <span className="small-table-row"><img src={ require('./logos/transmuter.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.multifarmData.totalElixir/10000)/100}M</span><span></span>
+                                <span className="small-table-row"></span><span className="table-text-bold">Treasury</span><span>USD value</span>
+                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.totalTreasury/10000)/100}M</span>
+                                <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.nonAlcxTreasury/10000)/100}M</span>
+                                <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
+                                <span className="small-table-row"></span><span className="table-text-bold">Elixirs</span><span>USD value</span>
+                                <span className="small-table-row"><img src={ require('./logos/transmuter.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.multifarmData.totalElixir/10000)/100}M</span>
 
                                 {/*<span className="small-table-row"><img src={ require('./logos/alusd_crv.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
                                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlEthCrvElixir)}</span><span className="important-2">${Math.round(this.props.elixirCvxAlEthCrvValue/10000)/100}M</span>

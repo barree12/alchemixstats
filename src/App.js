@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Web3 from 'web3';
-import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
 //import ChartQuartiles from './charts/ChartQuartiles';
 import Deposits from './Deposits';
 import AlAssets from './AlAssets';
@@ -11,11 +10,9 @@ import Emissions from './Emissions';
 import Overview from './Overview';
 import Debt from './Debt';
 import Treasury from './Treasury';
-import Elixir from './Elixir';
 import { Link } from "react-router-dom";
-import { formatDate, datesEqual} from './Functions';
+import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
-import { Button, ButtonGroup } from '@mui/material';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -65,6 +62,7 @@ export default class App extends React.Component {
       harvests: {},
       alAssetCrvSupply: {},
       multifarmData: {},
+      alAssetSupply: {},
       tokenPricesLoading: true,
       v2CurrentLoading: true,
       stakingLoading: true,
@@ -152,6 +150,7 @@ export default class App extends React.Component {
         alUsdMarketcaps[counter] = Math.round(result.market_caps[i][1]/10000)/100;
         if(result.market_caps[i][1] !== 0) counter++;
       }
+      //console.log(result)
       this.setState({ dates: dates, prices: prices, volumes: volumes, alUsdMarketcaps: alUsdMarketcaps, alUsdMarketcapDates: alUsdMarketcapDates, alUsdLoading: false });
     }
   } 
@@ -160,6 +159,7 @@ export default class App extends React.Component {
     let v2Caps = {}
     let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0 }
     let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, daiInMigrate: 0, wethInMigrate: 0 }
+    let alAssetSupply = {alEth: 0, alUsd: 0}
 
     Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdcAddress).call(),
@@ -189,10 +189,12 @@ export default class App extends React.Component {
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
       this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
       this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
-      this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call()
+      this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
+      this.alEthContract.methods.totalSupply().call(),
+      this.alUsdContract.methods.totalSupply().call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate]) => {
+      .then(([daiParams, usdcParams, usdtParams, daiTokens, usdcTokens, usdtTokens, ethParams, ethTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.ftmDai = ftmDaiParams[4]/Math.pow(10, ftmDaiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
@@ -233,8 +235,10 @@ export default class App extends React.Component {
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
-        //console.log(tokensPerShare.optiAWeth)
-        this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, v2CurrentLoading: false });
+        alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
+        alAssetSupply.alUsd = alUsdSupply/Math.pow(10, 18);
+        //console.log(alAssetSupply)
+        this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
     })
     .catch(function(err) {
       console.log(err.message);
@@ -270,7 +274,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInSaddleFBP: 0, fbpInSaddleFBP: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -288,12 +292,12 @@ export default class App extends React.Component {
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
-      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
-      this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
+      //this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
+      //this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInSaddleFBP, fbpInSaddleFBP, alUsdInCurveFBP, fbpInCurveFBP]) => {
+    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -312,8 +316,8 @@ export default class App extends React.Component {
       lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
       lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
-      lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
-      lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
+      //lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
+      //lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       //console.log(lps.daiInBeets)
@@ -660,9 +664,13 @@ export default class App extends React.Component {
     let alcxInTreasury = 0;
     let totalElixir = 0;
     let alEthCrvInElixir = 0;
+    let alEthCrvEthInElixir = 0;
     let alUsdCrvInElixir = 0;
     let alEthCrvInTreasury = 0;
     let alUsdCrvInTreasury = 0;
+    let alUsdInElixir = 0;
+    let alEthInElixir = 0;
+    let daiInElixir = 0;
     let tempMultifarmCalc = {}
     for(let i=0;i<treasury.data.length;i++){
       if(treasury.data[i].active) totalTreasury += treasury.data[i].positionSizeUsd;
@@ -672,8 +680,14 @@ export default class App extends React.Component {
     }
     for(let i=0;i<elixir.data.length;i++){
       if(elixir.data[i].active) totalElixir += elixir.data[i].positionSizeUsd;
-      if(elixir.data[i].asset === 'ETH / alETH') alEthCrvInElixir = elixir.data[i].positionSizeUsd;
+      if(elixir.data[i].asset === 'ETH / alETH'){
+        alEthCrvInElixir = elixir.data[i].positionSizeUsd;
+        alEthCrvEthInElixir = elixir.data[i].positionSizeEth;
+      } 
       if(elixir.data[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir.data[i].positionSizeUsd;
+      if(elixir.data[i].asset === 'alUSD') alUsdInElixir = elixir.data[i].positionSizeUsd;
+      if(elixir.data[i].asset === 'alETH') alEthInElixir = elixir.data[i].positionSizeEth;
+      if(elixir.data[i].asset === 'DAI') daiInElixir = elixir.data[i].positionSizeUsd;
     }
     tempMultifarmCalc = {
       totalTreasury: totalTreasury,
@@ -681,9 +695,13 @@ export default class App extends React.Component {
       nonAlcxTreasury: totalTreasury - alcxInTreasury,
       alcxInTreasury: alcxInTreasury,
       alEthCrvInElixir: alEthCrvInElixir,
+      alEthCrvEthInElixir: alEthCrvEthInElixir,
       alUsdCrvInElixir: alUsdCrvInElixir,
       alEthCrvInTreasury: alEthCrvInTreasury,
       alUsdCrvInTreasury: alUsdCrvInTreasury,
+      alUsdInElixir: alUsdInElixir,
+      alEthInElixir: alEthInElixir,
+      daiInElixir: daiInElixir
     }
     this.setState({ multifarmDataLoading: false, multifarmData: tempMultifarmCalc })
     console.log(tempMultifarmCalc)
@@ -776,6 +794,7 @@ export default class App extends React.Component {
     const alchemistTvl = this.getAlchemistTvlQuery(0)
     const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
     const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
+    const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
     const harvestsQuery = `{
       alchemistHarvestEvents(
         first: 1000
@@ -808,16 +827,18 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, ftmAlchemistTvl, optiAlchemistTvl, harvests]) => {
+      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, alchemistTvlSkip3000, ftmAlchemistTvl, ftmAlchemistTvlSkip1000, optiAlchemistTvl, harvests]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.concat(daiPegSkip1000.data.poolHistoricalRates).reverse(), usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse(), usdtPeg.data.poolHistoricalRates.concat(usdtPegSkip1000.data.poolHistoricalRates).reverse(), dai10mPeg.data.poolHistoricalRates.concat(dai10mPegSkip1000.data.poolHistoricalRates).reverse(), usdc10mPeg.data.poolHistoricalRates.concat(usdc10mPegSkip1000.data.poolHistoricalRates).reverse(), usdt10mPeg.data.poolHistoricalRates.concat(usdt10mPegSkip1000.data.poolHistoricalRates).reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse(), alEth5kPeg.data.poolHistoricalRates.reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
-        this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.reverse())
+        this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.concat(ftmAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
         this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
-        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories)).reverse())
+        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories.concat(alchemistTvlSkip3000.data.alchemistTVLHistories))).reverse())
         //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
     .catch(function(err) {
@@ -884,7 +905,7 @@ export default class App extends React.Component {
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
         stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
-        tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
+        tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl} alAssetSupply={this.state.alAssetSupply}
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg}
         tokenPricesLoading={this.state.tokenPricesLoading} multifarmData={this.state.multifarmData}

@@ -82,6 +82,12 @@ export function formatDate(date, yearOffset){
     return (date.getFullYear() + yearOffset) + '-' + month + '-' + day;
 }
 
+export function formatDateNumber(number){
+    if(number===0) return 12;
+    if(number>9) return number;
+    else return "0" + number;
+}
+
 export function datesEqual(date1, date2){
     return (date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate());
 }
