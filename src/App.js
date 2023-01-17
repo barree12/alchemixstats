@@ -680,7 +680,7 @@ export default class App extends React.Component {
     }
     for(let i=0;i<elixir.data.length;i++){
       if(elixir.data[i].active) totalElixir += elixir.data[i].positionSizeUsd;
-      if(elixir.data[i].asset === 'ETH / alETH'){
+      if(elixir.data[i].asset === 'ETH / alETH' && elixir.data[i].farm === 'Convex'){
         alEthCrvInElixir = elixir.data[i].positionSizeUsd;
         alEthCrvEthInElixir = elixir.data[i].positionSizeEth;
       } 
@@ -704,7 +704,6 @@ export default class App extends React.Component {
       daiInElixir: daiInElixir
     }
     this.setState({ multifarmDataLoading: false, multifarmData: tempMultifarmCalc })
-    console.log(tempMultifarmCalc)
   }
 
   getMultifarmData(){

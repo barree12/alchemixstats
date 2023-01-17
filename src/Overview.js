@@ -23,7 +23,7 @@ export default class Overview extends React.Component {
         let ethPriceChange = this.props.tokenPricesLoading ? 0 : Math.round((this.props.ethPrice[this.props.ethPrice.length-1]/this.props.ethPrice[this.props.ethPrice.length-31]-1)*10000)/100;
         let alUsdCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.multifarmData.alUsdCrvInElixir + this.props.multifarmData.daiInElixir) / (this.props.alAssetSupply.alUsd - this.props.multifarmData.alUsdInElixir);
         let alEthCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.multifarmData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.multifarmData.alEthInElixir);
-        console.log(this.props.multifarmData.alEthCrvInElixir)
+
         return (
             <>
                 <h2>Protocol Summary</h2>
