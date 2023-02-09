@@ -25,22 +25,22 @@ export default class EmissionWeights extends React.Component {
                             <span className="table-title">alAsset liquidity (24%)</span>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alusd_crv.png').default } alt="alUSD" className="image" />
-                            <div className="table-item-1">alUSD3Crv</div>
+                            <div className="table-item-1">alUSD3CRV</div>
                             <div className="table-item-2">11%</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/eth_aleth.png').default } alt="alETH-ETH" className="image" />
-                            <div className="table-item-1">alETHCrv</div>
+                            <div className="table-item-1">alETH Curve</div>
                             <div className="table-item-2">9%</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/frax_crv.png').default } alt="d3pool" className="image" />
-                            <div className="table-item-1">FraxBPCrv</div>
+                            <div className="table-item-1">FraxBP Curve</div>
                             <div className="table-item-2">2%</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/aleth_saddle.png').default } alt="alETH Saddle" className="image" />
-                            <div className="table-item-1">Saddle alETH</div>
+                            <div className="table-item-1">alETH Saddle</div>
                             <div className="table-item-2">2%</div>
                             </div>
                         </div>

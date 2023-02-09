@@ -672,22 +672,22 @@ export default class App extends React.Component {
     let alEthInElixir = 0;
     let daiInElixir = 0;
     let tempMultifarmCalc = {}
-    for(let i=0;i<treasury.data.length;i++){
-      if(treasury.data[i].active) totalTreasury += treasury.data[i].positionSizeUsd;
-      if(treasury.data[i].asset === 'ALCX' || treasury.data[i].asset === 'tALCX') alcxInTreasury += treasury.data[i].positionSizeUsd;
-      if(treasury.data[i].asset === 'ETH / alETH') alEthCrvInTreasury = treasury.data[i].positionSizeUsd;
-      if(treasury.data[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInTreasury = treasury.data[i].positionSizeUsd;
+    for(let i=0;i<treasury.length;i++){
+      if(treasury[i].active) totalTreasury += treasury[i].positionSizeUsd;
+      if(treasury[i].asset === 'ALCX' || treasury[i].asset === 'tALCX') alcxInTreasury += treasury[i].positionSizeUsd;
+      if(treasury[i].asset === 'ETH / alETH') alEthCrvInTreasury = treasury[i].positionSizeUsd;
+      if(treasury[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInTreasury = treasury[i].positionSizeUsd;
     }
-    for(let i=0;i<elixir.data.length;i++){
-      if(elixir.data[i].active) totalElixir += elixir.data[i].positionSizeUsd;
-      if(elixir.data[i].asset === 'ETH / alETH' && elixir.data[i].farm === 'Convex'){
-        alEthCrvInElixir = elixir.data[i].positionSizeUsd;
-        alEthCrvEthInElixir = elixir.data[i].positionSizeEth;
+    for(let i=0;i<elixir.length;i++){
+      if(elixir[i].active) totalElixir += elixir[i].positionSizeUsd;
+      if(elixir[i].asset === 'ETH / alETH' && elixir[i].farm === 'Convex'){
+        alEthCrvInElixir = elixir[i].positionSizeUsd;
+        alEthCrvEthInElixir = elixir[i].positionSizeEth;
       } 
-      if(elixir.data[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir.data[i].positionSizeUsd;
-      if(elixir.data[i].asset === 'alUSD') alUsdInElixir = elixir.data[i].positionSizeUsd;
-      if(elixir.data[i].asset === 'alETH') alEthInElixir = elixir.data[i].positionSizeEth;
-      if(elixir.data[i].asset === 'DAI') daiInElixir = elixir.data[i].positionSizeUsd;
+      if(elixir[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir[i].positionSizeUsd;
+      if(elixir[i].asset === 'alUSD') alUsdInElixir = elixir[i].positionSizeUsd;
+      if(elixir[i].asset === 'alETH') alEthInElixir = elixir[i].positionSizeEth;
+      if(elixir[i].asset === 'DAI') daiInElixir = elixir[i].positionSizeUsd;
     }
     tempMultifarmCalc = {
       totalTreasury: totalTreasury,
@@ -723,12 +723,11 @@ export default class App extends React.Component {
     }
 
     Promise.all([fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderElixir).then(res => res.json()),
-      fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderTreasury).then(res => res.json())
+    fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderTreasury).then(res => res.json()),
+    fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools?page=2", requestHeaderTreasury).then(res => res.json())
     ])
-      .then(([elixir, treasury]) => {
-          this.calculateMultifarmData(treasury, elixir)
-          console.log(elixir)
-          console.log(treasury)
+      .then(([elixir, treasury, treasuryPage2]) => {
+          this.calculateMultifarmData(treasury.data.concat(treasuryPage2.data), elixir.data)
       })
       .catch(function(err) { console.log(err) });
   }

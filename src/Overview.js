@@ -34,7 +34,7 @@ export default class Overview extends React.Component {
                     </span>
                     <br/>
                     <span>
-                        The Q3 2022 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a>
+                        The Q4 2022 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a>
                     </span>
                     {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.multifarmDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">

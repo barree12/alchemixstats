@@ -13,7 +13,7 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUsd3Crv", "alEthCrv"],
+            labels: ["alUSD3CRV", "alETH Curve"],
             datasets: [{
               label: 'Owned',
               data: [
@@ -62,10 +62,10 @@ export default class ChartCrvPoolRatios extends React.Component {
                         if (context.parsed.y !== null) {
                             label += ': ' + context.parsed.y + '% - $';
                             label +=
-                            ((context.dataset.label === 'Owned' && context.label === 'alUsd3Crv') ? (Math.round((helperPointer.props.multifarmData.alUsdCrvInTreasury + helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === 'alUsd3Crv') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.multifarmData.alUsdCrvInTreasury - helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "alEthCrv") ? (Math.round((helperPointer.props.multifarmData.alEthCrvInTreasury + helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "alEthCrv") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.multifarmData.alEthCrvInTreasury - helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "")
+                            ((context.dataset.label === 'Owned' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.multifarmData.alUsdCrvInTreasury + helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.multifarmData.alUsdCrvInTreasury - helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.multifarmData.alEthCrvInTreasury + helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.multifarmData.alEthCrvInTreasury - helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "")
                           }
                         return label;
                     }
