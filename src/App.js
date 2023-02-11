@@ -671,6 +671,7 @@ export default class App extends React.Component {
     let alUsdInElixir = 0;
     let alEthInElixir = 0;
     let daiInElixir = 0;
+    let alUsdFraxBpInElixir = 0;
     let tempMultifarmCalc = {}
     for(let i=0;i<treasury.length;i++){
       if(treasury[i].active) totalTreasury += treasury[i].positionSizeUsd;
@@ -685,6 +686,7 @@ export default class App extends React.Component {
         alEthCrvEthInElixir = elixir[i].positionSizeEth;
       } 
       if(elixir[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir[i].positionSizeUsd;
+      if(elixir[i].asset === 'alUSD / FRAX / USDC') alUsdFraxBpInElixir = elixir[i].positionSizeUsd;
       if(elixir[i].asset === 'alUSD') alUsdInElixir = elixir[i].positionSizeUsd;
       if(elixir[i].asset === 'alETH') alEthInElixir = elixir[i].positionSizeEth;
       if(elixir[i].asset === 'DAI') daiInElixir = elixir[i].positionSizeUsd;
@@ -701,7 +703,8 @@ export default class App extends React.Component {
       alUsdCrvInTreasury: alUsdCrvInTreasury,
       alUsdInElixir: alUsdInElixir,
       alEthInElixir: alEthInElixir,
-      daiInElixir: daiInElixir
+      daiInElixir: daiInElixir,
+      alUsdFraxBpInElixir: alUsdFraxBpInElixir
     }
     this.setState({ multifarmDataLoading: false, multifarmData: tempMultifarmCalc })
   }

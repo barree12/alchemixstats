@@ -1,13 +1,11 @@
 import React from 'react';
-import ChartDaiTVL from './charts/ChartDaiTVL';
-import ChartEthTVL from './charts/ChartEthTVL';
 import ChartV2AlchemistTVL from './charts/ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './charts/ChartV2AlchemistEthTVL';
 import ChartV2AlchemistFtmTVL from './charts/ChartV2AlchemistFtmTVL';
 import ChartOptiAlchemistTVL from './charts/ChartOptiAlchemistTVL';
 import ChartOptiAlchemistEthTVL from './charts/ChartOptiAlchemistEthTVL';
 import FtmSummary from './FtmSummary';
-import { Switch } from '@mui/material';
+//import { Switch } from '@mui/material';
 import OptiSummary from './OptiSummary';
 
 export default class Deposits extends React.Component {

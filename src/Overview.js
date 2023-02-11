@@ -21,7 +21,9 @@ export default class Overview extends React.Component {
         let ethVaultUsdChange = Math.round((ethDepositsUsd/ethDepositsUsd1mAgo-1)*10000)/100;
         let depositsChange = Math.round((deposits/deposits1mAgo-1)*10000)/100;
         let ethPriceChange = this.props.tokenPricesLoading ? 0 : Math.round((this.props.ethPrice[this.props.ethPrice.length-1]/this.props.ethPrice[this.props.ethPrice.length-31]-1)*10000)/100;
-        let alUsdCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.multifarmData.alUsdCrvInElixir + this.props.multifarmData.daiInElixir) / (this.props.alAssetSupply.alUsd - this.props.multifarmData.alUsdInElixir);
+        let alUsdCollateralNotReceived = (stablecoinDeposits === 0 || this.props.multifarmData.alUsdCrvInElixir === 0 || this.props.multifarmData.daiInElixir === 0 || this.props.alAssetSupply.alUsd === 0 || this.props.multifarmData.alUsdInElixir === 0 || this.props.multifarmData.alUsdFraxBpInElixir === 0);
+        let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.multifarmData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.multifarmData.alEthInElixir === 0);
+        let alUsdCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.multifarmData.alUsdCrvInElixir + this.props.multifarmData.daiInElixir + this.props.multifarmData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.multifarmData.alUsdInElixir);
         let alEthCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.multifarmData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.multifarmData.alEthInElixir);
 
         return (
@@ -44,12 +46,12 @@ export default class Overview extends React.Component {
                                 <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alUSD</span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alUsdLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alUSD price</span><span className="important-5">{Math.round(this.props.alUsdPeg.dai.peg[this.props.alUsdPeg.dai.peg.length-1]*10000)/10000}</span>
-                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{Math.round(alUsdCollateralRatio*100)}%</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{alUsdCollateralNotReceived ? "-" : Math.round(alUsdCollateralRatio*100)}%</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
                                 <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alEthLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alETH price</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
-                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{Math.round(alEthCollateralRatio*100)}%</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{alEthCollateralNotReceived ? "-" : Math.round(alEthCollateralRatio*100)}%</span>
                             </div>
                         </div>
                         <div className="small-table-4">
