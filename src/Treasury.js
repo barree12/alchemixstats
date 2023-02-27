@@ -40,14 +40,17 @@ export default class Treasury extends React.Component {
 
             <div className="section-wrapper">
             <div className="summary">
-                There are 2 main treasury addresses of the Alchemix protocol, plus 2 addresses for the alUSD and alETH Elixirs.<br/>
+                There are 5 main treasury addresses of the Alchemix protocol, plus 3 addresses for the alUSD and alETH Elixirs.<br/>
                 The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
                     Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x8392f6669292fa56123f71949b52d883ae57e225">
                     Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x3216d2a52f0094aa860ca090bc5c335de36e6273">
-                    sdCRV Controller</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
-                    alUSD Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0xe761bf731a06fe8259fee05897b2687d56933110">
+                    sdCRV Controller</a>, <a target="_blank" rel="noreferrer" href="https://optimistic.etherscan.io/address/0xc224bf25dcc99236f00843c7d8c4194abe8aa94a">
+                    Optimism Multisig</a>, <a target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x851abef4d67e8bb4ee2f90e5de5e880f6235d028">
+                    SDL Controller</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x06378717d86b8cd2dba58c87383da1eda92d3495">
+                    alUSDFRAXBP Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
+                    alUSD3CRV Elixir</a>, <a target="_blank" rel="noreferrer" href="https://zapper.fi/account/0xe761bf731a06fe8259fee05897b2687d56933110">
                     alETH Elixir</a><br/>
                 </span>
             </div>

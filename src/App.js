@@ -660,6 +660,7 @@ export default class App extends React.Component {
   }
 
   calculateMultifarmData(treasury, elixir){
+    console.log(elixir)
     let totalTreasury = 0;
     let alcxInTreasury = 0;
     let totalElixir = 0;
