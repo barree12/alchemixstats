@@ -76,7 +76,10 @@ export const addresses = {
     optiAUsdtAddress: '0x2680b58945A31602E4B6122C965c2849Eb76Dd3B',
     optiAWethAddress: '0x337B4B933d60F40CB57DD19AE834Af103F049810',
     tempMigrateDaiAddress: '0x72A7cb4d5daB8E9Ba23f30DBE8E72Bc854a9945A',
-    tempMigrateEthAddress: '0xb4E7cc74e004F95AEe7565a97Dbfdea9c1761b24'
+    tempMigrateEthAddress: '0xb4E7cc74e004F95AEe7565a97Dbfdea9c1761b24',
+    vaUsdcAddress: '0xa8b607Aa09B6A2E306F93e74c282Fb13f6A80452',
+    vaDaiAddress: '0x0538C8bAc84E95A9dF8aC10Aad17DbE81b9E36ee',
+    vaEthAddress: '0xd1C117319B3595fbc39b471AB1fd485629eb05F2'
 }
 
 export const abis = {

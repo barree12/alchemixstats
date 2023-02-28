@@ -4,7 +4,12 @@ import { Chart } from 'react-chartjs-2';
 export default class ChartV2AlchemistTVL extends React.Component {
 
   render(){  
-    
+  let totalOther = [];
+  for(let i=0;i<this.props.alchemistTvl.yvUsdt.length;i++){
+    totalOther[i] = this.props.alchemistTvl.yvUsdt[i] + this.props.alchemistTvl.aUsdc[i] +
+      this.props.alchemistTvl.aDai[i] + this.props.alchemistTvl.vaDai[i];
+  }
+
   return (
       <div className="chart-container-3">
         <Chart
@@ -32,28 +37,8 @@ export default class ChartV2AlchemistTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'yvUSDT',
-              data: this.props.alchemistTvl.yvUsdt,
-              backgroundColor: 'rgba(161,175,255,0.8)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
-              label: 'aDAI',
-              data: this.props.alchemistTvl.aDai,
-              backgroundColor: 'rgba(102,102,102,0.8)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
-              label: 'aUSDC',
-              data: this.props.alchemistTvl.aUsdc,
+              label: 'vaUSDC',
+              data: this.props.alchemistTvl.vaUsdc,
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -62,9 +47,9 @@ export default class ChartV2AlchemistTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'aUSDT',
-              data: this.props.alchemistTvl.aUsdt,
-              backgroundColor: 'rgba(255,204,75,0.7)',
+              label: 'Others',
+              data: totalOther,
+              backgroundColor: 'rgba(102,102,102,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

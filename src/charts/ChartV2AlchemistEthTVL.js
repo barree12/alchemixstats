@@ -50,6 +50,16 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
+            },
+            {
+              label: 'vaETH',
+              data: this.props.alchemistTvl.vaEth,
+              backgroundColor: 'rgba(161,175,255,1)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
             }]
           }}
             options={{
