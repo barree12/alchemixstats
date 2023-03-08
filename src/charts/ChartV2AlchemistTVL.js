@@ -6,8 +6,8 @@ export default class ChartV2AlchemistTVL extends React.Component {
   render(){  
   let totalOther = [];
   for(let i=0;i<this.props.alchemistTvl.yvUsdt.length;i++){
-    totalOther[i] = this.props.alchemistTvl.yvUsdt[i] + this.props.alchemistTvl.aUsdc[i] +
-      this.props.alchemistTvl.aDai[i] + this.props.alchemistTvl.vaDai[i];
+    totalOther[i] = Math.round((this.props.alchemistTvl.yvUsdt[i] + this.props.alchemistTvl.aUsdc[i] +
+      this.props.alchemistTvl.aDai[i] + this.props.alchemistTvl.vaDai[i])*100)/100;
   }
 
   return (
