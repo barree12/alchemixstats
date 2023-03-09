@@ -867,6 +867,18 @@ div.earn-yield-link-- a {
   .multifarm-switcher-buttons-inside {
     width: 90px;
   }
+  .earn-yield {
+    width: 500px;
+  }
+  .earn-yield-reward {
+    display: none;
+  }
+  .earn-yield-strat {
+    width: 120px;
+  }
+  .description-all {
+    grid-template-columns: 100%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -907,6 +919,12 @@ div.earn-yield-link-- a {
   .multifarm-switcher-buttons-inactive {
     padding: 0.25rem;
   }
+  .earn-yield {
+    width: 450px;
+  }
+  .compounders {
+    width: 450px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -928,6 +946,15 @@ div.earn-yield-link-- a {
   }
   .multifarm-switcher-buttons-inside {
     width: 65px;
+  }
+  .earn-yield {
+    width: 380px;
+  }
+  .compounders {
+    width: 380px;
+  }
+  .earn-yield-chain {
+    display: none;
   }
 }
 

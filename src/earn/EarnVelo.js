@@ -65,7 +65,7 @@ export default class EarnVelo extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD-USDC LP
+              alUSD-USDC
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />
@@ -88,7 +88,7 @@ export default class EarnVelo extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD-MAI LP
+              alUSD-MAI
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />
@@ -111,7 +111,7 @@ export default class EarnVelo extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD-OP LP
+              alUSD-OP
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />
@@ -134,7 +134,7 @@ export default class EarnVelo extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alETH-WETH LP
+              alETH-WETH
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />
@@ -157,7 +157,7 @@ export default class EarnVelo extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alETH-OP LP
+              alETH-OP
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />

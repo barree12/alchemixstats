@@ -57,7 +57,7 @@ export default class EarnBeets extends Component {
         <div className="earn-yield-row">
           
           <div className="earn-yield-strat">
-            Beets alUSD LP
+            Beets alUSD
           </div>
           <div className="earn-yield-chain">
               <img src={ require('../logos/ftm_small.png').default } alt="FTM logo" className="image" />

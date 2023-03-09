@@ -74,7 +74,7 @@ export default class EarnIdle extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD3Crv Senior Tranche
+              alUSD3Crv Senior
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
@@ -98,7 +98,7 @@ export default class EarnIdle extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD3Crv Junior Tranche
+              alUSD3Crv Junior
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
