@@ -111,6 +111,7 @@ export default class App extends React.Component {
     this.alEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alEthOptimismContractAddress);
     this.usdcOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdcOptimismContractAddress);
     this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
+    this.maiOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.maiOptimismContractAddress);
     this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
     this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
     this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
@@ -288,7 +289,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -302,6 +303,8 @@ export default class App extends React.Component {
       this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
       this.usdcOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
+      this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
+      this.maiOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
       this.alEthOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
@@ -311,7 +314,7 @@ export default class App extends React.Component {
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP]) => {
+    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -325,6 +328,8 @@ export default class App extends React.Component {
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
       lps.alUsdInVelodrome = alUsdInVelodrome/Math.pow(10, 18);
       lps.usdcInVelodrome = usdcInVelodrome/Math.pow(10, 6);
+      lps.alUsdInMaiVelodrome = alUsdInMaiVelodrome/Math.pow(10, 18);
+      lps.maiInMaiVelodrome = maiInMaiVelodrome/Math.pow(10, 18);
       lps.alEthInVelodrome = alEthInVelodrome/Math.pow(10, 18);
       lps.wethInVelodrome = wethInVelodrome/Math.pow(10, 18);
       lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);

@@ -9,6 +9,7 @@ export default class AlUsdSummary extends React.Component {
       const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
       //const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
       const totalCurveFBP = Math.round(this.props.lps.alUsdInCurveFBP/10000+this.props.lps.fbpInCurveFBP/10000)/100;
+      const totalMaiUsdVelodrome = Math.round(this.props.lps.alUsdInMaiVelodrome/10000+this.props.lps.maiInMaiVelodrome/10000)/100;
         return (
             <div className="summary">
                 alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -35,32 +36,7 @@ export default class AlUsdSummary extends React.Component {
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
-                  <div className="small-table-inner-4">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_crv.png').default } alt="alUsd logo" className="image" />
-                      <span className="table-text-title">alUSD3Crv</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdIn3Crv/10000)/100}M</span>
-                    </span> 
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">3CRV</span>
-                      <span className="important-2">${Math.round(this.props.lps.crv3In3Crv/10000)/100}M</span>
-                    </span>  
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalAlUsd3Crv}M</span>
-                    </span>
-                  </div>
+                  
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/frax_crv.png').default } alt="Curve FraxBP pool logo" className="image" />
@@ -87,6 +63,88 @@ export default class AlUsdSummary extends React.Component {
                       <span className="important-2">${totalCurveFBP}M</span>
                     </span>
                   </div>
+
+                  <div className="small-table-inner-4">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_crv.png').default } alt="alUsd logo" className="image" />
+                      <span className="table-text-title">alUSD3Crv</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdIn3Crv/10000)/100}M</span>
+                    </span> 
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">3CRV</span>
+                      <span className="important-2">${Math.round(this.props.lps.crv3In3Crv/10000)/100}M</span>
+                    </span>  
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalAlUsd3Crv}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
+                      <span className="table-text-title">alUSD Velodrome</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">USDC</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalAlUsdVelodrome}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_mai.png').default } alt="alUSD-MAI logo" className="image" />
+                      <span className="table-text-title">MAI Velodrome</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInMaiVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">MAI</span>
+                      <span className="important-2">${Math.round(this.props.lps.maiInMaiVelodrome/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalMaiUsdVelodrome}M</span>
+                    </span>
+                  </div>
+                  
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/saddle4pool.png').default } alt="Saddle 4pool logo" className="image" />
@@ -167,32 +225,7 @@ export default class AlUsdSummary extends React.Component {
                       <span className="important-2">${totalSaddleFBP}M</span>
                     </span>
         </div>*/}
-                  <div className="small-table-inner-11">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
-                      <span className="table-text-title">Optimism Velodrome</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInVelodrome/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">USDC</span>
-                      <span className="important-2">${Math.round(this.props.lps.usdcInVelodrome/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalAlUsdVelodrome}M</span>
-                    </span>
-                  </div>
+                  
                 </div>
           </div>
         );
