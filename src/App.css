@@ -385,6 +385,7 @@ h3 {
   flex-direction: column;
   margin: 10px;
   margin-top: 0px;
+  align-items: center;
 }
 
 .header-disclaimer {
@@ -897,12 +898,16 @@ div.earn-yield-link-- a {
   }
   .small-table-inner-10 {
     grid-template-columns: 1fr;
-    width: 400px;
+    width: 350px;
   }
   .small-table-title-wrap {
     grid-template-columns: 100%;
     margin-top: 7px;
     margin-bottom: 3px;
+  }
+  .small-table-content-wrap {
+    display: grid;
+    grid-template-columns: 33% 33% 34%;
   }
   .cell-disappear {
     display: none;
