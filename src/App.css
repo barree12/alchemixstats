@@ -346,6 +346,12 @@ h3 {
   align-items: center;
 }
 
+.small-table-cell-disappear {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .small-table-row {
   display: flex;
   flex-direction: row;
@@ -831,7 +837,7 @@ div.earn-yield-link-- a {
   }
   .small-table-inner-4 {
     grid-template-columns: 1fr;
-    grid-template-rows: 17% 17% 17% 17% 16% 16%;
+    grid-template-rows: 30% 20% 20% 20% 5% 5%;
     width: 145px;
   }
   .small-table-inner-5 {
@@ -848,12 +854,15 @@ div.earn-yield-link-- a {
   .small-table-inner-11 {
     margin-top: 30px;
     grid-template-columns: 1fr;
-    grid-template-rows: 30% 14% 14% 14% 14% 14%;
+    grid-template-rows: 20% 14% 14% 14% 14% 14%;
     width: 145px;
     text-align: center;
   }
   .small-table-cell-title {
     flex-direction: column;
+  }
+  .small-table-cell-disappear {
+    display: none;
   }
   .button-group-large-screen {
     display: none;
