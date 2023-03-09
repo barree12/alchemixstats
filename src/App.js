@@ -115,6 +115,7 @@ export default class App extends React.Component {
     this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
     this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
     this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
+    this.alUsdFraxBpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFBPCurveContractAddress);
   }
 
   componentDidMount() {
@@ -263,17 +264,18 @@ export default class App extends React.Component {
   getTreasury(){
     let alcxEthSlp = { alcx: 0, weth: 0 }
     let alchemixStaking = { alcx: 0, alcxEthSlp: 0, alcxEthSlpStakingRatio: 0 }
-    let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0 };
+    let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0, alUsdFraxBp: 0 };
     Promise.all([
       this.alcxContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.alcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.wethContract.methods.balanceOf(addresses.alcxEthSlpAddress).call(),
       this.alUsd3CrvContract.methods.totalSupply().call(),
       this.alEthCrvContract.methods.totalSupply().call(),
+      this.alUsdFraxBpContract.methods.totalSupply().call(),
       this.alcxEthSlpContract.methods.totalSupply().call(),
       this.alcxEthSlpContract.methods.balanceOf(addresses.masterChefAddress).call(),
     ])
-    .then(([alcxInSlp, stakedAlcx, wethInSlp, alUsd3CrvSupply, alEthCrvSupply, alcxEthSlpTotalSupply, stakedAlcxEth]) => {
+    .then(([alcxInSlp, stakedAlcx, wethInSlp, alUsd3CrvSupply, alEthCrvSupply, alUsdFraxBpCrvSupply, alcxEthSlpTotalSupply, stakedAlcxEth]) => {
       alcxEthSlp.alcx = alcxInSlp/Math.pow(10, 18);
       alcxEthSlp.weth = wethInSlp/Math.pow(10, 18);
       alchemixStaking.alcx = stakedAlcx/Math.pow(10, 18);
@@ -281,6 +283,7 @@ export default class App extends React.Component {
       alchemixStaking.alcxEthSlpStakingRatio = stakedAlcxEth/alcxEthSlpTotalSupply;
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
+      alAssetCrvSupply.alUsdFraxBp = alUsdFraxBpCrvSupply/Math.pow(10, 18);
       this.setState({ alcxEthSlp: alcxEthSlp, alchemixStaking: alchemixStaking, alAssetCrvSupply: alAssetCrvSupply, stakingLoading: false })
     })
     .catch(function(err) {
