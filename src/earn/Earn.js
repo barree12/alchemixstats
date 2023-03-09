@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
-import EarnTokemak from './EarnTokemak';
 import EarnPremia from './EarnPremia';
 import EarnConvex from './EarnConvex';
 import EarnSaddle from './EarnSaddle';
-import EarnElement from './EarnElement';
 import EarnBeets from './EarnBeets';
 import EarnVelo from './EarnVelo';
 import EarnIdle from './EarnIdle';
 import '../App.css';
-import TokemakDescription from './description/TokemakDescription';
 import ConvexDescription from './description/ConvexDescription';
 import SaddleDescription from './description/SaddleDescription';
 import VelodromeDescription from './description/VelodromeDescription';
 import BeetsDescription from './description/BeetsDescription';
 import PremiaDescription from './description/PremiaDescription';
 import IdleDescription from './description/IdleDescription';
-import ElementDescription from './description/ElementDescription';
 import { Link } from 'react-router-dom';
 
 export default class Earn extends Component {
@@ -79,6 +75,34 @@ export default class Earn extends Component {
           <EarnBeets />
           </div>
           <br/>
+          <h2>
+            Compounder services
+          </h2>
+          Compounder services deploy in the pools displayed above, but automate the reward collection and reinvestment cycle.
+          <br/>After depositing, users do not need to do anything just let compound interest work its magic.
+          <br/>On occasion, these services provide additional incentives on top of the base yield, so make sure to check them out.
+          <br/>
+          <div className="compounders">
+            <div className="compounder-row">
+              <div className="earn-yield-protocol-name">
+                <img src={ require('../logos/beefy.png').default } alt="Convex logo" className="image" /> Beefy Finance
+              </div>
+              <div className="earn-yield-link-2"><a href="https://beefy.com" target="_blank" rel="noreferrer">Go to Beefy</a></div>
+            </div>
+            <div className="compounder-row">
+              <div className="earn-yield-protocol-name">
+                <img src={ require('../logos/pickle.png').default } alt="Convex logo" className="image" /> Pickle Finance
+              </div>
+              <div className="earn-yield-link-2"><a href="https://www.pickle.finance" target="_blank" rel="noreferrer">Go to Pickle</a></div>
+            </div>
+            <div className="compounder-row">
+              <div className="earn-yield-protocol-name">
+                <img src={ require('../logos/concentrator.png').default } alt="Convex logo" className="image" /> Concentrator
+              </div>
+              <div className="earn-yield-link-2"><a href="https://concentrator.aladdin.club" target="_blank" rel="noreferrer">Go to Concentrator</a></div>
+            </div>
+          </div>
+            
           <br/>
           <h2>Other Opportunities</h2>
           <span>
@@ -116,20 +140,14 @@ export default class Earn extends Component {
         </div>
       </div>
       <br/>
-      <br/>
-      <br/>
-      <br/>
       <h2>Protocol Descriptions</h2>
       <div className="description-all">
         <ConvexDescription />
-        <SaddleDescription />
+        <PremiaDescription />
         <VelodromeDescription />
         <BeetsDescription />
-
-        <PremiaDescription />
-        <TokemakDescription />
+        <SaddleDescription />
         <IdleDescription />
-        <ElementDescription />
       </div>
 
     </div>;
