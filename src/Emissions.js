@@ -27,7 +27,7 @@ export default class Emissions extends React.Component {
                     <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 3 years from now ({formatDate(new Date(), 3)}): <span className="important">{futureInflation(3).totalInflation}%</span><br/>
                     Forward-looking inflation 3 years from now: <span className="important">{futureInflation(3).forwardInflation}%</span></span>
                     <br/>
-                    <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/alchemix-finance/token-distribution/alcx-monetary-policy">ALCX Monetary Policy</a></span>
+                    <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/alchemix-dao/alcx-token-distribution/alcx-emissions-schedule">ALCX Monetary Policy</a></span>
                     <br/>
                     {this.props.alcxDataLoading ? "Loading..." : 
                     <span>
