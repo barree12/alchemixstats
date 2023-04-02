@@ -8,21 +8,20 @@ function ChartDonut(){
         <Chart
             type='doughnut' 
             data={{
-            labels: ['Redirected to Treasury', 'Staking - ALCX/ETH SLP', 'Staking - gALCX', 
-            'alAssets - alUSD3CRV', 'alAssets - alETHCRV', 'Fantom - Beets alUSD/USDC',
-            'alAssets - FraxBP Curve', 'alAssets - Saddle alETH', 'Fantom - Spooky gALCX/FTM', 'Fantom - Spirit gALCX/FTM'],
+            labels: ['alAssets - alETH Curve', 'alAssets - FraxBP Curve', 'Staking - ALCX/ETH SLP', 'Staking - gALCX', 
+            'alAssets - alUSD3CRV', 'alAssets - Saddle alETH', 'Arbitrum - Saddle L2D4', 'Fantom - Beets alUSD/USDC',
+             'Fantom - Spooky gALCX/FTM'],
             datasets: [{
               label: '',
-              data: [39, 20, 13, 11, 9, 2.5, 2, 2, 0.83, 0.66],
+              data: [29, 29, 20, 13, 4.5, 2, 1, 1, 0.5],
               backgroundColor: [ 
-                '#0a8c24',
+                '#d6d456',
+                '#f0ee81',
                 '#0052bd',
                 '#3483eb',
                 '#b5b331',
-                '#d6d456',
-                '#1f1f1f',
-                '#f0ee81',
                 '#fffda1',
+                '#1f1f1f',               
                 '#4d4d4d',
                 '#666666'
               ],

@@ -14,12 +14,10 @@ export default class Emissions extends React.Component {
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="ALCX logo" className="image3" />
                     <h2>ALCX Emissions</h2>
                 </div>
-                {/*<img src={ require('./logos/alcx_logo_only.svg').default } alt="ALCX logo" className="image3" />
-                <h2>ALCX Emissions</h2>*/}
                 <div className="summary">
                     <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
                     <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
-                    <span>Current inflation is <span className="important">{currentStats().currentInflationAnnual}%/year <i>({Math.round(currentStats().currentInflationAnnual*61)/100}%/year*)</i></span></span>
+                    <span>Current inflation is <span className="important">{currentStats().currentInflationAnnual}%/year</span></span>
                     <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({formatDate(new Date(), 1)}): <span className="important">{futureInflation(1).totalInflation}%</span><br/>
                     Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
                     <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({formatDate(new Date(), 2)}): <span className="important">{futureInflation(2).totalInflation}%</span><br/>
@@ -34,10 +32,6 @@ export default class Emissions extends React.Component {
                         <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.props.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX circulating supply: <span className="important">{this.props.alcxData.currentSupply}</span> Circulating Marketcap: <span className="important">${this.props.alcxData.marketcap}M</span> Total Marketcap (incl. treasury): <span className="important">${this.props.alcxTotalMarketcap}M</span>
                     </span>
                     }
-                    <br/>
-                    <span>*39% of emissions are being redirected to the Alchemix treasury, meaning the tokens do not enter circulation.<br />
-                    See the adjusted numbers for circulating supply metrics in <span className="important"><i>(brackets)</i></span> above.<br/>
-                    This measures the new circulating supply compared to total supply.</span>
                 </div>
 
                 <div className="section-wrapper">
