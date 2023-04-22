@@ -81,7 +81,8 @@ export const addresses = {
     tempMigrateEthAddress: '0xb4E7cc74e004F95AEe7565a97Dbfdea9c1761b24',
     vaUsdcAddress: '0xa8b607Aa09B6A2E306F93e74c282Fb13f6A80452',
     vaDaiAddress: '0x0538C8bAc84E95A9dF8aC10Aad17DbE81b9E36ee',
-    vaEthAddress: '0xd1C117319B3595fbc39b471AB1fd485629eb05F2'
+    vaEthAddress: '0xd1C117319B3595fbc39b471AB1fd485629eb05F2',
+    pcsChefAddress: '0x556b9306565093c855aea9ae92a594704c2cd59e'
 }
 
 export const abis = {
@@ -349,6 +350,54 @@ export const abis = {
         outputs: [{
             name: 'allocationPoints',
             type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }],
+    pcsChefAbi: [{
+        constant: true,
+        inputs: [],
+        name: 'latestPeriodCakePerSecond',
+        outputs: [{
+            name: 'amount',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [],
+        name: 'totalAllocPoint',
+        outputs: [{
+            name: 'amount',
+            type: 'uint256'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [{
+            name: 'id',
+            type: 'uint256'
+        }],
+        name: 'poolInfo',
+        outputs: [{
+            name: 'poolInfo',
+            type: 'tuple',
+            components: [
+                { type: "uint256", name: "allocPoint" },
+                { type: "address", name: "v3pool" },
+                { type: "address", name: "token0" },
+                { type: "address", name: "token1" },
+                { type: "uint24", name: "fee" },
+                { type: "uint256", name: "totalLiquidity" },
+                { type: "uint256", name: "boostLiquidity" }
+            ]
         }],
         payable: false,
         stateMutability: 'view',

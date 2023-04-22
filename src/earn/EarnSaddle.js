@@ -19,7 +19,8 @@ export default class EarnSaddle extends Component {
       d4AprFees: 0,
       fraxbpAprEmissions: 0,
       alEthAprEmissions: 0,
-      alEthAprFees: 0
+      alEthAprFees: 0,
+      l2d4Apr: 0
     }
 
     this.saddleGaugeController = new web3.eth.Contract(abis.saddleGaugeControllerAbi, gaugeController);
@@ -35,7 +36,8 @@ export default class EarnSaddle extends Component {
     this.getData();
   }
 
-  calculateApr(subgraphResponse, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice){
+  calculateApr(subgraphResponse, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice, fraxPools){
+    let l2d4Apr = 0;
     let d4TVL = 0;
     let d4Fees = 0;
     let alEthTVL = 0;
@@ -69,7 +71,10 @@ export default class EarnSaddle extends Component {
     d4AprEmissions = d4Emissions / d4Staked * Math.pow(10, 18) * 100;
     fraxbpAprEmissions = fraxbpEmissions / alUsdFraxbpStaked * Math.pow(10, 18) * 100;
     alEthAprFees = alEthFees / alEthTVL * 100;
-    this.setState({ arpLoading: false, d4AprEmissions: d4AprEmissions, d4AprFees: d4AprFees, fraxbpAprEmissions: fraxbpAprEmissions, alEthAprFees: alEthAprFees, alEthAprEmissions: alEthAprEmissions })
+    for(let i=0;i<fraxPools.length;i++){
+      if(fraxPools[i].identifier === "Saddle L2D4 [Arbitrum]") l2d4Apr = fraxPools[i].apy;
+    }
+    this.setState({ arpLoading: false, d4AprEmissions: d4AprEmissions, d4AprFees: d4AprFees, fraxbpAprEmissions: fraxbpAprEmissions, alEthAprFees: alEthAprFees, alEthAprEmissions: alEthAprEmissions, l2d4Apr: l2d4Apr })
   }
 
   getSubgraphRequestOptions(query){
@@ -104,9 +109,10 @@ export default class EarnSaddle extends Component {
     fetch("https://api.coingecko.com/api/v3/coins/saddle-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
     fetch("https://api.coingecko.com/api/v3/coins/alchemix/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
     fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
+    fetch("https://api.frax.finance/v1/pools").then(res => res.json())
     ])
-    .then(([subgraphResponse, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice]) => {
-      this.calculateApr(subgraphResponse.data.liquidityPoolDailySnapshots, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice);
+    .then(([subgraphResponse, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice, fraxPools]) => {
+      this.calculateApr(subgraphResponse.data.liquidityPoolDailySnapshots, inflation, d4Weight, fraxBPWeight, d4Staked, alUsdFraxbpStaked, alEthRewardRate, alEthTotalDeposited, sdlPrice, alcxPrice, ethPrice, fraxPools);
     })
     .catch(function(err) {
       console.log(err.message);
@@ -184,6 +190,28 @@ export default class EarnSaddle extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://alchemix.fi/farms" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
+          </div>
+
+          <div className="earn-yield-row">
+            
+            <div className="earn-yield-strat">
+              Saddle L2D4
+            </div>
+            <div className="earn-yield-chain">
+              <img src={ require('../logos/arbi.png').default } alt="Arbi logo" className="image" />
+            </div>
+            <div className="earn-yield-alasset">
+              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
+            </div>
+            <div className="earn-yield-reward">
+              <img src={ require('../logos/frax.png').default } alt="FRAX logo" className="image" />
+            </div>
+            <div className="earn-yield-yield">
+              {this.aprLoading ? "0" : <span>{Math.round(this.state.l2d4Apr * 100)/100}%</span>}
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://app.frax.finance/staking/saddle-arbi-l2d4" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
       </div>);
