@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 export default class AlEthSummary extends React.Component {
 
@@ -10,6 +11,10 @@ export default class AlEthSummary extends React.Component {
         const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInPcsUsd = Math.round(this.props.lps.alEthInPcs*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const ethInPcsUsd = Math.round(this.props.lps.ethInPcs*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.alEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const fxsEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         return (
             <div className="summary">
                 alETH supply grows when people deposit collateral assets and borrow alETH against them.<br/>
@@ -22,16 +27,10 @@ export default class AlEthSummary extends React.Component {
                 <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" />wstETH</div>
                 <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />rETH</div>
                 </div>
-                The protocol deploys collateral assets into one of the supported yield strategies.<br/>
-                In the case of rETH, it is only possible to deposit rETH, which is the yield strategy itself.<br/>
-                Currently supported general yield options:
-                <div className="small-table-2">
-                <div className="tokens"><img src={ require('./logos/yearn_weth.png').default } alt="yearn weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa258C4606Ca8206D8aA700cE2143D7db854D168c">Yearn WETH</a></div>
-                <div className="tokens"><img src={ require('./logos/aave_eth.png').default } alt="aave weth token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&marketName=proto_mainnet">Aave WETH</a></div>
-                <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" /><a target="_blank" rel="noreferrer" href="https://lido.fi/ethereum">wstETH</a></div>
-                </div>
                 The transmuter always exchanges 1 alETH for 1 ETH<br/>
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to 1 ETH for alETH.<br/>
+                <br/>
+                To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   <div className="small-table-inner-5">
@@ -84,7 +83,7 @@ export default class AlEthSummary extends React.Component {
                   </div>
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/aleth_saddle.png').default } alt="D3 Cruve pool logo" className="image" />
+                      <img src={ require('./logos/aleth_saddle.png').default } alt="alEth Saddle logo" className="image" />
                       <span className="table-text-title">Saddle alETH</span>
                     </span>
                     <span className="small-table-cell">
@@ -93,7 +92,7 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2"><i>({Math.round(this.props.lps.alEthInSaddle)})</i></span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">WETH</span>
+                      <span className="table-text-bold-2">ETH</span>
                       <span className="important-2">${wethInSaddleUsd}M</span>
                       <span className="important-2"><i>({Math.round(this.props.lps.wethInSaddle)})</i></span>
                     </span>
@@ -105,6 +104,54 @@ export default class AlEthSummary extends React.Component {
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-5">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth frxEth logo" className="image" />
+                      <span className="table-text-title">Velodrome frxETH</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInVeloFxsEthAlEthUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInVeloFxsEthAlEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">fxsETH</span>
+                      <span className="important-2">${fxsEthInVeloFxsEthAlEthUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInVeloFxsEthAlEthUsd + fxsEthInVeloFxsEthAlEthUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+                  <div className="small-table-inner-5">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/aleth_pcs.png').default } alt="alEth Pcs logo" className="image" />
+                      <span className="table-text-title">PancakeSwap alETH</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInPcsUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInPcs)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">ETH</span>
+                      <span className="important-2">${ethInPcsUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.ethInPcs)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInPcsUsd + ethInPcsUsd)*100)/100}M</span>
                     </span>
                   </div>
                 </div>

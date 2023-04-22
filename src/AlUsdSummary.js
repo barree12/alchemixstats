@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 export default class AlUsdSummary extends React.Component {
 
@@ -20,20 +21,12 @@ export default class AlUsdSummary extends React.Component {
                     <div className="tokens"><img src={ require('./logos/dai.png').default } alt="dai token" className="image" />DAI</div>
                     <div className="tokens"><img src={ require('./logos/usdt.png').default } alt="usdt token" className="image" />USDT</div>
                     <div className="tokens"><img src={ require('./logos/usdc.png').default } alt="usdc token" className="image" />USDC</div>
-                </div>
-                The protocol deploys collateral assets into one of the supported yield strategies. Currently supported yield options:
-                <div className="small-table-2">
-                    <div className="tokens"><img src={ require('./logos/yearn_dai.png').default } alt="yearn dai token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xdA816459F1AB5631232FE5e97a05BBBb94970c95">Yearn Dai</a></div>
-                    <div className="tokens"><img src={ require('./logos/yearn_usdt.png').default } alt="yearn usdt token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0x7Da96a3891Add058AdA2E826306D812C638D87a7">Yearn USDT</a></div>
-                    <div className="tokens"><img src={ require('./logos/yearn_usdc.png').default } alt="yearn usdc token" className="image" /><a target="_blank" rel="noreferrer" href="https://yearn.finance/#/vault/0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE">Yearn USDC</a></div>
-                </div>
-                <div className="small-table-2">
-                    <div className="tokens"><img src={ require('./logos/aave_dai.png').default } alt="aave dai token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0x6b175474e89094c44da98b954eedeac495271d0f&marketName=proto_mainnet">Aave Dai</a></div>
-                    <div className="tokens"><img src={ require('./logos/aave_usdt.png').default } alt="aave usdt token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0xdac17f958d2ee523a2206206994597c13d831ec7&marketName=proto_mainnet">Aave USDT</a></div>
-                    <div className="tokens"><img src={ require('./logos/aave_usdc.png').default } alt="aave usdc token" className="image" /><a target="_blank" rel="noreferrer" href="https://app.aave.com/reserve-overview/?underlyingAsset=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&marketName=proto_mainnet">Aave USDC</a></div>
+                    <div className="tokens"><img src={ require('./logos/frax.png').default } alt="frax token" className="image" />FRAX</div>
                 </div>
                 The protocol assumes every alUSD is worth $1 and the transmuter exchanges alUSD for $1 worth of any collateral asset.<br/>
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
+                <br/>
+                To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   

@@ -82,7 +82,17 @@ export const addresses = {
     vaUsdcAddress: '0xa8b607Aa09B6A2E306F93e74c282Fb13f6A80452',
     vaDaiAddress: '0x0538C8bAc84E95A9dF8aC10Aad17DbE81b9E36ee',
     vaEthAddress: '0xd1C117319B3595fbc39b471AB1fd485629eb05F2',
-    pcsChefAddress: '0x556b9306565093c855aea9ae92a594704c2cd59e'
+    pcsChefAddress: '0x556b9306565093c855aea9ae92a594704c2cd59e',
+    pcsAlEthAddress: '0xa6f73c2B591D88843ffDaa526BaC2463b7f23411',
+    l2d4Address: '0xf2839e0b30b5e96083085f498b14bbc12530b734',
+    arbiUsxContractAddress: '0x641441c631e2F909700d2f41FD87F0aA6A6b4EDb',
+    arbiUsdsContractAddress: '0xD74f5255D557944cf7Dd0E45FF521520002D5748',
+    arbiFraxContractAddress: '0x17FC002b466eEc40DaE837Fc4bE5c67993ddBd6F',
+    arbiAlUsdContractAddress: '0xCB8FA9a76b8e203D8C3797bF438d8FB81Ea3326A',
+    veloFraxAlUsdAddress: '0x27fcbf9832d9a23b595169d0c5a4a090ba55b634',
+    veloFxsAlEthAddress: '0x87383ec35af6f0d58db242960898ac4d8c9f83a6',
+    optiFraxAddress: '0x2E3D870790dC77A83DD1d18184Acc7439A53f475',
+    optiFxsEthAddress: '0x6806411765Af15Bddd26f8f544A34cC40cb9838B'
 }
 
 export const abis = {
