@@ -301,7 +301,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -329,8 +329,14 @@ export default class App extends React.Component {
       this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       this.alEthOptimismContract.methods.balanceOf(addresses.veloFxsAlEthAddress).call(),
       this.fxsEthOptimismContract.methods.balanceOf(addresses.veloFxsAlEthAddress).call(),
+      this.fraxOptimismContract.methods.balanceOf(addresses.veloFraxAlUsdAddress).call(),
+      this.alUsdOptimismContract.methods.balanceOf(addresses.veloFraxAlUsdAddress).call(),
+      this.alUsdArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      this.fraxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth]) => {
+    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -359,6 +365,12 @@ export default class App extends React.Component {
       lps.ethInPcs = ethInPcs/Math.pow(10, 18);
       lps.alEthInVeloFxsEthAlEth = alEthInVeloFxsEthAlEth/Math.pow(10, 18);
       lps.fxsEthInVeloFxsEthAlEth = fxsEthInVeloFxsEthAlEth/Math.pow(10, 18);
+      lps.fraxInVeloFraxAlUsd = fraxInVeloFraxAlUsd/Math.pow(10, 18);
+      lps.alUsdInVeloFraxAlUsd = alUsdInVeloFraxAlUsd/Math.pow(10, 18);
+      lps.alUsdInL2d4 = alUsdInL2d4/Math.pow(10, 18);
+      lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
+      lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
+      lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
       //console.log(lps.daiInBeets)
       this.setState({ lps: lps, lpsLoading: false })
     })
@@ -711,7 +723,6 @@ export default class App extends React.Component {
   }
 
   calculateMultifarmData(treasury, elixir){
-    console.log(elixir)
     let totalTreasury = 0;
     let alcxInTreasury = 0;
     let totalElixir = 0;

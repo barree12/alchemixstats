@@ -5,12 +5,14 @@ export default class AlUsdSummary extends React.Component {
 
     render(){
       const totalAlUsd3Crv = Math.round(this.props.lps.alUsdIn3Crv/10000+this.props.lps.crv3In3Crv/10000)/100;
-      const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
+      //const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
+      const totalL2d4 = Math.round(this.props.lps.alUsdInL2d4/10000+this.props.lps.fraxInL2d4/10000+this.props.lps.usxInL2d4/10000+this.props.lps.usdsInL2d4/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
       const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
       //const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
       const totalCurveFBP = Math.round(this.props.lps.alUsdInCurveFBP/10000+this.props.lps.fbpInCurveFBP/10000)/100;
       const totalMaiUsdVelodrome = Math.round(this.props.lps.alUsdInMaiVelodrome/10000+this.props.lps.maiInMaiVelodrome/10000)/100;
+      const totalFraxVelodrome = Math.round(this.props.lps.alUsdInVeloFraxAlUsd/10000+this.props.lps.fraxInVeloFraxAlUsd/10000)/100;
         return (
             <div className="summary">
                 alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
@@ -116,6 +118,33 @@ export default class AlUsdSummary extends React.Component {
 
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_frax.png').default } alt="alUSD-FRAX logo" className="image" />
+                      <span className="table-text-title">FRAX Velodrome</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInVeloFraxAlUsd/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">FRAX</span>
+                      <span className="important-2">${Math.round(this.props.lps.fraxInVeloFraxAlUsd/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalFraxVelodrome}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_mai.png').default } alt="alUSD-MAI logo" className="image" />
                       <span className="table-text-title">MAI Velodrome</span>
                     </span>
@@ -143,32 +172,32 @@ export default class AlUsdSummary extends React.Component {
 
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/saddle4pool.png').default } alt="Saddle 4pool logo" className="image" />
-                      <span className="table-text-title">Saddle d4</span>
+                      <img src={ require('./logos/l2d4.png').default } alt="L2D4 logo" className="image" />
+                      <span className="table-text-title">Saddle L2D4</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInD4/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInL2d4/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">FRAX</span>
-                      <span className="important-2">${Math.round(this.props.lps.fraxInD4/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.fraxInL2d4/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">FEI</span>
-                      <span className="important-2">${Math.round(this.props.lps.feiInD4/10000)/100}M</span>
+                      <span className="table-text-bold-2">USX</span>
+                      <span className="important-2">${Math.round(this.props.lps.usxInL2d4/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">LUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.lUsdInD4/10000)/100}M</span>
+                      <span className="table-text-bold-2">USDs</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdsInL2d4/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalD4}M</span>
+                      <span className="important-2">${totalL2d4}M</span>
                     </span>
                   </div>
 
-                  <div className="small-table-inner-11">
+                  {/*<div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_beets.png').default } alt="alUsd beets logo" className="image" />
                       <span className="table-text-title">Fantom Beets</span>
