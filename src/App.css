@@ -324,6 +324,15 @@ h3 {
   text-align: left;
 }
 
+.small-table-inner-13 {
+  display: grid;
+  grid-template-columns: 24% 17% 17% 17% 17%;
+  row-gap: 3px;
+  width: 600px;
+  margin-top: 10px;
+  text-align: left;
+}
+
 .small-table-title-wrap {
   display: grid;
   grid-template-columns: 20% 80%;
@@ -855,6 +864,13 @@ div.earn-yield-link-- a {
     margin-top: 30px;
     grid-template-columns: 1fr;
     grid-template-rows: 20% 14% 14% 14% 14% 14%;
+    width: 145px;
+    text-align: center;
+  }
+  .small-table-inner-13 {
+    margin-top: 30px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 24% 24% 24% 10% 10%;
     width: 145px;
     text-align: center;
   }

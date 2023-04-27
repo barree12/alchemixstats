@@ -36,7 +36,7 @@ export default class AlEthSummary extends React.Component {
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/eth_aleth.png').default } alt="alUsd logo" className="image" />
-                      <span className="table-text-title">alETHCrv</span>
+                      <span className="table-text-title">Curve alETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
@@ -60,7 +60,7 @@ export default class AlEthSummary extends React.Component {
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_opti.png').default } alt="alEth optimism logo" className="image" />
-                      <span className="table-text-title">alETH Velodrome</span>
+                      <span className="table-text-title">Velo alETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
@@ -106,10 +106,12 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
                     </span>
                   </div>
-                  <div className="small-table-inner-5">
+                </div>
+                <div className="small-table-3">
+                  <div className="small-table-inner-13">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth frxEth logo" className="image" />
-                      <span className="table-text-title">Velodrome frxETH</span>
+                      <span className="table-text-title">Velo frxETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
@@ -117,11 +119,11 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2"><i>({Math.round(this.props.lps.alEthInVeloFxsEthAlEth)})</i></span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">fxsETH</span>
+                      <span className="table-text-bold-2">frxETH</span>
                       <span className="important-2">${fxsEthInVeloFxsEthAlEthUsd}M</span>
                       <span className="important-2"><i>({Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth)})</i></span>
                     </span>
-                    <span className="small-table-cell">
+                    <span className="small-table-cell-disappear">
                       <span></span>
                       <span></span>
                     </span>
@@ -130,10 +132,10 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2">${Math.round((alEthInVeloFxsEthAlEthUsd + fxsEthInVeloFxsEthAlEthUsd)*100)/100}M</span>
                     </span>
                   </div>
-                  <div className="small-table-inner-5">
+                  <div className="small-table-inner-13">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_pcs.png').default } alt="alEth Pcs logo" className="image" />
-                      <span className="table-text-title">PancakeSwap alETH</span>
+                      <span className="table-text-title">PCS alETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
@@ -145,7 +147,7 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2">${ethInPcsUsd}M</span>
                       <span className="important-2"><i>({Math.round(this.props.lps.ethInPcs)})</i></span>
                     </span>
-                    <span className="small-table-cell">
+                    <span className="small-table-cell-disappear">
                       <span></span>
                       <span></span>
                     </span>

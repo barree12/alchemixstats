@@ -99,8 +99,8 @@ export default class App extends React.Component {
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
     this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
     this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
-    this.feiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.feiAddress);
-    this.lUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.lUsdAddress);
+    //this.feiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.feiAddress);
+    //this.lUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.lUsdAddress);
     this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
     this.alEthCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthCrvContractAddress);
     this.veSdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.veSdtContractAddress);
@@ -301,13 +301,13 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      //this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      this.fraxContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
-      this.feiContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
-      this.lUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      //this.fraxContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      //this.feiContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
+      //this.lUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       web3.eth.getBalance(addresses.alEthCrvContractAddress),
@@ -319,8 +319,8 @@ export default class App extends React.Component {
       this.maiOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
       this.alEthOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
-      this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
-      this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
+      //this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
+      //this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
       //this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       //this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
@@ -336,13 +336,13 @@ export default class App extends React.Component {
       this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
     ])
-    .then(([alUsdIn3Crv, alUsdInD4, crv3In3Crv, fraxInD4, feiInD4, lUsdInD4, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, yearnUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
-      lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
+      //lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
-      lps.fraxInD4 = fraxInD4/Math.pow(10, 18);
-      lps.feiInD4 = feiInD4/Math.pow(10, 18);
-      lps.lUsdInD4 = lUsdInD4/Math.pow(10, 18);
+      //lps.fraxInD4 = fraxInD4/Math.pow(10, 18);
+      //lps.feiInD4 = feiInD4/Math.pow(10, 18);
+      //lps.lUsdInD4 = lUsdInD4/Math.pow(10, 18);
       lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
       lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
@@ -354,9 +354,9 @@ export default class App extends React.Component {
       lps.maiInMaiVelodrome = maiInMaiVelodrome/Math.pow(10, 18);
       lps.alEthInVelodrome = alEthInVelodrome/Math.pow(10, 18);
       lps.wethInVelodrome = wethInVelodrome/Math.pow(10, 18);
-      lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
-      lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
-      lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
+      //lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
+      //lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
+      //lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       //lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
       //lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);

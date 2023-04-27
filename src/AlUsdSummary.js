@@ -8,7 +8,7 @@ export default class AlUsdSummary extends React.Component {
       //const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
       const totalL2d4 = Math.round(this.props.lps.alUsdInL2d4/10000+this.props.lps.fraxInL2d4/10000+this.props.lps.usxInL2d4/10000+this.props.lps.usdsInL2d4/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
-      const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
+      //const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdcInBeets/10000+this.props.lps.daiInBeets/10000)/100;
       //const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
       const totalCurveFBP = Math.round(this.props.lps.alUsdInCurveFBP/10000+this.props.lps.fbpInCurveFBP/10000)/100;
       const totalMaiUsdVelodrome = Math.round(this.props.lps.alUsdInMaiVelodrome/10000+this.props.lps.maiInMaiVelodrome/10000)/100;
