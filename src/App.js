@@ -91,7 +91,6 @@ export default class App extends React.Component {
     this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
     this.tAlcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.tAlcxAddress);
     this.alcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxAddress);
-    this.tokeStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.tokeStakingContractAddress);
     this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.alcxEthSlpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxEthSlpAddress);
     this.wethContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.wethAddress);
@@ -177,11 +176,13 @@ export default class App extends React.Component {
       this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdtAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.vaUsdcAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.vaDaiAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(addresses.vaFraxAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvDaiAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvUsdcAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvUsdtAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaUsdcAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaDaiAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaFraxAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(addresses.yvWethAddress).call(),
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.yvWethAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(addresses.vaEthAddress).call(),
@@ -190,16 +191,20 @@ export default class App extends React.Component {
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.wstEthAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(addresses.rEthAddress).call(),
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.rEthAddress).call(),
+      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.sfrxEthAddress).call(),
+      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.sfrxEthAddress).call(),
       this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvDaiAddress).call(),
       this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvUsdcAddress).call(),
       this.alchemistFtmContract.methods.getYieldTokenParameters(addresses.ftmYvUsdtAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
+      this.alchemistContract.methods.getYieldTokenParameters(addresses.aFraxAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
+      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aFraxAddress).call(),
       this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
@@ -211,7 +216,7 @@ export default class App extends React.Component {
       this.alUsdContract.methods.totalSupply().call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply]) => {
+      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, ftmDaiParams, ftmUsdcParams, ftmUsdtParams, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.ftmDai = ftmDaiParams[4]/Math.pow(10, ftmDaiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
@@ -224,13 +229,16 @@ export default class App extends React.Component {
         v2Caps.eth = ethParams[4]/Math.pow(10, ethParams[0]);
         v2Caps.wstEth = wstEthParams[4]/Math.pow(10, wstEthParams[0]);
         v2Caps.rEth = rEthParams[4]/Math.pow(10, rEthParams[0]);
+        v2Caps.sfrxEth = sfrxEthParams[4]/Math.pow(10, sfrxEthParams[0]);
         v2Caps.aDai = aDaiParams[4]/Math.pow(10, aDaiParams[0]);
         v2Caps.aUsdc = aUsdcParams[4]/Math.pow(10, aUsdcParams[0]);
         v2Caps.aUsdt = aUsdtParams[4]/Math.pow(10, aUsdtParams[0]);
+        v2Caps.aFrax = aFraxParams[4]/Math.pow(10, aFraxParams[0]);
         v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
         v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
         v2Caps.vaUsdc = vaUsdcParams[4]/Math.pow(10, 6);
         v2Caps.vaDai = vaDaiParams[4]/Math.pow(10, vaDaiParams[0]);
+        v2Caps.vaFrax = vaFraxParams[4]/Math.pow(10, vaFraxParams[0]);
         v2Caps.vaEth = vaEthParams[4]/Math.pow(10, vaEthParams[0]);
         tokensPerShare.dai = daiTokens/Math.pow(10, 18);
         tokensPerShare.usdc = usdcTokens/Math.pow(10, 6);
@@ -238,13 +246,16 @@ export default class App extends React.Component {
         tokensPerShare.eth = ethTokens/Math.pow(10, 18);
         tokensPerShare.wstEth = wstEthTokens/Math.pow(10, 18);
         tokensPerShare.rEth = rEthTokens/Math.pow(10, 18);
+        tokensPerShare.sfrxEth = sfrxEthTokens/Math.pow(10, 18);
         tokensPerShare.aDai = aDaiTokens/Math.pow(10, 18);
         tokensPerShare.aUsdc = aUsdcTokens/Math.pow(10, 6);
         tokensPerShare.aUsdt = aUsdtTokens/Math.pow(10, 6);
+        tokensPerShare.aFrax = aFraxTokens/Math.pow(10, 18);
         tokensPerShare.aWeth = aWethTokens/Math.pow(10, 18);
         //tokensPerShare.optiAWeth = optiAWethTokens/Math.pow(10, 18);
         tokensPerShare.vaDai = vaDaiTokens/Math.pow(10, 18);
         tokensPerShare.vaUsdc = vaUsdcTokens/Math.pow(10, 6);
+        tokensPerShare.vaFrax = vaFraxTokens/Math.pow(10, 18);
         tokensPerShare.vaEth = vaEthTokens/Math.pow(10, 18);
         deposit.dai = daiParams[8]/Math.pow(10, 24);
         deposit.usdc = usdcParams[8]/Math.pow(10, 12);
@@ -252,12 +263,15 @@ export default class App extends React.Component {
         deposit.eth = ethParams[8]/Math.pow(10, 18);
         deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
         deposit.rEth = rEthParams[8]/Math.pow(10, 18);
+        deposit.sfrxEth = sfrxEthParams[8]/Math.pow(10, 18);
         deposit.aDai = aDaiParams[8]/Math.pow(10, 24);
         deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
         deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
+        deposit.aFrax = aFraxParams[8]/Math.pow(10, 24);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         deposit.vaUsdc = vaUsdcParams[8]/Math.pow(10, 24);
         deposit.vaDai = vaDaiParams[8]/Math.pow(10, 12);
+        deposit.vaFrax = vaFraxParams[8]/Math.pow(10, 24);
         deposit.vaEth = vaEthParams[8]/Math.pow(10, 18);
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
@@ -379,8 +393,8 @@ export default class App extends React.Component {
     });
   }
 
-  calculateTokenPrices(eth, rEth, wstEth, toke, cvx, sdt, crv){
-    let tokenPrices = { eth: [], rEth: [], wstEth: [], toke: [], cvx: [], sdt: [], crv: [] }
+  calculateTokenPrices(eth, rEth, wstEth, sfrxEth, cvx, sdt, crv){
+    let tokenPrices = { eth: [], rEth: [], wstEth: [], sfrxEth: [], cvx: [], sdt: [], crv: [] }
     for(let i=0;i<eth.prices.length;i++){
       tokenPrices.eth[i] = eth.prices[i][1]; 
     }
@@ -390,8 +404,8 @@ export default class App extends React.Component {
     for(let i=0;i<wstEth.prices.length;i++){
       tokenPrices.wstEth[i] = wstEth.prices[i][1]; 
     }
-    for(let i=0;i<toke.prices.length;i++){
-      tokenPrices.toke[i] = toke.prices[i][1]; 
+    for(let i=0;i<sfrxEth.prices.length;i++){
+      tokenPrices.sfrxEth[i] = sfrxEth.prices[i][1]; 
     }
     for(let i=0;i<cvx.prices.length;i++){
       tokenPrices.cvx[i] = cvx.prices[i][1]; 
@@ -705,15 +719,15 @@ export default class App extends React.Component {
     Promise.all([fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/wrapped-steth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/rocket-pool-eth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/tokemak/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
+      fetch("https://api.coingecko.com/api/v3/coins/staked-frax-ether/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/convex-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/stake-dao/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/curve-dao-token/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/alchemix-usd/market_chart?vs_currency=usd&days=max&interval=daily").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/alchemix/market_chart?vs_currency=usd&days=max&interval=daily").then(res => res.json())
     ])
-      .then(([ethPrice, wstEthPrice, rEthPrice, tokePrice, cvxPrice, sdtPrice, crvPrice, alUsdData, alcxData]) => {
-        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, tokePrice, cvxPrice, sdtPrice, crvPrice);
+      .then(([ethPrice, wstEthPrice, rEthPrice, sfrxEthPrice, cvxPrice, sdtPrice, crvPrice, alUsdData, alcxData]) => {
+        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, sfrxEthPrice, cvxPrice, sdtPrice, crvPrice);
         this.calculateAlUsdArrays(alUsdData);
         this.calculateAlcxArrays(alcxData);
     })
@@ -924,8 +938,10 @@ export default class App extends React.Component {
   let v2aDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aDai*this.state.tokensPerShare.aDai*100)/100;
   let v2aUsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdc*this.state.tokensPerShare.aUsdc*100)/100;
   let v2aUsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdt*this.state.tokensPerShare.aUsdt*100)/100;
+  let v2aFraxTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aFrax*this.state.tokensPerShare.aFrax*100)/100;
   let v2vaUsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaUsdc*this.state.tokensPerShare.vaUsdc*100)/100;
   let v2vaDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaDai*this.state.tokensPerShare.vaDai*100)/100;
+  let v2vaFraxTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaFrax*this.state.tokensPerShare.vaFrax*100)/100;
   let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
   let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2vaEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaEth*this.state.tokensPerShare.vaEth);
@@ -936,6 +952,8 @@ export default class App extends React.Component {
   let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
+  let v2SfrxEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokensPerShare.sfrxEth);
+  let v2SfrxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokenPrices.sfrxEth[this.state.tokenPrices.sfrxEth.length-1]/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
   let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
@@ -978,10 +996,10 @@ export default class App extends React.Component {
         v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
-        stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue}
+        stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
         tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl} alAssetSupply={this.state.alAssetSupply}
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg}
+        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
         tokenPricesLoading={this.state.tokenPricesLoading} multifarmData={this.state.multifarmData}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
         lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
@@ -1127,8 +1145,9 @@ export default class App extends React.Component {
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
           stakedAlcxValue={stakedAlcxValue} stakingSlpValue={stakingSlpValue} v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
-          tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl}
+          tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
+          v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
         />)}
       {this.state.activeTab !== "treasury" ? "" :
       <Treasury

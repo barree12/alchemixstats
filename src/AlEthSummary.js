@@ -30,7 +30,7 @@ export default class AlEthSummary extends React.Component {
                 The transmuter always exchanges 1 alETH for 1 ETH<br/>
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to 1 ETH for alETH.<br/>
                 <br/>
-                To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link>
+                <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   <div className="small-table-inner-5">

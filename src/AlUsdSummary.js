@@ -28,7 +28,7 @@ export default class AlUsdSummary extends React.Component {
                 The protocol assumes every alUSD is worth $1 and the transmuter exchanges alUSD for $1 worth of any collateral asset.<br/>
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
                 <br/>
-                To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link>
+                <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   

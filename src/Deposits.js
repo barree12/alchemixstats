@@ -35,22 +35,12 @@ export default class Deposits extends React.Component {
                         <span>In V2, the transmuters hold a very little amount of assets and the Elixirs (Alchemix AMOs) own the funds that were previously controlled by the transmuters.<br/>The contents of the Elixirs are shown in the <i>Treasury and Elixirs</i> section.</span>
                         Deposit caps are set for each collateral asset. As long as a user can deposit a certain amount of collateral, they are able to take a max loan of 50% of their deposit.<br/>
                         *Please note that the deposit caps are set in USD and ETH, not the token of the underlying vault.<br/>
-                        As of 2022 October, V1 contracts have been deprecated.<br/>
+                        As of 2022 October, V1 contracts had been deprecated.<br/>
                         All remaining funds were moved into a temporary migration contract where users can manually migrate to V2.<br/>
-                        Thus, V1 metrics are no longer covered, only the remaining contents of the migration contract.
+                        <span>There are still <b>${Math.round(this.props.v2Deposit.daiInMigrate*100)/100}M of Dai</b> and <b>${Math.round(this.props.wethInMigrateUsd*100)/100}M of ETH</b> left in the temporary contracts.</span>
                         <div className="tvl-tables-2">
-                        {this.props.tokenPricesLoading ? "Loading..." :
                         <div className="small-table">
-                            <h3>V1 Migrate Contract</h3>
-                            <div className="small-table-inner">
-                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />DAI</span><span className="important-2">${Math.round(this.props.v2Deposit.daiInMigrate*100)/100}M</span>
-                            <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />WETH</span><span className="important-2">${Math.round(this.props.wethInMigrateUsd*100)/100}M&nbsp;<i>({Math.round(this.props.v2Deposit.wethInMigrate)} ETH)</i></span>
-                            <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />+<img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" /></span><span className="important-2">${Math.round((this.props.v2Deposit.daiInMigrate + this.props.wethInMigrateUsd)*100)/100}M</span>
-                            </div>
-                        </div>
-                        }
-                        <div className="small-table">
-                            <h3>V2 Deposits and Deposit Caps*</h3>
+                            <h3>Stablecoin Deposits*</h3>
                             <div className="small-table-inner-2">
                             <span className="small-table-row"></span><span className="table-text-bold">TVL</span><span className="table-text-bold">Deposit cap</span>
                             <span className="small-table-row"><img src={ require('./logos/dai.png').default } alt="DAI logo" className="image" />yvDAI</span><span className="important-2">${this.props.v2DaiTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.dai/10000)/100}M</span>
@@ -59,17 +49,28 @@ export default class Deposits extends React.Component {
                             <span className="small-table-row"><img src={ require('./logos/aave_dai.png').default } alt="Aave Dai logo" className="image" />aDAI</span><span className="important-2">${this.props.v2aDaiTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.aDai/10000)/100}M</span>
                             <span className="small-table-row"><img src={ require('./logos/aave_usdc.png').default } alt="Aave USDC logo" className="image" />aUSDC</span><span className="important-2">${this.props.v2aUsdcTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.aUsdc/10000)/100}M</span>
                             <span className="small-table-row"><img src={ require('./logos/aave_usdt.png').default } alt="Aave USDT logo" className="image" />aUSDT</span><span className="important-2">${this.props.v2aUsdtTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.aUsdt/10000)/100}M</span>
+                            <span className="small-table-row"><img src={ require('./logos/aave_frax.png').default } alt="Aave FRAX logo" className="image" />aFRAX</span><span className="important-2">${this.props.v2aFraxTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.aFrax/10000)/100}M</span>
                            
                             <span className="small-table-row"><img src={ require('./logos/vesper_usdc.png').default } alt="Vesper USDC logo" className="image" />vaUSDC</span><span className="important-2">${this.props.v2vaUsdcTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.vaUsdc/10000)/100}M</span>
                             <span className="small-table-row"><img src={ require('./logos/vesper_dai.png').default } alt="Vesper Dai logo" className="image" />vaDAI</span><span className="important-2">${this.props.v2vaDaiTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.vaDai/10000)/100}M</span>
+                            <span className="small-table-row"><img src={ require('./logos/vesper_frax.png').default } alt="Vesper Frax logo" className="image" />vaFRAX</span><span className="important-2">${this.props.v2vaFraxTVL}M</span><span className="table-text-bold">${Math.round(this.props.v2Caps.vaFrax/10000)/100}M</span>
+
+                            <span className="small-table-row-2">TOTAL</span><span className="important-3">${Math.round((this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL + this.props.v2aFraxTVL + this.props.v2vaFraxTVL)*100)/100}M</span>
+                            </div>
+                        </div>
+                        <div className="small-table">
+                            <h3>ETH Deposits*</h3>
+                            <div className="small-table-inner-2">
+                            <span className="small-table-row"></span><span className="table-text-bold">TVL</span><span className="table-text-bold">Deposit cap</span>
 
                             <span className="small-table-row"><img src={ require('./logos/eth.png').default } alt="ETH logo" className="image" />yvWETH</span><span className="important-4"><span>${this.props.v2EthUsdTVL}M</span><i>({this.props.v2EthTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.eth)} ETH</span>
                             <span className="small-table-row"><img src={ require('./logos/aave_eth.png').default } alt="Aave WETH logo" className="image" />aWETH</span><span className="important-4"><span>${this.props.v2aWethUsdTVL}M</span><i>({this.props.v2aWethTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.aWeth)} ETH</span>
                             <span className="small-table-row"><img src={ require('./logos/steth.png').default } alt="stETH logo" className="image" />wstETH</span><span className="important-4">${this.props.v2StethUsdTVL}M&nbsp;<i>({this.props.v2StethTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.wstEth)} ETH</span>
                             <span className="small-table-row"><img src={ require('./logos/reth.png').default } alt="rETH logo" className="image" />rETH</span><span className="important-4">${this.props.v2RethUsdTVL}M&nbsp;<i>({this.props.v2RethTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.rEth)} ETH</span>
+                            <span className="small-table-row"><img src={ require('./logos/frxeth.png').default } alt="sfrxETH logo" className="image" />sfrxETH</span><span className="important-4">${this.props.v2sfrxEthUsdTVL}M&nbsp;<i>({this.props.v2sfrxEthTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.sfrxEth)} ETH</span>
                             <span className="small-table-row"><img src={ require('./logos/vesper_eth.png').default } alt="vaETH logo" className="image" />vaETH</span><span className="important-4">${this.props.v2vaEthUsdTVL}M&nbsp;<i>({this.props.v2vaEthTVL} ETH)</i></span><span className="table-text-bold">{Math.round(this.props.v2Caps.vaEth)} ETH</span>
 
-                            <span className="small-table-row-2">TOTAL V2</span><span className="important-3">${Math.round((this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL + this.props.v2EthUsdTVL + this.props.v2aWethUsdTVL + this.props.v2RethUsdTVL + this.props.v2StethUsdTVL)*100)/100}M</span>
+                            <span className="small-table-row-2">TOTAL</span><span className="important-3">${Math.round((this.props.v2EthUsdTVL + this.props.v2aWethUsdTVL + this.props.v2RethUsdTVL + this.props.v2StethUsdTVL + this.props.v2sfrxEthUsdTVL)*100)/100}M</span>
                             </div>
                         </div>
                         <div className="small-table">
