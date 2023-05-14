@@ -8,7 +8,7 @@ function ChartDonut(){
         <Chart
             type='doughnut' 
             data={{
-            labels: ['alAssets - alETH Curve', 'alAssets - FraxBP Curve', 'Staking - ALCX/ETH SLP', 'Staking - gALCX', 
+            labels: ['alAssets - alETH Curve', 'alAssets - FraxBP Curve', 'Staking - ALCX/ETH BPT', 'Staking - gALCX', 
             'alAssets - alUSD3CRV', 'alAssets - Saddle alETH', 'Arbitrum - Saddle L2D4', 'Fantom - Beets alUSD/USDC',
              'Fantom - Spooky gALCX/FTM'],
             datasets: [{

@@ -315,7 +315,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdcInBeets: 0, daiInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       //this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -333,7 +333,7 @@ export default class App extends React.Component {
       this.maiOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
       this.alEthOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
       this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
-      //this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
+      this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
       //this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
       //this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       //this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
@@ -350,7 +350,7 @@ export default class App extends React.Component {
       this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       //lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -368,7 +368,8 @@ export default class App extends React.Component {
       lps.maiInMaiVelodrome = maiInMaiVelodrome/Math.pow(10, 18);
       lps.alEthInVelodrome = alEthInVelodrome/Math.pow(10, 18);
       lps.wethInVelodrome = wethInVelodrome/Math.pow(10, 18);
-      //lps.alUsdInBeets = alUsdBeets[3][2]/Math.pow(10, 18);
+      lps.alUsdInBeets = alUsdBeets[3][0]/Math.pow(10, 18);
+      lps.usdInBeets = alUsdBeets[3][1]/Math.pow(10, 18);
       //lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       //lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       //lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
@@ -385,7 +386,7 @@ export default class App extends React.Component {
       lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
       lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
       lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
-      //console.log(lps.daiInBeets)
+      console.log(alUsdBeets)
       this.setState({ lps: lps, lpsLoading: false })
     })
     .catch(function(err) {
@@ -566,20 +567,23 @@ export default class App extends React.Component {
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
     let resultIndex = 0;
-    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], vaUsdc: [], vaDai: [], vaEth: [] };
+    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], aFrax: [], vaUsdc: [], vaDai: [], vaFrax: [], vaEth: [], frxEth: [] };
     let tempYvDai = 0;
     let tempYvUsdc = 0;
     let tempYvUsdt = 0;
     let tempADai = 0;
     let tempAUsdc = 0;
     let tempAUsdt = 0;
+    let tempAFrax = 0;
     let tempVaUsdc = 0;
     let tempVaDai = 0;
+    let tempVaFrax = 0;
     let tempYvWeth = 0;
     let tempAWeth = 0;
     let tempWstEth = 0;
     let tempReth = 0;
     let tempVaEth = 0;
+    let tempFrxEth = 0;
     for(let j=0;startDate<today;j++){
 
       for(let i=resultIndex;i<result.length;i++){
@@ -592,15 +596,18 @@ export default class App extends React.Component {
         tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdc;
         tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdt;
         tempADai = result[i].token.symbol === "s_aDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempADai;
+        tempAFrax = result[i].token.symbol === "s_aFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempAFrax;
         tempAUsdc = result[i].token.symbol === "s_aUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
         tempAUsdt = result[i].token.symbol === "s_aUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdt;
         tempVaUsdc = result[i].token.symbol === "vaUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaUsdc;
         tempVaDai = result[i].token.symbol === "vaDAI" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempVaDai;
+        tempVaFrax = result[i].token.symbol === "vaFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaFrax;
         tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
         tempAWeth = result[i].token.symbol === "s_aWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempAWeth;
         tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
         tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
         tempVaEth = result[i].token.symbol === "vaETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempVaEth;
+        tempFrxEth = result[i].token.symbol === "sfrxETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempFrxEth;
         resultIndex++;
       }
       alchemistTvl.yvDai[j] = Math.round(tempYvDai/10000)/100;
@@ -615,10 +622,14 @@ export default class App extends React.Component {
       if(j>0 && !tempAUsdc) alchemistTvl.aUsdc[j] = alchemistTvl.aUsdc[j-1];
       alchemistTvl.aUsdt[j] = Math.round(tempAUsdt/10000)/100;
       if(j>0 && !tempAUsdt) alchemistTvl.aUsdt[j] = alchemistTvl.aUsdt[j-1];
+      alchemistTvl.aFrax[j] = Math.round(tempAFrax/10000)/100;
+      if(j>0 && !tempAFrax) alchemistTvl.aFrax[j] = alchemistTvl.aFrax[j-1];
       alchemistTvl.vaUsdc[j] = Math.round(tempVaUsdc/10000)/100;
       if(j>0 && !tempVaUsdc) alchemistTvl.vaUsdc[j] = alchemistTvl.vaUsdc[j-1];
       alchemistTvl.vaDai[j] = Math.round(tempVaDai/10000)/100;
       if(j>0 && !tempVaDai) alchemistTvl.vaDai[j] = alchemistTvl.vaDai[j-1];
+      alchemistTvl.vaFrax[j] = Math.round(tempVaFrax/10000)/100;
+      if(j>0 && !tempVaFrax) alchemistTvl.vaFrax[j] = alchemistTvl.vaFrax[j-1];
       alchemistTvl.yvWeth[j] = Math.round(tempYvWeth/10000)/100;
       if(j>0 && !tempYvWeth) alchemistTvl.yvWeth[j] = alchemistTvl.yvWeth[j-1];
       alchemistTvl.aWeth[j] = Math.round(tempAWeth/10000)/100;
@@ -629,6 +640,8 @@ export default class App extends React.Component {
       if(j>0 && !tempReth) alchemistTvl.rEth[j] = alchemistTvl.rEth[j-1];
       alchemistTvl.vaEth[j] = Math.round(tempVaEth/10000)/100;
       if(j>0 && !tempVaEth) alchemistTvl.vaEth[j] = alchemistTvl.vaEth[j-1];
+      alchemistTvl.frxEth[j] = Math.round(tempFrxEth/10000)/100;
+      if(j>0 && !tempFrxEth) alchemistTvl.frxEth[j] = alchemistTvl.frxEth[j-1];
       alchemistTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
       /*tempYvDai = 0;
@@ -752,7 +765,8 @@ export default class App extends React.Component {
     let tempMultifarmCalc = {}
     for(let i=0;i<treasury.length;i++){
       if(treasury[i].active) totalTreasury += treasury[i].positionSizeUsd;
-      if(treasury[i].asset === 'ALCX' || treasury[i].asset === 'tALCX') alcxInTreasury += treasury[i].positionSizeUsd;
+      if(treasury[i].asset === 'ALCX') alcxInTreasury += treasury[i].positionSizeUsd;
+      if(treasury[i].asset === 'ETH / ALCX') alcxInTreasury += treasury[i].positionSizeUsd * 0.8;
       if(treasury[i].asset === 'ETH / alETH') alEthCrvInTreasury = treasury[i].positionSizeUsd;
       if(treasury[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInTreasury = treasury[i].positionSizeUsd;
     }

@@ -4,6 +4,10 @@ import { Chart } from 'react-chartjs-2';
 export default class ChartV2AlchemistEthTVL extends React.Component {
 
   render(){  
+    let totalOther = [];
+      for(let i=0;i<this.props.alchemistTvl.vaEth.length;i++){
+        totalOther[i] = Math.round((this.props.alchemistTvl.vaEth[i] + this.props.alchemistTvl.aWeth[i])*100)/100;
+      }
     
   return (
       <div className="chart-container-3">
@@ -22,16 +26,6 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'aWETH',
-              data: this.props.alchemistTvl.aWeth,
-              backgroundColor: 'rgba(115,136,255,0.9)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
               label: 'wstETH',
               data: this.props.alchemistTvl.wstEth,
               backgroundColor: 'rgba(255,204,75,0.7)',
@@ -42,9 +36,9 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'rETH',
-              data: this.props.alchemistTvl.rEth,
-              backgroundColor: 'rgba(161,175,255,1)',
+              label: 'frxETH',
+              data: this.props.alchemistTvl.frxEth,
+              backgroundColor: 'rgba(115,136,255,0.9)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
@@ -52,8 +46,18 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'vaETH',
-              data: this.props.alchemistTvl.vaEth,
+              label: 'rETH',
+              data: this.props.alchemistTvl.rEth,
+              backgroundColor: 'rgba(102,102,102,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'Others',
+              data: totalOther,
               backgroundColor: 'rgba(161,175,255,1)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,

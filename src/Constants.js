@@ -64,7 +64,7 @@ export const addresses = {
     alEthOptimismContractAddress: '0x3e29d3a9316dab217754d13b28646b76607c5f04',
     wethOptimismContractAddress: '0x4200000000000000000000000000000000000006',
     beetsVaultContractAddress: '0x20dd72ed959b6147912c2e529f0a0c651c33c9ce',
-    alUsdBeetsPoolId: '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b',
+    alUsdBeetsPoolId: '0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e',
     beetsYearnUsdPoolId: '0x5ddb92a5340fd0ead3987d3661afcd6104c3b757000000000000000000000187',
     alUsdFBPSaddleContractAddress: '0xfb516cf3710fc6901f2266aaeb8834cf5e4e9558',
     saddleFBPContractAddress: '0x927e6f04609a45b107c789af34ba90ebbf479f7f',

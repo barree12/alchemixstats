@@ -26,7 +26,7 @@ export default class EarnBeets extends Component {
   getData() {
     let query=`{
       pool (
-        id: "0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b"
+        id: "0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e"
       ) { 
         id name address totalLiquidity apr { 
           total 
@@ -74,7 +74,7 @@ export default class EarnBeets extends Component {
             {this.state.aprLoading ? "0" : Math.round(this.state.apr*10000)/100}%
           </div>
           <div className="earn-yield-link">
-              <a href="https://beets.fi/pool/0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://beets.fi/pool/0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e" target="_blank" rel="noreferrer">Deposit</a>
           </div>
         </div>
       </div>);

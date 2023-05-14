@@ -11,8 +11,8 @@ export default class EmissionWeights extends React.Component {
                         <div className="weight-table-column">
                             <span className="table-title">Staking (33%)</span>
                             <div className="weight-table-row">
-                            <img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX-ETH SLP" className="image" />
-                            <div className="table-item-1">ALCX/ETH SLP</div>
+                            <img src={ require('./logos/alcx_eth.png').default } alt="ALCX-ETH BPT" className="image" />
+                            <div className="table-item-1">ALCX/ETH BPT</div>
                             <div className="table-item-2">20%</div>
                             </div>
                             <div className="weight-table-row">
