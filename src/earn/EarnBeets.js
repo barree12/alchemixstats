@@ -25,20 +25,18 @@ export default class EarnBeets extends Component {
     
   getData() {
     let query=`{
-      pool (
-        id: "0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e"
-      ) { 
-        id name address totalLiquidity apr { 
-          total 
-        } 
+      poolGetPool (id: "0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e") { 
+        id name dynamicData {
+          apr { total }
+        }
       } 
     }`
 
-    fetch("https://backend.beets-ftm-node.com/graphql", this.getSubgraphRequestOptions(query))
+    fetch("https://backend-v2.beets-ftm-node.com", this.getSubgraphRequestOptions(query))
       .then(res => res.json())
       .then(
         (result) => {
-          this.setState({ aprLoading: false, apr: result.data.pool.apr.total })
+          this.setState({ aprLoading: false, apr: result.data.poolGetPool.dynamicData.apr.total })
         },
         (error) => {
           console.log(error)

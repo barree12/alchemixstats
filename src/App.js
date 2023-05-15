@@ -386,7 +386,7 @@ export default class App extends React.Component {
       lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
       lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
       lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
-      console.log(alUsdBeets)
+      //console.log(alUsdBeets)
       this.setState({ lps: lps, lpsLoading: false })
     })
     .catch(function(err) {
