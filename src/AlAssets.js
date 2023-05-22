@@ -71,10 +71,10 @@ export default class AlAssets extends React.Component {
                 </div>
                 <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} />
                 <div className="section-wrapper">
-                    <div className="chart-title">
+                    {/*<div className="chart-title">
                         <h3>alETH Total Supply</h3>
                         <ChartAlethSupply />
-                    </div>
+        </div>*/}
                     <div className="chart-title">
                         <h3>alETH Price</h3>
                         <div className="toggle-text">

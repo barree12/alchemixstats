@@ -762,7 +762,7 @@ div.earn-yield-link-- a {
   border-style: solid;
   background-color: rgba(16,21,27,1);
   justify-content: center;
-  width: 280px;
+  width: 350px;
 }
 
 .multifarm-switcher-buttons-active {
@@ -801,21 +801,35 @@ div.earn-yield-link-- a {
   justify-content: center;
   height: 100%;
   padding-left: 5px;
-}
-
-.multifarm-switcher-buttons-sub-inside {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  height: 100%;
-  padding-left: 5px;
-  width: 70px;
+  width: 55px;
 }
 
 .multifarm-widget-powered-by-badge {
   background-color: #141921 !important;
   color: white !important;
+}
+
+.multifarm-switcher-buttons-active-1 {
+  padding: 0.25rem;
+}
+.multifarm-switcher-buttons-inactive-1 {
+  padding: 0.25rem;
+}
+
+@media (max-width: 950px) {
+  .button-group-small-screen {
+    display: flex;
+    flex-direction: column;
+  }
+  .menu-switcher {
+    width: 495px;
+  }
+  .button-group-large-screen {
+    display: none;
+  }
+  .menu-switcher {
+    width: 390px;
+  }
 }
 
 @media (max-width: 780px) {
@@ -880,19 +894,6 @@ div.earn-yield-link-- a {
   .small-table-cell-disappear {
     display: none;
   }
-  .button-group-large-screen {
-    display: none;
-  }
-  .button-group-small-screen {
-    display: flex;
-    flex-direction: column;
-  }
-  .menu-switcher {
-    width: 495px;
-  }
-  .multifarm-switcher-buttons-inside {
-    width: 90px;
-  }
   .earn-yield {
     width: 500px;
   }
@@ -937,18 +938,6 @@ div.earn-yield-link-- a {
   .cell-disappear {
     display: none;
   }
-  .menu-switcher {
-    width: 450px;
-  }
-  .multifarm-switcher-buttons-inside {
-    width: 80px;
-  }
-  .multifarm-switcher-buttons-active {
-    padding: 0.25rem;
-  }
-  .multifarm-switcher-buttons-inactive {
-    padding: 0.25rem;
-  }
   .earn-yield {
     width: 450px;
   }
@@ -970,12 +959,6 @@ div.earn-yield-link-- a {
   }
   .content-tab {
     width: 400px;
-  }
-  .menu-switcher {
-    width: 390px;
-  }
-  .multifarm-switcher-buttons-inside {
-    width: 65px;
   }
   .earn-yield {
     width: 380px;

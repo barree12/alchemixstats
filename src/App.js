@@ -10,6 +10,7 @@ import Emissions from './Emissions';
 import Overview from './Overview';
 import Debt from './Debt';
 import Treasury from './Treasury';
+import Elixir from './Elixir';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
@@ -1026,11 +1027,20 @@ export default class App extends React.Component {
                 {this.state.activeTab === "treasury" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
                 </div> :
                 <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
+                </div>}
+                {this.state.activeTab === "elixir" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
                 </div>}
                 {this.state.activeTab === "emissions" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
@@ -1044,11 +1054,11 @@ export default class App extends React.Component {
                 {this.state.activeTab === "deposits" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
                 </div> :
                 <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
+                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
                 </div>}
                 {this.state.activeTab === "debt" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
@@ -1088,11 +1098,20 @@ export default class App extends React.Component {
                 {this.state.activeTab === "treasury" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
                 </div> :
                 <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury and Elixir</div>
+                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
+                </div>}
+                {this.state.activeTab === "elixir" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("elixir")}}>
+                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
                 </div>}
                 {this.state.activeTab === "emissions" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
@@ -1103,19 +1122,19 @@ export default class App extends React.Component {
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
                 </div>}
-                {this.state.activeTab === "deposits" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
-                </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits and Staking</div>
-                </div>}
               </div>
             </div>
           <div className="multifarm-switcher-container">
               <div className="menu-switcher">
+                {this.state.activeTab === "deposits" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
+                </div> :
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
+                </div>}
                 {this.state.activeTab === "debt" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image-menu" />
@@ -1134,7 +1153,12 @@ export default class App extends React.Component {
                     <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">alAssets</div>
                 </div>}
-                {this.state.activeTab === "harvests" ? 
+                
+            </div>
+          </div>
+          <div className="multifarm-switcher-container">
+            <div className="menu-switcher">
+            {this.state.activeTab === "harvests" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
                     <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">Harvests</div>
@@ -1143,7 +1167,7 @@ export default class App extends React.Component {
                     <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">Harvests</div>
                 </div>}
-            </div>
+                </div>
           </div>
 
       </div>
@@ -1163,8 +1187,15 @@ export default class App extends React.Component {
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
           v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
         />)}
+
       {this.state.activeTab !== "treasury" ? "" :
       <Treasury
+        multifarmData={this.state.multifarmData}
+        multifarmDataLoading={this.state.multifarmDataLoading}
+        />}
+
+        {this.state.activeTab !== "elixir" ? "" :
+      <Elixir
         alAssetCrvSupply={this.state.alAssetCrvSupply}
         multifarmData={this.state.multifarmData}
         multifarmDataLoading={this.state.multifarmDataLoading}

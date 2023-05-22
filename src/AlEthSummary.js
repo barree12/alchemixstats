@@ -23,9 +23,9 @@ export default class AlEthSummary extends React.Component {
                 Currently, the following collateral types are supported:<br/>
                 <div className="small-table-2">
                 <div className="tokens"><img src={ require('./logos/eth.png').default } alt="eth token" className="image" />ETH</div>
-                <div className="tokens"><img src={ require('./logos/weth.png').default } alt="weth token" className="image" />WETH</div>
                 <div className="tokens"><img src={ require('./logos/steth.png').default } alt="wstETH token" className="image" />wstETH</div>
                 <div className="tokens"><img src={ require('./logos/reth.png').default } alt="reth token" className="image" />rETH</div>
+                <div className="tokens"><img src={ require('./logos/frxeth.png').default } alt="frxeth token" className="image" />frxETH</div>
                 </div>
                 The transmuter always exchanges 1 alETH for 1 ETH<br/>
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to 1 ETH for alETH.<br/>
