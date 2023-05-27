@@ -6,10 +6,6 @@ import "@multifarm/widget/dist/alchemix.css";
 
 export default class Elixir extends React.Component {
 
-    constructor(props) {
-        super(props);
-      }
-
     render(){
         let strategyTypesObject = {
             collateral: {

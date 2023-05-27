@@ -2,7 +2,7 @@ import React from 'react';
 import ChartAlusdSupply from './charts/ChartAlusdSupply';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
 import ChartAlEthPrice from './charts/ChartAlEthPrice';
-import ChartAlethSupply from './charts/ChartAlethSupply';
+//import ChartAlethSupply from './charts/ChartAlethSupply';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch, Button, ButtonGroup } from '@mui/material';

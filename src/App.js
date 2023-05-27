@@ -9,6 +9,7 @@ import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
 import Debt from './Debt';
+import Revenues from './Revenues';
 import Treasury from './Treasury';
 import Elixir from './Elixir';
 import { Link } from "react-router-dom";
@@ -938,7 +939,6 @@ export default class App extends React.Component {
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.concat(ftmAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
         this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories.concat(alchemistTvlSkip3000.data.alchemistTVLHistories.concat(alchemistTvlSkip4000.data.alchemistTVLHistories)))).reverse())
-        //this.logCapIncreases(depositCapIncreases.data.alchemistMaximumExpectedValueUpdatedEvents.reverse())
     })
     .catch(function(err) {
       console.log(err.message);
@@ -1060,14 +1060,14 @@ export default class App extends React.Component {
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">Deposits</div>
                 </div>}
-                {this.state.activeTab === "debt" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                {this.state.activeTab === "revenues" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("debt")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
                 </div>}
                 {this.state.activeTab === "alassets" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
@@ -1135,14 +1135,14 @@ export default class App extends React.Component {
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
                     <div className="multifarm-switcher-buttons-inside">Deposits</div>
                 </div>}
-                {this.state.activeTab === "debt" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("debt")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                {this.state.activeTab === "revenues" ? 
+                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("debt")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="debt logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">User Debt</div>
+                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
+                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
                 </div>}
                 {this.state.activeTab === "alassets" ? 
                 <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
@@ -1202,8 +1202,8 @@ export default class App extends React.Component {
         alEthCrvTotalValue={alEthCrvTotalValue}
         />}
       
-      {this.state.activeTab !== "debt" ? "" : 
-      <Debt ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
+      {this.state.activeTab !== "revenues" ? "" : 
+      <Revenues ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
       v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
       v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} />
       }
