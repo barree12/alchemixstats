@@ -35,7 +35,8 @@ export default class Revenues extends React.Component {
           let [month, day, year] = revenueDate.split('/');
           let date = new Date(+year, month - 1, +day);
 
-          let monthDifference = Math.floor((currentDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 30))
+          let monthDifference = 12 * (currentDate.getFullYear() - date.getFullYear()) + (currentDate.getMonth() - date.getMonth());
+          //let monthDifference = Math.floor((currentDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 31))
           //console.log(monthDifference)
           //if(month === currentDate.getMonth() && year === currentDate.getFullYear()){
             if(revenues[i].Revenue_Type === 'Harvest') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].Value)

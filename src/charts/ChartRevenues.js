@@ -6,7 +6,7 @@ export default class ChartRevenues extends React.Component {
   render(){  
     
   let currentMonth = new Date();
-  let monthlength = 1000 * 60 * 60 * 24 * 30;
+  let monthlength = 1000 * 60 * 60 * 24 * 31;
   let monthArray = [];
   for(let i=0;i<12;i++){
     let tempDate = new Date(currentMonth.getTime() - monthlength*i); 

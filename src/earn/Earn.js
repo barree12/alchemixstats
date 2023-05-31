@@ -42,7 +42,7 @@ export default class Earn extends Component {
           Standard Liquidity Pools
         </h2>
         <span>
-          Liquidity pools are what AAMs (Automated Market Makers) rely on to facilitate token swaps.
+          Liquidity pools are what AMMs (Automated Market Makers) rely on to facilitate token swaps.
           <br/>Users provide (usually) 2 tokens in a pair, for example ETH and DAI and whenever someone wants to trade ETH to DAI or vica versa, the funds in this token pair are used to complete the exchange.
           <br/>These pairs are called liquidity pools, as they provide the required liquidity.
           <br/>Even though the pools below are stable pairs, meaning that all tokens should converge to the same price, please make sure you understand the concept of IL (Impermanent Loss) and other risks before providing liquidity to a pool.
