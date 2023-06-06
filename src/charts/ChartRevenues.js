@@ -4,9 +4,9 @@ import { Chart } from 'react-chartjs-2';
 export default class ChartRevenues extends React.Component {
 
   render(){  
-    
-  let currentMonth = new Date();
-  let monthlength = 1000 * 60 * 60 * 24 * 31;
+  let today = new Date()  
+  let currentMonth = new Date(today.getFullYear(), today.getMonth(), 5);
+  let monthlength = 1000 * 60 * 60 * 24 * 30;
   let monthArray = [];
   for(let i=0;i<12;i++){
     let tempDate = new Date(currentMonth.getTime() - monthlength*i); 
