@@ -98,7 +98,7 @@ export const addresses = {
     optiFraxAddress: '0x2E3D870790dC77A83DD1d18184Acc7439A53f475',
     optiFxsEthAddress: '0x6806411765Af15Bddd26f8f544A34cC40cb9838B',
     sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f',
-    veloStats: '0x8b70c5e53235abbd1415957f7110fbfe5d0529d4'
+    veloStats: '0xd2b1d1b75a0f226722b3a174dae54e6dd14af1a1'
 }
 
 export const abis = {
@@ -421,11 +421,42 @@ export const abis = {
     }],
     veloStatsAbi: [{
         constant: true,
-        inputs: [],
+        inputs: [{
+            name: '_limit',
+            type: 'uint256'
+        },
+        {
+            name: '_offset',
+            type: 'uint256'
+        },
+        {
+            name: '_account',
+            type: 'address'
+        }],
         name: 'all',
         outputs: [{
             name: 'lp',
-            type: 'tuple'
+            type: 'tuple[]',
+            components: [
+                { type: "address", name: "poolAddress" },
+                { type: "string", name: "symbol" },
+                { type: "uint256", name: "decimals" },
+                { type: "bool", name: "stable" },
+                { type: "uint256", name: "total_supply" },
+                { type: "address", name: "token0" },
+                { type: "uint256", name: "reserve0" },
+                { type: "uint256", name: "claimable0" },
+                { type: "address", name: "token1" },
+                { type: "uint256", name: "reserve1" },
+                { type: "uint256", name: "claimable1" },
+                { type: "address", name: "gauge" },
+                { type: "uint256", name: "gauge_total_supply" },
+                { type: "bool", name: "gauge_alive" },
+                { type: "address", name: "fee" },
+                { type: "address", name: "bribe" },
+                { type: "address", name: "factory" },
+                { type: "uint256", name: "emissions" }
+            ]
         }],
         payable: false,
         stateMutability: 'view',

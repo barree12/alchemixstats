@@ -24,42 +24,84 @@ export default class EarnVelo extends Component {
   }
 
   componentDidMount(){
-    //this.getData();
+    this.getData();
   }
     
-  parseResult(result){
-    console.log(result)
-    let stablePool = "0xe75a3f4bf99882ad9f8aebab2115873315425d00";
-    let ethPool = "0x6fd5bee1ddb4dbbb0b7368b080ab99b8ba765902";
-    let opAlUsd = "0x78fa29412998acedd7728b4cf5623ee5e2f8f589";
-    let opAlEth = "0x49b5c691685aaeeaaaff57ab6ccef081a165f5bb";
-    let maiAlUsd = "0x16e7e0960a74b0ea3e61118a0c0eae8f83d43d7c";
-    let fraxEth = "0x87383ec35af6f0d58db242960898ac4d8c9f83a6";
-    let fraxUsd = "0x27fcbf9832d9a23b595169d0c5a4a090ba55b634";
-    let stableApr = 0;
+  parseResult(result, veloPrice){
+    console.log(result);
+    //console.log(veloPrice)
+    let secondsInAYear = 31556926;
+    let alUsdUsdc = "sAMMV2-USDC/alUSD";
+    let ethPool = "sAMMV2-alETH/WETH";
+    let opAlUsd = "vAMMV2-OP/alUSD";
+    let opAlEth = "vAMMV2-alETH/OP";
+    let maiAlUsd = "sAMMV2-alUSD/MAI";
+    let frxEth = "sAMMV2-alETH/frxETH";
+    let fraxUsd = "sAMMV2-FRAX/alUSD";
+    let alUsdUsdcEmissions = 0;
+    let ethEmissions = 0;
+    let opAlUsdEmissions = 0;
+    let opAlEthEmissions = 0;
+    let maiEmissions = 0;
+    let fraxEmissions = 0;
+    let frxEthEmissions = 0;
+    let alUsdUsdcTvl = 0;
+    let ethTvl = 0;
+    let opAlUsdTvl = 0;
+    let opAlEthTvl = 0;
+    let maiTvl = 0;
+    let fraxTvl = 0;
+    let frxEthTvl = 0;
+    let alUsdUsdcApr = 0;
     let ethApr = 0;
     let opAlUsdApr = 0;
     let opAlEthApr = 0;
-    let maiAlUsdApr = 0;
-    let fraxEthApr = 0;
-    let fraxUsdApr = 0;
-    for(let i=0;i<result.data.length;i++){
-      if(result.data[i].address === stablePool) stableApr = result.data[i].apr;
-      if(result.data[i].address === ethPool) ethApr = result.data[i].apr;
-      if(result.data[i].address === opAlUsd) opAlUsdApr = result.data[i].apr;
-      if(result.data[i].address === opAlEth) opAlEthApr = result.data[i].apr;
-      if(result.data[i].address === maiAlUsd) maiAlUsdApr = result.data[i].apr;
-      if(result.data[i].address === fraxEth) fraxEthApr = result.data[i].apr;
-      if(result.data[i].address === fraxUsd) fraxUsdApr = result.data[i].apr;
+    let maiApr = 0;
+    let frxEthApr = 0;
+    let fraxApr = 0;
+    for(let i=0;i<result.length;i++){
+      if(result[i][1] === alUsdUsdc) {
+        alUsdUsdcEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        alUsdUsdcTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+      }
+      if(result[i][1] === ethPool) ethEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === opAlUsd) opAlUsdEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === opAlEth) opAlEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === maiAlUsd) {
+        maiEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        maiTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+      }
+      if(result[i][1] === frxEth) frxEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === fraxUsd) {
+        fraxEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        fraxTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+      }
     }
-    this.setState({ aprLoading: false, aprStable: stableApr, aprEth: ethApr, aprOpAlUsd: opAlUsdApr, aprOpAlEth: opAlEthApr, aprMaiAlUsd: maiAlUsdApr, aprFraxEth: fraxEthApr, aprFraxUsd: fraxUsdApr })
+    alUsdUsdcApr = alUsdUsdcEmissions / alUsdUsdcTvl * 100;
+    ethApr = 0;
+    opAlUsdApr = 0;
+    opAlEthApr = 0;
+    maiApr = maiEmissions / maiTvl * 100;
+    frxEthApr = 0;
+    fraxApr = fraxEmissions /fraxTvl * 100;
+    console.log(maiTvl)
+    this.setState({ aprLoading: false, aprStable: alUsdUsdcApr, aprEth: ethApr, aprOpAlUsd: opAlUsdApr, aprOpAlEth: opAlEthApr, aprMaiAlUsd: maiApr, aprFraxEth: frxEthApr, aprFraxUsd: fraxApr })
     console.log(result)
   }
 
   getData() {
 
-    this.veloStatsContract.methods.all().call()
-      .then(res => res.json())
+    Promise.all([this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call(),
+    fetch("https://api.coingecko.com/api/v3/coins/velodrome-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json())
+    ])
+    .then(([veloStats, veloPrice]) => {
+      this.parseResult(veloStats, veloPrice)
+    })
+    .catch(function(err) {
+      console.log(err.message);
+    });
+
+    /*this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
       .then(
         (result) => {
           this.parseResult(result)
@@ -67,7 +109,7 @@ export default class EarnVelo extends Component {
         (error) => {
           console.log(error)
         }
-      )
+      )*/
     }
 
   render() {
