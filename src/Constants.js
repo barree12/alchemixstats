@@ -17,6 +17,7 @@ export const addresses = {
     alchemistEthOptiAddress: '0xe04bb5b4de60fa2fba69a93ade13a8b3b569d5b4',
     alUsdAddress: '0xbc6da0fe9ad5f3b0d58160288917aa56653660e9',
     alEthAddress: '0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6',
+    frxEthAddress: '0x5e8422345238f34275888049021821e8e08caa1f',
     daiAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
     usdcAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     usdtAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -51,6 +52,7 @@ export const addresses = {
     d3CrvContractAddress: '0xbaaa1f5dba42c3389bdbc2c9d2de134f5cd0dc89',
     saddled4ContractAddress: '0xc69ddcd4dfef25d8a793241834d4cc4b3668ead6',
     alEthCrvContractAddress: '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e',
+    frxEthAlEthContractAddress: '0xb657b895b265c38c53fff00166cf7f6a3c70587d',
     veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
     sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
     sdtControllerContractAddress: '0x3216d2a52f0094aa860ca090bc5c335de36e6273',
@@ -95,7 +97,8 @@ export const addresses = {
     veloFxsAlEthAddress: '0x87383ec35af6f0d58db242960898ac4d8c9f83a6',
     optiFraxAddress: '0x2E3D870790dC77A83DD1d18184Acc7439A53f475',
     optiFxsEthAddress: '0x6806411765Af15Bddd26f8f544A34cC40cb9838B',
-    sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f'
+    sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f',
+    veloStats: '0x8b70c5e53235abbd1415957f7110fbfe5d0529d4'
 }
 
 export const abis = {
@@ -415,5 +418,17 @@ export const abis = {
         payable: false,
         stateMutability: 'view',
         type: 'function'
-    }]
+    }],
+    veloStatsAbi: [{
+        constant: true,
+        inputs: [],
+        name: 'all',
+        outputs: [{
+            name: 'lp',
+            type: 'tuple'
+        }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    }],
 }

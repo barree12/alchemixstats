@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import Web3 from 'web3';
+import { addresses, abis } from '../Constants';
+
+const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 
 export default class EarnVelo extends Component {
 
@@ -15,13 +19,16 @@ export default class EarnVelo extends Component {
       aprFraxEth: 0,
       aprFraxUsd: 0
     }
+
+    this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
   }
 
   componentDidMount(){
-    this.getData();
+    //this.getData();
   }
     
   parseResult(result){
+    console.log(result)
     let stablePool = "0xe75a3f4bf99882ad9f8aebab2115873315425d00";
     let ethPool = "0x6fd5bee1ddb4dbbb0b7368b080ab99b8ba765902";
     let opAlUsd = "0x78fa29412998acedd7728b4cf5623ee5e2f8f589";
@@ -51,7 +58,7 @@ export default class EarnVelo extends Component {
 
   getData() {
 
-    fetch("https://api.velodrome.finance/api/v1/pairs")
+    this.veloStatsContract.methods.all().call()
       .then(res => res.json())
       .then(
         (result) => {

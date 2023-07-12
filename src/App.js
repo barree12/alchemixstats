@@ -8,7 +8,7 @@ import AlAssets from './AlAssets';
 import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
-import Debt from './Debt';
+//import Debt from './Debt';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
 import Elixir from './Elixir';
@@ -108,6 +108,7 @@ export default class App extends React.Component {
     this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
     this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
     this.alEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthAddress);
+    this.frxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.frxEthAddress);
     this.daiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.daiAddress);
     this.alUsdOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alUsdOptimismContractAddress);
     this.alEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alEthOptimismContractAddress);
@@ -317,7 +318,7 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       //this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -329,6 +330,8 @@ export default class App extends React.Component {
       web3.eth.getBalance(addresses.alEthCrvContractAddress),
       this.wethContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
+      this.alEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
+      this.frxEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
       this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
       this.usdcOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
       this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
@@ -352,7 +355,7 @@ export default class App extends React.Component {
       this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       //lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -364,6 +367,8 @@ export default class App extends React.Component {
       lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
       lps.wethInSaddle = wethInSaddle/Math.pow(10, 18);
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
+      lps.alEthInFrxEthCrv = alEthInFrxEthCrv/Math.pow(10, 18);
+      lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
       lps.alUsdInVelodrome = alUsdInVelodrome/Math.pow(10, 18);
       lps.usdcInVelodrome = usdcInVelodrome/Math.pow(10, 6);
       lps.alUsdInMaiVelodrome = alUsdInMaiVelodrome/Math.pow(10, 18);

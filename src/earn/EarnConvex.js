@@ -9,7 +9,8 @@ export default class EarnConvex extends Component {
       aprLoading: true,
       apr3Crv: 0,
       aprFrax: 0,
-      aprAlEth: 0
+      aprAlEth: 0,
+      aprFrxEth: 0
     }
   }
 
@@ -22,10 +23,12 @@ export default class EarnConvex extends Component {
     let apr3Crv = result.apys["37"].baseApy + result.apys["37"].crvApy;
     let aprAlEth = result.apys["factory-v2-38"].baseApy + result.apys["factory-v2-38"].crvApy;
     let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;
+    let aprFrxEth = result.apys["factory-v2-253"].baseApy + result.apys["factory-v2-253"].crvApy;
     this.setState({ aprLoading: false, 
       apr3Crv: apr3Crv, 
       aprAlEth: aprAlEth, 
-      aprFrax: aprFrax 
+      aprFrax: aprFrax,
+      aprFrxEth: aprFrxEth
     });
   }
 
@@ -120,6 +123,30 @@ export default class EarnConvex extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://curve.fi/factory/38" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
+          </div>
+
+          <div className="earn-yield-row">
+            
+            <div className="earn-yield-strat">
+              alETHfrxETHCrv
+            </div>
+            <div className="earn-yield-chain">
+              <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
+            </div>
+            
+            <div className="earn-yield-alasset">
+              <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
+            </div>
+            <div className="earn-yield-reward">
+              <img src={ require('../logos/crv.png').default } alt="Curve logo" className="image" />
+              <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" />
+            </div>
+            <div className="earn-yield-yield">
+              {this.state.aprLoading ? "0" : Math.round(this.state.aprFrxEth*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://curve.fi/factory/253" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
       </div>);

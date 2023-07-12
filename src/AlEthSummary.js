@@ -11,10 +11,10 @@ export default class AlEthSummary extends React.Component {
         const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const alEthInPcsUsd = Math.round(this.props.lps.alEthInPcs*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const ethInPcsUsd = Math.round(this.props.lps.ethInPcs*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const alEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.alEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const fxsEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInFrxEthCrvUsd = Math.round(this.props.lps.alEthInFrxEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const frxEthInFrxEthCrvUsd = Math.round(this.props.lps.frxEthInFrxEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         return (
             <div className="summary">
                 alETH supply grows when people deposit collateral assets and borrow alETH against them.<br/>
@@ -134,6 +134,38 @@ export default class AlEthSummary extends React.Component {
                   </div>
                   <div className="small-table-inner-13">
                     <span className="small-table-cell-title">
+                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth FrxEth logo" className="image" />
+                      <span className="table-text-title">Curve frxETH</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInFrxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInFrxEthCrv)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">frxETH</span>
+                      <span className="important-2">${frxEthInFrxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.frxEthInFrxEthCrv)})</i></span>
+                    </span>
+                    <span className="small-table-cell-disappear">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInFrxEthCrvUsd + frxEthInFrxEthCrvUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+
+/*
+<div className="small-table-inner-13">
+                    <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_pcs.png').default } alt="alEth Pcs logo" className="image" />
                       <span className="table-text-title">PCS alETH</span>
                     </span>
@@ -155,9 +187,4 @@ export default class AlEthSummary extends React.Component {
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${Math.round((alEthInPcsUsd + ethInPcsUsd)*100)/100}M</span>
                     </span>
-                  </div>
-                </div>
-            </div>
-        );
-    }
-}
+                  </div>*/

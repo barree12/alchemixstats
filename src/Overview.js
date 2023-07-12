@@ -6,7 +6,7 @@ export default class Overview extends React.Component {
 
     render(){
 //console.log(this.props.vaultV1Tvls)
-        let alUsdLiquidity = this.props.lpsLoading ? 0 : Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInBeets/10000 + this.props.lps.usdInBeets/10000 + this.props.lps.alUsdInVelodrome/10000 + this.props.lps.usdcInVelodrome/10000 + this.props.lps.alUsdInCurveFBP/10000 + this.props.lps.fbpInCurveFBP/10000 + this.props.lps.alUsdInVeloFraxAlUsd/10000 + this.props.lps.fraxInVeloFraxAlUsd/10000 + this.props.lps.alUsdInL2d4/10000 + this.props.lps.fraxInL2d4/10000 + this.props.lps.usxInL2d4/10000 + this.props.lps.usdsInL2d4/10000)/100
+        let alUsdLiquidity = this.props.lpsLoading ? 0 : Math.round(this.props.lps.alUsdIn3Crv/10000 + this.props.lps.crv3In3Crv/10000 + this.props.lps.alUsdInVelodrome/10000 + this.props.lps.usdcInVelodrome/10000 + this.props.lps.alUsdInCurveFBP/10000 + this.props.lps.fbpInCurveFBP/10000 + this.props.lps.alUsdInVeloFraxAlUsd/10000 + this.props.lps.fraxInVeloFraxAlUsd/10000 + this.props.lps.alUsdInL2d4/10000 + this.props.lps.fraxInL2d4/10000 + this.props.lps.usxInL2d4/10000 + this.props.lps.usdsInL2d4/10000)/100
         let alEthLiquidity = (this.props.lpsLoading || this.props.tokenPricesLoading) ? 0 : Math.round((this.props.lps.alEthInCrv + this.props.lps.alEthInSaddle + this.props.lps.ethInAlEthCrv + this.props.lps.wethInSaddle + this.props.lps.sEthInSaddle + this.props.lps.alEthInVelodrome + this.props.lps.wethInVelodrome + this.props.lps.alEthInVeloFxsEthAlEth + this.props.lps.fxsEthInVeloFxsEthAlEth + this.props.lps.alEthInPcs + this.props.lps.ethInPcs)*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.props.v2Deposit.daiInMigrate + this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL + this.props.v2vaUsdcTVL + this.props.v2vaDaiTVL)*100)/100;
         let ethDeposits = this.props.v2CurrentLoading ? 0 : Math.round(this.props.v2Deposit.wethInMigrate + this.props.v2EthTVL + this.props.v2aWethTVL + this.props.v2StethTVL + this.props.v2RethTVL + this.props.v2vaEthTVL + this.props.v2sfrxEthTVL);
@@ -36,7 +36,8 @@ export default class Overview extends React.Component {
                     </span>
                     <br/>
                     <span>
-                        The Q1 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a>
+                        The Q1 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
+                        A new <a target="_blank" rel="noreferrer" href="https://app.alphaday.com/b/alchemix/">information dashboard</a> has been released by Alphaday, where you can keep up to date with all things Alchemix!
                     </span>
                     {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.multifarmDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">
