@@ -91,7 +91,7 @@ export default class App extends React.Component {
     this.cvxAlUsd3CrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlUsd3CrvStakingContractAddress);
     this.cvxAlEthCrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlEthCrvStakingContractAddress);
     this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
-    this.tAlcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.tAlcxAddress);
+    //this.tAlcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.tAlcxAddress);
     this.alcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxAddress);
     this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.alcxEthSlpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxEthSlpAddress);
@@ -117,7 +117,7 @@ export default class App extends React.Component {
     this.maiOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.maiOptimismContractAddress);
     this.fraxOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFraxAddress);
     this.fxsEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFxsEthAddress);
-    this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
+    //this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
     this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
     this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
     this.alUsdFraxBpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFBPCurveContractAddress);
@@ -125,7 +125,7 @@ export default class App extends React.Component {
     this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
     this.usdsArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsdsContractAddress);
     this.usxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsxContractAddress);
-
+    this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
 
   }
 
@@ -318,7 +318,12 @@ export default class App extends React.Component {
   }
 
   getLPs(){
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInBeets: 0, usdInBeets: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInPcs: 0, ethInPcs: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
+    let alUsdUsdc = "sAMMV2-USDC/alUSD";
+    let ethPool = "sAMMV2-alETH/WETH";
+    let maiAlUsd = "sAMMV2-alUSD/MAI";
+    let frxEth = "sAMMV2-alETH/frxETH";
+    let fraxUsd = "sAMMV2-FRAX/alUSD";
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       //this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
@@ -332,30 +337,21 @@ export default class App extends React.Component {
       this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
       this.frxEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
-      this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
-      this.usdcOptimismContract.methods.balanceOf(addresses.alUsdVelodromeContractAddress).call(),
-      this.alUsdOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
-      this.maiOptimismContract.methods.balanceOf(addresses.alUsdMaiVelodromeContractAddress).call(),
-      this.alEthOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
-      this.wethOptimismContract.methods.balanceOf(addresses.alEthVelodromeContractAddress).call(),
-      this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
+      //this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
       //this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
       //this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       //this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
-      this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.alEthOptimismContract.methods.balanceOf(addresses.veloFxsAlEthAddress).call(),
-      this.fxsEthOptimismContract.methods.balanceOf(addresses.veloFxsAlEthAddress).call(),
-      this.fraxOptimismContract.methods.balanceOf(addresses.veloFraxAlUsdAddress).call(),
-      this.alUsdOptimismContract.methods.balanceOf(addresses.veloFraxAlUsdAddress).call(),
+      //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
+      //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       this.alUsdArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.fraxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInVelodrome, usdcInVelodrome, alUsdInMaiVelodrome, maiInMaiVelodrome, alEthInVelodrome, wethInVelodrome, alUsdBeets, alUsdInCurveFBP, fbpInCurveFBP, alEthInPcs, ethInPcs, alEthInVeloFxsEthAlEth, fxsEthInVeloFxsEthAlEth, fraxInVeloFraxAlUsd, alUsdInVeloFraxAlUsd, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4, veloStats]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       //lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
@@ -369,30 +365,38 @@ export default class App extends React.Component {
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
       lps.alEthInFrxEthCrv = alEthInFrxEthCrv/Math.pow(10, 18);
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
-      lps.alUsdInVelodrome = alUsdInVelodrome/Math.pow(10, 18);
-      lps.usdcInVelodrome = usdcInVelodrome/Math.pow(10, 6);
-      lps.alUsdInMaiVelodrome = alUsdInMaiVelodrome/Math.pow(10, 18);
-      lps.maiInMaiVelodrome = maiInMaiVelodrome/Math.pow(10, 18);
-      lps.alEthInVelodrome = alEthInVelodrome/Math.pow(10, 18);
-      lps.wethInVelodrome = wethInVelodrome/Math.pow(10, 18);
-      lps.alUsdInBeets = alUsdBeets[3][0]/Math.pow(10, 18);
-      lps.usdInBeets = alUsdBeets[3][1]/Math.pow(10, 18);
-      //lps.usdcInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][1]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
-      //lps.daiInBeets = alUsdBeets[3][0]/Math.pow(10, 18)*(yearnUsdBeets[3][0]/Math.pow(10, 18)/(yearnUsdBeets[3][1]/Math.pow(10, 18)+yearnUsdBeets[3][0]/Math.pow(10, 18)));
       //lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
       //lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
-      lps.alEthInPcs = alEthInPcs/Math.pow(10, 18);
-      lps.ethInPcs = ethInPcs/Math.pow(10, 18);
-      lps.alEthInVeloFxsEthAlEth = alEthInVeloFxsEthAlEth/Math.pow(10, 18);
-      lps.fxsEthInVeloFxsEthAlEth = fxsEthInVeloFxsEthAlEth/Math.pow(10, 18);
-      lps.fraxInVeloFraxAlUsd = fraxInVeloFraxAlUsd/Math.pow(10, 18);
-      lps.alUsdInVeloFraxAlUsd = alUsdInVeloFraxAlUsd/Math.pow(10, 18);
+      //lps.alEthInPcs = alEthInPcs/Math.pow(10, 18);
+      //lps.ethInPcs = ethInPcs/Math.pow(10, 18);
       lps.alUsdInL2d4 = alUsdInL2d4/Math.pow(10, 18);
       lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
       lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
       lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
+      for(let i=0;i<veloStats.length;i++){
+        if(veloStats[i][1] === alUsdUsdc) {
+          lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.usdcInVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,6);
+        }
+        if(veloStats[i][1] === ethPool) {
+          lps.alEthInVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,18);
+          lps.wethInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+        }
+        if(veloStats[i][1] === maiAlUsd) {
+          lps.alUsdInMaiVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,18);
+          lps.maiInMaiVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+        }
+        if(veloStats[i][1] === frxEth) {
+          lps.alEthInVeloFxsEthAlEth = parseInt(veloStats[i][6]) / Math.pow(10,18);
+          lps.fxsEthInVeloFxsEthAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
+        }
+        if(veloStats[i][1] === fraxUsd) {
+          lps.fraxInVeloFraxAlUsd = parseInt(veloStats[i][6]) / Math.pow(10,18);
+          lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
+        }
+      }
       //console.log(alUsdBeets)
       this.setState({ lps: lps, lpsLoading: false })
     })
