@@ -897,6 +897,7 @@ export default class App extends React.Component {
     const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
     const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
     const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
+    const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
     const harvestsQuery = `{
       alchemistHarvestEvents(
         first: 1000
@@ -933,17 +934,19 @@ export default class App extends React.Component {
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip4000)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip5000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_ftm", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alEthPegSkip1000, alEth5kPegSkip1000, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, alchemistTvlSkip3000, alchemistTvlSkip4000, ftmAlchemistTvl, ftmAlchemistTvlSkip1000, optiAlchemistTvl, harvests]) => {
+      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alEthPegSkip1000, alEth5kPegSkip1000, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, alchemistTvlSkip3000, alchemistTvlSkip4000, alchemistTvlSkip5000, ftmAlchemistTvl, ftmAlchemistTvlSkip1000, optiAlchemistTvl, optiAlchemistTvlSkip1000, harvests]) => {
         this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.concat(daiPegSkip1000.data.poolHistoricalRates).reverse(), usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse(), usdtPeg.data.poolHistoricalRates.concat(usdtPegSkip1000.data.poolHistoricalRates).reverse(), dai10mPeg.data.poolHistoricalRates.concat(dai10mPegSkip1000.data.poolHistoricalRates).reverse(), usdc10mPeg.data.poolHistoricalRates.concat(usdc10mPegSkip1000.data.poolHistoricalRates).reverse(), usdt10mPeg.data.poolHistoricalRates.concat(usdt10mPegSkip1000.data.poolHistoricalRates).reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.concat(alEthPegSkip1000.data.poolHistoricalRates).reverse(), alEth5kPeg.data.poolHistoricalRates.concat(alEth5kPegSkip1000.data.poolHistoricalRates).reverse())
         this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
         this.calculateFtmTvl(ftmAlchemistTvl.data.alchemistTVLHistories.concat(ftmAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
-        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
-        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories.concat(alchemistTvlSkip3000.data.alchemistTVLHistories.concat(alchemistTvlSkip4000.data.alchemistTVLHistories)))).reverse())
+        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.concat(optiAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
+        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories.concat(alchemistTvlSkip3000.data.alchemistTVLHistories.concat(alchemistTvlSkip4000.data.alchemistTVLHistories.concat(alchemistTvlSkip5000.data.alchemistTVLHistories))))).reverse())
     })
     .catch(function(err) {
       console.log(err.message);

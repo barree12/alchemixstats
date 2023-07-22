@@ -27,8 +27,8 @@ export default class EarnVelo extends Component {
     this.getData();
   }
     
-  parseResult(result, veloPrice){
-    console.log(result);
+  parseResult(result, veloPrice, ethPrice, opPrice){
+    //console.log(result);
     //console.log(veloPrice)
     let secondsInAYear = 31556926;
     let alUsdUsdc = "sAMMV2-USDC/alUSD";
@@ -62,40 +62,54 @@ export default class EarnVelo extends Component {
     for(let i=0;i<result.length;i++){
       if(result[i][1] === alUsdUsdc) {
         alUsdUsdcEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
-        alUsdUsdcTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+        alUsdUsdcTvl = parseInt(result[i][6]) / Math.pow(10,6) + parseInt(result[i][9]) / Math.pow(10,18);
       }
-      if(result[i][1] === ethPool) ethEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
-      if(result[i][1] === opAlUsd) opAlUsdEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
-      if(result[i][1] === opAlEth) opAlEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === ethPool) {
+        ethEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        ethTvl = (parseInt(result[i][6]) / Math.pow(10,18) + parseInt(result[i][9]) / Math.pow(10,18)) * ethPrice.prices[ethPrice.prices.length-1][1];
+      }
+      if(result[i][1] === opAlUsd) {
+        opAlUsdEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        opAlUsdTvl = (parseInt(result[i][6]) / Math.pow(10,18)) * opPrice.prices[opPrice.prices.length-1][1] + parseInt(result[i][9]) / Math.pow(10,18);
+      }
+      if(result[i][1] === opAlEth) {
+        opAlEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        opAlEthTvl = (parseInt(result[i][6]) / Math.pow(10,18)) * ethPrice.prices[ethPrice.prices.length-1][1] + (parseInt(result[i][9]) / Math.pow(10,18)) * opPrice.prices[opPrice.prices.length-1][1];
+      }
       if(result[i][1] === maiAlUsd) {
         maiEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
         maiTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
       }
-      if(result[i][1] === frxEth) frxEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+      if(result[i][1] === frxEth) {
+        frxEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
+        frxEthTvl = (parseInt(result[i][6]) / Math.pow(10,18) + parseInt(result[i][9]) / Math.pow(10,18)) * ethPrice.prices[ethPrice.prices.length-1][1];
+      }
       if(result[i][1] === fraxUsd) {
         fraxEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * veloPrice.prices[veloPrice.prices.length-1][1];
         fraxTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
       }
     }
     alUsdUsdcApr = alUsdUsdcEmissions / alUsdUsdcTvl * 100;
-    ethApr = 0;
-    opAlUsdApr = 0;
-    opAlEthApr = 0;
+    ethApr = ethEmissions / ethTvl * 100;
+    opAlUsdApr = opAlUsdEmissions / opAlUsdTvl * 100;
+    opAlEthApr = opAlEthEmissions / opAlEthTvl * 100;
     maiApr = maiEmissions / maiTvl * 100;
-    frxEthApr = 0;
+    frxEthApr = frxEthEmissions / frxEthTvl * 100;
     fraxApr = fraxEmissions /fraxTvl * 100;
-    console.log(maiTvl)
+    //console.log(maiTvl)
     this.setState({ aprLoading: false, aprStable: alUsdUsdcApr, aprEth: ethApr, aprOpAlUsd: opAlUsdApr, aprOpAlEth: opAlEthApr, aprMaiAlUsd: maiApr, aprFraxEth: frxEthApr, aprFraxUsd: fraxApr })
-    console.log(result)
+    //console.log(result)
   }
 
   getData() {
 
     Promise.all([this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call(),
-    fetch("https://api.coingecko.com/api/v3/coins/velodrome-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json())
+    fetch("https://api.coingecko.com/api/v3/coins/velodrome-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
+    fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
+    fetch("https://api.coingecko.com/api/v3/coins/optimism/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json())
     ])
-    .then(([veloStats, veloPrice]) => {
-      this.parseResult(veloStats, veloPrice)
+    .then(([veloStats, veloPrice, ethPrice, opPrice]) => {
+      this.parseResult(veloStats, veloPrice, ethPrice, opPrice)
     })
     .catch(function(err) {
       console.log(err.message);

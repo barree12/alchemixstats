@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import EarnPremia from './EarnPremia';
 import EarnConvex from './EarnConvex';
 import EarnSaddle from './EarnSaddle';
-import EarnBeets from './EarnBeets';
 import EarnVelo from './EarnVelo';
 import EarnIdle from './EarnIdle';
-import EarnPancakeSwap from './EarnPancakeSwap';
 import '../App.css';
 import ConvexDescription from './description/ConvexDescription';
 import SaddleDescription from './description/SaddleDescription';
 import VelodromeDescription from './description/VelodromeDescription';
-import BeetsDescription from './description/BeetsDescription';
 import PremiaDescription from './description/PremiaDescription';
 import IdleDescription from './description/IdleDescription';
-import PancakeSwapDescription from './description/PancakeSwapDescription';
 import { Link } from 'react-router-dom';
 
 export default class Earn extends Component {
@@ -74,8 +70,6 @@ export default class Earn extends Component {
           <EarnConvex />
           <EarnSaddle />
           <EarnVelo />
-          <EarnPancakeSwap />
-          <EarnBeets />
           </div>
           <br/>
           <h2>
@@ -148,10 +142,10 @@ export default class Earn extends Component {
         <ConvexDescription />
         <PremiaDescription />
         <VelodromeDescription />
-        <BeetsDescription />
+        {/*<BeetsDescription />*/}
         <SaddleDescription />
         <IdleDescription />
-        <PancakeSwapDescription />
+        {/*<PancakeSwapDescription />*/}
       </div>
 
     </div>;
