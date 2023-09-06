@@ -21,10 +21,10 @@ export default class Overview extends React.Component {
         let ethVaultUsdChange = Math.round((ethDepositsUsd/ethDepositsUsd1mAgo-1)*10000)/100;
         let depositsChange = Math.round((deposits/deposits1mAgo-1)*10000)/100;
         let ethPriceChange = this.props.tokenPricesLoading ? 0 : Math.round((this.props.ethPrice[this.props.ethPrice.length-1]/this.props.ethPrice[this.props.ethPrice.length-31]-1)*10000)/100;
-        let alUsdCollateralNotReceived = (stablecoinDeposits === 0 || this.props.multifarmData.alUsdCrvInElixir === 0 || this.props.alAssetSupply.alUsd === 0 || this.props.multifarmData.alUsdInElixir === 0 || this.props.multifarmData.alUsdFraxBpInElixir === 0);
-        let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.multifarmData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.multifarmData.alEthInElixir === 0);
-        let alUsdCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.multifarmData.alUsdCrvInElixir + this.props.multifarmData.daiInElixir + this.props.multifarmData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.multifarmData.alUsdInElixir);
-        let alEthCollateralRatio = (this.props.multifarmDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.multifarmData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.multifarmData.alEthInElixir);
+        let alUsdCollateralNotReceived = (stablecoinDeposits === 0 || this.props.debankData.alUsdCrvInElixir === 0 || this.props.alAssetSupply.alUsd === 0 || this.props.debankData.alUsdInElixir === 0 || this.props.debankData.alUsdFraxBpInElixir === 0);
+        let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.debankData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.debankData.alEthInElixir === 0);
+        let alUsdCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.debankData.alUsdCrvInElixir + this.props.debankData.daiInElixir + this.props.debankData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.debankData.alUsdInElixir);
+        let alEthCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.debankData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.debankData.alEthInElixir);
 
         return (
             <>
@@ -32,14 +32,14 @@ export default class Overview extends React.Component {
                 <div className="overview">
                     <span className="flex-row">
                         <span>Total Protocol TVL:&nbsp;</span>
-                        <div className="important">${Math.round(deposits*100+this.props.multifarmData.totalElixir/10000)/100}M</div>
+                        <div className="important">${Math.round(deposits*100+this.props.debankData.totalElixir/10000)/100}M</div>
                     </span>
                     <br/>
                     <span>
-                        The Q1 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
+                        The Q2 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
                         A new <a target="_blank" rel="noreferrer" href="https://app.alphaday.com/b/alchemix/">information dashboard</a> has been released by Alphaday, where you can keep up to date with all things Alchemix!
                     </span>
-                    {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.multifarmDataLoading) ? <LoadingComponent /> :
+                    {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.debankDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">
                         <div className="small-table-4">
                             <h3>alAssets</h3>
@@ -75,28 +75,17 @@ export default class Overview extends React.Component {
                                 <span className="small-table-title-wrap"><span className="small-table-row"></span><span className="important-4">Total</span></span>
                                 <span className="small-table-content-wrap"><span className="important-3">${deposits1mAgo}M</span><span className="important-3">${deposits}M</span><span className="important-3">{depositsChange >= 0 ? <span className="change-positive">+{depositsChange}%</span> : <span className="change-negative">{depositsChange}%</span>}</span></span>
                             </div>
-                            {/*<div className="small-table-inner-8">
-                                <span className="small-table-row"></span><span className="important-4"></span>
-                                <span className="table-text-bold"></span><span></span>
-                                <span className="small-table-row"></span><span className="table-text-bold">Staking TVL</span>
-                                <span>Amount</span><span>USD Value</span>
-                                <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span>
-                                <span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcx)}</span><span className="important-2">${Math.round(this.props.stakedAlcxValue/10000)/100}M</span>
-                                <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX/ETH SLP" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span>
-                                <span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
-                                <span className="small-table-row-2"></span><span></span>
-                                <span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
-        </div>*/}
+                            
                         </div>
                         <div className="small-table-4">
                             <h3>Treasury and Elixirs</h3>
                             <div className="small-table-inner-9">
                                 <span className="small-table-row"></span><span className="table-text-bold">Treasury</span><span>USD value</span>
-                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.totalTreasury/10000)/100}M</span>
-                                <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.multifarmData.nonAlcxTreasury/10000)/100}M</span>
+                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.debankData.totalTreasury/10000)/100}M</span>
+                                <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.debankData.nonAlcxTreasury/10000)/100}M</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-bold">Elixirs</span><span>USD value</span>
-                                <span className="small-table-row"><img src={ require('./logos/transmuter.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.multifarmData.totalElixir/10000)/100}M</span>
+                                <span className="small-table-row"><img src={ require('./logos/transmuter.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Elixirs</span><span className="important-2">${Math.round(this.props.debankData.totalElixir/10000)/100}M</span>
 
                                 {/*<span className="small-table-row"><img src={ require('./logos/alusd_crv.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">alUSD3Crv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span><span className="important-2">${Math.round(this.props.treasury.cvxAlUsd3CrvElixir/10000)/100}M</span>
                                 <span className="small-table-row"><img src={ require('./logos/eth_aleth.png').default } alt="alethcurve logo" className="image" /></span><span className="table-text-title">alETHCrv</span><span className="table-text-bold">{Math.round(this.props.treasury.cvxAlEthCrvElixir)}</span><span className="important-2">${Math.round(this.props.elixirCvxAlEthCrvValue/10000)/100}M</span>

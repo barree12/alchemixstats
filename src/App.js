@@ -64,7 +64,7 @@ export default class App extends React.Component {
       optiTvl: {},
       harvests: {},
       alAssetCrvSupply: {},
-      multifarmData: {},
+      debankData: {},
       alAssetSupply: {},
       tokenPricesLoading: true,
       v2CurrentLoading: true,
@@ -78,7 +78,7 @@ export default class App extends React.Component {
       optiTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
-      multifarmDataLoading: true,
+      debankDataLoading: true,
       activeTab: 'treasury'
     };
     this.selectTab = this.selectTab.bind(this);
@@ -135,7 +135,7 @@ export default class App extends React.Component {
     this.getLPs();
     this.getAlUsdPeg();
     this.getCoinGeckoData();
-    this.getMultifarmData();
+    this.getDebankData();
   }
 
   selectTab(active){
@@ -323,13 +323,9 @@ export default class App extends React.Component {
     let maiAlUsd = "sAMMV2-alUSD/MAI";
     let frxEth = "sAMMV2-alETH/frxETH";
     let fraxUsd = "sAMMV2-FRAX/alUSD";
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, alUsdInD4: 0, fraxInD4: 0, feiInD4: 0, lUsdInD4: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      //this.alUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      //this.fraxContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
-      //this.feiContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
-      //this.lUsdContract.methods.balanceOf(addresses.saddled4ContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       web3.eth.getBalance(addresses.alEthCrvContractAddress),
@@ -337,10 +333,6 @@ export default class App extends React.Component {
       this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
       this.frxEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
-      //this.beetsVaultContract.methods.getPoolTokens(addresses.alUsdBeetsPoolId).call(),
-      //this.beetsVaultContract.methods.getPoolTokens(addresses.beetsYearnUsdPoolId).call(),
-      //this.alUsdContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
-      //this.saddleFBPContract.methods.balanceOf(addresses.alUsdFBPSaddleContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
@@ -353,11 +345,7 @@ export default class App extends React.Component {
     ])
     .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4, veloStats]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
-      //lps.alUsdInD4 = alUsdInD4/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
-      //lps.fraxInD4 = fraxInD4/Math.pow(10, 18);
-      //lps.feiInD4 = feiInD4/Math.pow(10, 18);
-      //lps.lUsdInD4 = lUsdInD4/Math.pow(10, 18);
       lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
       lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
@@ -365,8 +353,6 @@ export default class App extends React.Component {
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
       lps.alEthInFrxEthCrv = alEthInFrxEthCrv/Math.pow(10, 18);
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
-      //lps.alUsdInSaddleFBP = alUsdInSaddleFBP/Math.pow(10, 18);
-      //lps.fbpInSaddleFBP = fbpInSaddleFBP/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       //lps.alEthInPcs = alEthInPcs/Math.pow(10, 18);
@@ -397,7 +383,6 @@ export default class App extends React.Component {
           lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
         }
       }
-      //console.log(alUsdBeets)
       this.setState({ lps: lps, lpsLoading: false })
     })
     .catch(function(err) {
@@ -760,10 +745,9 @@ export default class App extends React.Component {
     });
   }
 
-  calculateMultifarmData(treasury, elixir){
-    let totalTreasury = 0;
+  calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp){
+    let totalTreasury = totalTreasury1.total_usd_value + totalTreasury2.total_usd_value + totalSdCrvController.total_usd_value + totalOptimismMs.total_usd_value + totalArbitrumMs.total_usd_value;
     let alcxInTreasury = 0;
-    let totalElixir = 0;
     let alEthCrvInElixir = 0;
     let alEthCrvEthInElixir = 0;
     let alUsdCrvInElixir = 0;
@@ -771,31 +755,134 @@ export default class App extends React.Component {
     let alUsdCrvInTreasury = 0;
     let alUsdInElixir = 0;
     let alEthInElixir = 0;
-    let daiInElixir = 0;
     let alUsdFraxBpInElixir = 0;
-    let tempMultifarmCalc = {}
-    for(let i=0;i<treasury.length;i++){
-      if(treasury[i].active) totalTreasury += treasury[i].positionSizeUsd;
-      if(treasury[i].asset === 'ALCX') alcxInTreasury += treasury[i].positionSizeUsd;
-      if(treasury[i].asset === 'ETH / ALCX') alcxInTreasury += treasury[i].positionSizeUsd * 0.8;
-      if(treasury[i].asset === 'ETH / alETH') alEthCrvInTreasury = treasury[i].positionSizeUsd;
-      if(treasury[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInTreasury = treasury[i].positionSizeUsd;
+    let symbols = [];
+    let elixirSymbols = [];
+    let treasuryAssets = {};
+    let sortedTreasuryAssets = [];
+    let elixirAssets = {};
+    let sortedElixirAssets = [];
+
+    let tempDebankCalc = {};
+    let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs);
+    let protocolsConcat = treasury1.concat(treasury2).concat(sdCrvController).concat(optimismMs).concat(arbitrumMs);
+    let elixirTokensConcat = tokensElixir3crv.concat(tokensElixirAlUsdFraxBp);
+    let elixirProtocolsConcat = elixir3crv.concat(elixirAlUsdFraxBp);
+
+
+    //Calculate treasury
+    for(let i=0;i<protocolsConcat.length;i++){
+      for(let j=0;j<protocolsConcat[i].portfolio_item_list.length;j++){
+        for(let k=0;k<protocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
+          symbols[symbols.length] = protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol;
+        }
+      }
     }
-    for(let i=0;i<elixir.length;i++){
-      if(elixir[i].active) totalElixir += elixir[i].positionSizeUsd;
-      if(elixir[i].asset === 'ETH / alETH' && elixir[i].farm === 'Convex'){
-        alEthCrvInElixir = elixir[i].positionSizeUsd;
-        alEthCrvEthInElixir = elixir[i].positionSizeEth;
-      } 
-      if(elixir[i].asset === 'alUSD / DAI / USDC / USDT') alUsdCrvInElixir = elixir[i].positionSizeUsd;
-      if(elixir[i].asset === 'alUSD / FRAX / USDC') alUsdFraxBpInElixir = elixir[i].positionSizeUsd;
-      if(elixir[i].asset === 'alUSD') alUsdInElixir = elixir[i].positionSizeUsd;
-      if(elixir[i].asset === 'alETH') alEthInElixir = elixir[i].positionSizeEth;
-      if(elixir[i].asset === 'DAI') daiInElixir = elixir[i].positionSizeUsd;
+
+    for(let i=0;i<tokensConcat.length;i++){
+      symbols[symbols.length] = tokensConcat[i].symbol;
     }
-    tempMultifarmCalc = {
+
+    let filteredSymbols = [...new Set(symbols)]
+    for(let i=0;i<filteredSymbols.length;i++){
+      treasuryAssets[filteredSymbols[i]] = 0
+    }
+
+    for(let i=0;i<protocolsConcat.length;i++){
+      for(let j=0;j<protocolsConcat[i].portfolio_item_list.length;j++){
+        for(let k=0;k<protocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
+          treasuryAssets[protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "ALCX") alcxInTreasury += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+        }
+      }
+    }
+
+    for(let i=0;i<tokensConcat.length;i++){
+      treasuryAssets[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
+      if(tokensConcat[i].symbol === "ALCX") alcxInTreasury += tokensConcat[i].amount * tokensConcat[i].price;
+    }
+
+    let largestValue = 0;
+    let largestIndex = 0;
+    for(let i=0;i<filteredSymbols.length;i++){
+      for(let j=0;j<filteredSymbols.length;j++){
+        if(treasuryAssets[filteredSymbols[j]] > largestValue) {
+          largestValue = treasuryAssets[filteredSymbols[j]];
+          largestIndex = j;
+        }
+      }
+      let pushObject = {
+        symbol: filteredSymbols[largestIndex],
+        amount: treasuryAssets[filteredSymbols[largestIndex]]
+      };
+      sortedTreasuryAssets.push(pushObject)
+      filteredSymbols.splice(largestIndex, 1);
+      largestIndex = 0;
+      largestValue = 0;
+    }
+
+    console.log(elixirProtocolsConcat)
+
+    //Calculate Elixirs
+    for(let i=0;i<elixirProtocolsConcat.length;i++){
+      for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
+        for(let k=0;k<elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
+          elixirSymbols[elixirSymbols.length] = elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol;
+        }
+      }
+    }
+
+    for(let i=0;i<elixirTokensConcat.length;i++){
+      elixirSymbols[elixirSymbols.length] = elixirTokensConcat[i].symbol;
+    }
+
+    let elixirFilteredSymbols = [...new Set(elixirSymbols)]
+    for(let i=0;i<elixirFilteredSymbols.length;i++){
+      elixirAssets[elixirFilteredSymbols[i]] = 0
+    }
+
+    for(let i=0;i<elixirProtocolsConcat.length;i++){
+      for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
+        for(let k=0;k<elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
+          elixirAssets[elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD") alUsdInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+        }
+      }
+    }
+
+    for(let i=0;i<elixirTokensConcat.length;i++){
+      if(elixirTokensConcat[i].symbol !== "alUSD") elixirAssets[elixirTokensConcat[i].symbol] += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+      if(elixirTokensConcat[i].symbol === "alUSD") alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+    }
+
+    let elixirLargestValue = 0;
+    let elixirLargestIndex = 0;
+    for(let i=0;i<elixirFilteredSymbols.length;i++){
+      for(let j=0;j<elixirFilteredSymbols.length;j++){
+        if(elixirAssets[elixirFilteredSymbols[j]] > elixirLargestValue) {
+          elixirLargestValue = elixirAssets[elixirFilteredSymbols[j]];
+          elixirLargestIndex = j;
+        }
+      }
+      let pushObject = {
+        symbol: elixirFilteredSymbols[elixirLargestIndex],
+        amount: elixirAssets[elixirFilteredSymbols[elixirLargestIndex]]
+      };
+      sortedElixirAssets.push(pushObject)
+      elixirFilteredSymbols.splice(elixirLargestIndex, 1);
+      elixirLargestIndex = 0;
+      elixirLargestValue = 0;
+    }
+
+    console.log(sortedElixirAssets)
+    
+    let totalElixir = totalElixir3crv.total_usd_value + totalElixirAlUsdFraxBp.total_usd_value - alUsdInElixir;
+
+    tempDebankCalc = {
       totalTreasury: totalTreasury,
       totalElixir: totalElixir,
+      sortedTreasuryAssets: sortedTreasuryAssets,
+      sortedElixirAssets: sortedElixirAssets,
       nonAlcxTreasury: totalTreasury - alcxInTreasury,
       alcxInTreasury: alcxInTreasury,
       alEthCrvInElixir: alEthCrvInElixir,
@@ -805,36 +892,46 @@ export default class App extends React.Component {
       alUsdCrvInTreasury: alUsdCrvInTreasury,
       alUsdInElixir: alUsdInElixir,
       alEthInElixir: alEthInElixir,
-      daiInElixir: daiInElixir,
-      alUsdFraxBpInElixir: alUsdFraxBpInElixir
+      alUsdFraxBpInElixir: alUsdFraxBpInElixir,
     }
-    this.setState({ multifarmDataLoading: false, multifarmData: tempMultifarmCalc })
+    this.setState({ debankDataLoading: false, debankData: tempDebankCalc })
   }
 
-  getMultifarmData(){
-    let requestHeaderElixir = {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'multifarm-api-token': 'rBs3Kau4a_AQegm2LJQ2ldRBrvCoFfQb'
-        }
-    }
-    let requestHeaderTreasury = {
+  getDebankData(){
+    let requestHeader = {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'multifarm-api-token': 'di50relXm_XAKKAUKvZ9Igd9pVzk2gm1'
+        'AccessKey': 'a200a96baf7b82432d441cfab1307dcc6a7d7cf3'
       }
     }
 
-    Promise.all([fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderElixir).then(res => res.json()),
-    fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools", requestHeaderTreasury).then(res => res.json()),
-    fetch("https://api.multifarm.fi/jay_flamingo_random_6ix_vegas/auth/get_pools?page=2", requestHeaderTreasury).then(res => res.json())
+    Promise.all([fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_ids=op", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_ids=arb", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_ids=op", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_ids=arb", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_id=op&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_id=arb&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
     ])
-      .then(([elixir, treasury, treasuryPage2]) => {
-          this.calculateMultifarmData(treasury.data.concat(treasuryPage2.data), elixir.data)
-      })
-      .catch(function(err) { console.log(err) });
+    .then(([treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp]) => {
+          this.calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp)
+      }).catch(function(err) { console.log(err) });
+    
   }
 
   getPegQuery(alAsset, collateralToken, tradeSize, skip){
@@ -985,7 +1082,7 @@ export default class App extends React.Component {
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
   let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let stakingSlpValue = (this.state.stakingLoading || this.state.alcxDataLoading || this.state.tokenPricesLoading) ? 0 : (this.state.alcxEthSlp.alcx*this.state.alcxData.price+this.state.alcxEthSlp.weth*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1])*this.state.alchemixStaking.alcxEthSlpStakingRatio;
-  let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.multifarmDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.multifarmData.alcxInTreasury/10000)/100;
+  let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.debankDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.debankData.alcxInTreasury/10000)/100;
   let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/Math.pow(10,6);
   ChartJS.register(
@@ -1027,159 +1124,136 @@ export default class App extends React.Component {
         tokenPrices={this.state.tokenPrices} ftmTvl={this.state.ftmTvl} alAssetSupply={this.state.alAssetSupply}
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
-        tokenPricesLoading={this.state.tokenPricesLoading} multifarmData={this.state.multifarmData}
+        tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
         lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
-        v2CurrentLoading={this.state.v2CurrentLoading} multifarmDataLoading={this.state.multifarmDataLoading}
+        v2CurrentLoading={this.state.v2CurrentLoading} debankDataLoading={this.state.debankDataLoading}
       />
       <div className="button-group-large-screen">
-      <div className="multifarm-switcher-container">
+      <div className="general-switcher-container">
     
             <div className="menu-switcher">
                 {this.state.activeTab === "treasury" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
+                    <div className="general-switcher-buttons-inside">Holdings</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
-                </div>}
-                {this.state.activeTab === "elixir" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("elixir")}}>
-                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
-                </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("elixir")}}>
-                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
+                    <div className="general-switcher-buttons-inside">Holdings</div>
                 </div>}
                 {this.state.activeTab === "emissions" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
                 </div>}
                 {this.state.activeTab === "deposits" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
+                    <div className="general-switcher-buttons-inside">Deposits</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
+                    <div className="general-switcher-buttons-inside">Deposits</div>
                 </div>}
                 {this.state.activeTab === "revenues" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
+                    <div className="general-switcher-buttons-inside">Revenue</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
+                    <div className="general-switcher-buttons-inside">Revenue</div>
                 </div>}
                 {this.state.activeTab === "alassets" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
                     <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                    <div className="general-switcher-buttons-inside">alAssets</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
                     <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                    <div className="general-switcher-buttons-inside">alAssets</div>
                 </div>}
                 {this.state.activeTab === "harvests" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
                     <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                    <div className="general-switcher-buttons-inside">Harvests</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
                     <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
+                    <div className="general-switcher-buttons-inside">Harvests</div>
                 </div>}
             </div>
           </div>
       </div>
       <br/>
       <div className="button-group-small-screen">
-          <div className="multifarm-switcher-container">
+          <div className="general-switcher-container">
     
             <div className="menu-switcher">
                 {this.state.activeTab === "treasury" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
+                    <div className="general-switcher-buttons-inside">Holdings</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Treasury</div>
-                </div>}
-                {this.state.activeTab === "elixir" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("elixir")}}>
-                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
-                </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("elixir")}}>
-                    <img src={ require('./logos/transmuter.svg').default } alt="elixir logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Elixir</div>
+                    <div className="general-switcher-buttons-inside">Holdings</div>
                 </div>}
                 {this.state.activeTab === "emissions" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
                     <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">ALCX Emissions</div>
+                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
+                </div>}
+                {this.state.activeTab === "deposits" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Deposits</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Deposits</div>
                 </div>}
               </div>
             </div>
-          <div className="multifarm-switcher-container">
+          <div className="general-switcher-container">
               <div className="menu-switcher">
-                {this.state.activeTab === "deposits" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
-                </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Deposits</div>
-                </div>}
                 {this.state.activeTab === "revenues" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
+                    <div className="general-switcher-buttons-inside">Revenue</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Revenue</div>
+                    <div className="general-switcher-buttons-inside">Revenue</div>
                 </div>}
                 {this.state.activeTab === "alassets" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
                     <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                    <div className="general-switcher-buttons-inside">alAssets</div>
                 </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
                     <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">alAssets</div>
+                    <div className="general-switcher-buttons-inside">alAssets</div>
                 </div>}
-                
+                {this.state.activeTab === "harvests" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Harvests</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
+                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Harvests</div>
+                </div>}
             </div>
-          </div>
-          <div className="multifarm-switcher-container">
-            <div className="menu-switcher">
-            {this.state.activeTab === "harvests" ? 
-                <div className="multifarm-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
-                </div> :
-                <div className="multifarm-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="multifarm-switcher-buttons-inside">Harvests</div>
-                </div>}
-                </div>
           </div>
 
       </div>
@@ -1202,15 +1276,9 @@ export default class App extends React.Component {
 
       {this.state.activeTab !== "treasury" ? "" :
       <Treasury
-        multifarmData={this.state.multifarmData}
-        multifarmDataLoading={this.state.multifarmDataLoading}
-        />}
-
-        {this.state.activeTab !== "elixir" ? "" :
-      <Elixir
+        debankData={this.state.debankData}
+        debankDataLoading={this.state.debankDataLoading}
         alAssetCrvSupply={this.state.alAssetCrvSupply}
-        multifarmData={this.state.multifarmData}
-        multifarmDataLoading={this.state.multifarmDataLoading}
         alEthCrvTotalValue={alEthCrvTotalValue}
         />}
       

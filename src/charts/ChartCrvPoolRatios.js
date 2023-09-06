@@ -4,9 +4,9 @@ import { Chart } from 'react-chartjs-2';
 export default class ChartCrvPoolRatios extends React.Component {
 
   render(){  
-  let alUsd3CrvRatio = (this.props.multifarmData.alUsdCrvInTreasury + this.props.multifarmData.alUsdCrvInElixir) / this.props.alAssetCrvSupply.alUsd3Crv;
-  let alEthCrvRatio = (this.props.multifarmData.alEthCrvInTreasury + this.props.multifarmData.alEthCrvInElixir) / this.props.alEthCrvTotalValue;
-  let alUsdFraxBpCrvRatio = this.props.multifarmData.alUsdFraxBpInElixir / this.props.alAssetCrvSupply.alUsdFraxBp;
+  let alUsd3CrvRatio = (this.props.debankData.alUsdCrvInTreasury + this.props.debankData.alUsdCrvInElixir) / this.props.alAssetCrvSupply.alUsd3Crv;
+  let alEthCrvRatio = (this.props.debankData.alEthCrvInTreasury + this.props.debankData.alEthCrvInElixir) / this.props.alEthCrvTotalValue;
+  let alUsdFraxBpCrvRatio = this.props.debankData.alUsdFraxBpInElixir / this.props.alAssetCrvSupply.alUsdFraxBp;
   const helperPointer = this;
 
   return (
@@ -65,12 +65,12 @@ export default class ChartCrvPoolRatios extends React.Component {
                         if (context.parsed.y !== null) {
                             label += ': ' + context.parsed.y + '% - $';
                             label +=
-                            ((context.dataset.label === 'Owned' && context.label === 'alUSDFRAXBP') ? (Math.round(helperPointer.props.multifarmData.alUsdFraxBpInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === 'alUSDFRAXBP') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdFraxBp - helperPointer.props.multifarmData.alUsdFraxBpInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.multifarmData.alUsdCrvInTreasury + helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.multifarmData.alUsdCrvInTreasury - helperPointer.props.multifarmData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.multifarmData.alEthCrvInTreasury + helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.multifarmData.alEthCrvInTreasury - helperPointer.props.multifarmData.alEthCrvInElixir)/10000)/100 + "M") : "")
+                            ((context.dataset.label === 'Owned' && context.label === 'alUSDFRAXBP') ? (Math.round(helperPointer.props.debankData.alUsdFraxBpInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === 'alUSDFRAXBP') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdFraxBp - helperPointer.props.debankData.alUsdFraxBpInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.debankData.alUsdCrvInTreasury + helperPointer.props.debankData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === 'alUSD3CRV') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsd3Crv - helperPointer.props.debankData.alUsdCrvInTreasury - helperPointer.props.debankData.alUsdCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.debankData.alEthCrvInTreasury + helperPointer.props.debankData.alEthCrvInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "alETH Curve") ? (Math.round((helperPointer.props.alEthCrvTotalValue - helperPointer.props.debankData.alEthCrvInTreasury - helperPointer.props.debankData.alEthCrvInElixir)/10000)/100 + "M") : "")
                           }
                         return label;
                     }

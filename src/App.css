@@ -220,6 +220,18 @@ h3 {
   border-bottom: solid 1px #F5C09A;
 }
 
+.map-row {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 350px;
+  text-align: left;
+}
+
+.small-table-inner-map {
+  display: flex;
+  flex-direction: column;
+}
+
 .small-table-inner {
   display: grid;
   grid-template-columns: 40% 60%;
@@ -744,14 +756,14 @@ div.earn-yield-link-- a {
   width: 900px;
 }
 
-.multifarm-switcher-container {
+.general-switcher-container {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
 }
 
-.multifarm-switcher {
+.general-switcher {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   align-items: center;
@@ -765,7 +777,7 @@ div.earn-yield-link-- a {
   width: 350px;
 }
 
-.multifarm-switcher-buttons-active {
+.general-switcher-buttons-active {
   font-size: .75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -780,7 +792,7 @@ div.earn-yield-link-- a {
   flex-direction: row;
 }
 
-.multifarm-switcher-buttons-inactive {
+.general-switcher-buttons-inactive {
   font-size: .75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -794,7 +806,7 @@ div.earn-yield-link-- a {
   flex-direction: row;
 }
 
-.multifarm-switcher-buttons-inside {
+.general-switcher-buttons-inside {
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -804,15 +816,15 @@ div.earn-yield-link-- a {
   width: 55px;
 }
 
-.multifarm-widget-powered-by-badge {
+.general-widget-powered-by-badge {
   background-color: #141921 !important;
   color: white !important;
 }
 
-.multifarm-switcher-buttons-active-1 {
+.general-switcher-buttons-active-1 {
   padding: 0.25rem;
 }
-.multifarm-switcher-buttons-inactive-1 {
+.general-switcher-buttons-inactive-1 {
   padding: 0.25rem;
 }
 

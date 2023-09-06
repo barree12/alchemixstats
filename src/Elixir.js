@@ -1,21 +1,11 @@
 import React from 'react';
 import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
 //import { Button, ButtonGroup } from '@mui/material';
-import { MultifarmProvider, Dashboard, DASHBOARD_TABS_VARIANTS } from "@multifarm/widget";
-import "@multifarm/widget/dist/alchemix.css";
 
 export default class Elixir extends React.Component {
 
     render(){
-        let strategyTypesObject = {
-            collateral: {
-                active: false,
-            },
-            debt: {
-                active: false,
-            }
-        }
-        let apiKey = 'rBs3Kau4a_AQegm2LJQ2ldRBrvCoFfQb';
+        
         return (
             <>
                 <div className="section-header">
@@ -38,25 +28,16 @@ export default class Elixir extends React.Component {
             <div className="section-wrapper">
                 <div className="chart-title">
                 <h3>Curve Pool Ownership</h3>
-                {this.props.multifarmDataLoading ? "Loading..." :
+                {this.props.debankDataLoading ? "Loading..." :
                         <ChartCrvPoolRatios 
                             alAssetCrvSupply={this.props.alAssetCrvSupply}
-                            multifarmData={this.props.multifarmData}
+                            debankData={this.props.debankData}
                             alEthCrvTotalValue={this.props.alEthCrvTotalValue}
                         />}
                     </div>
             </div>
-            <div className="multifarm-wrapper">
-                <MultifarmProvider
-                    token={apiKey}
-                    theme="alchemix"
-                    provider="alchemix"
-                    themeColors="dark"
-                    badgePlacement="bottom"
-                    strategyTypesConfig={strategyTypesObject}
-                    dashboardTabs={[DASHBOARD_TABS_VARIANTS.PORTFOLIO_ALLOCATION, DASHBOARD_TABS_VARIANTS.STRATEGIES_PERFORMANCE]}>
-                    <Dashboard />
-                </MultifarmProvider>
+            <div className="general-wrapper">
+               
             </div>
             </>
         );

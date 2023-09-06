@@ -23,6 +23,7 @@ export default class EarnPancakeSwap extends Component {
   }
 
   calculateData(cakePerSecond, totalAllocPoint, poolInfo, cakePrice){
+    console.log(poolInfo);
     let cakePerYear = cakePerSecond / Math.pow(10,30) * 31536000;
     let poolEmissions = cakePerYear * cakePrice.prices[cakePrice.prices.length-1][1] * (parseInt(poolInfo[0]) / totalAllocPoint);
     let poolApr = poolEmissions / (parseInt(poolInfo[5]) / Math.pow(10,17))

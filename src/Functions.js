@@ -91,3 +91,9 @@ export function formatDateNumber(number){
 export function datesEqual(date1, date2){
     return (date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate());
 }
+
+export function styleNumber(number){
+    if(number > 1000000) return Math.round(number/10000)/100 + "M";
+    else if(number > 1000) return Math.round(number/10)/100 + "K";
+    else return Math.round(number*100)/100;
+}
