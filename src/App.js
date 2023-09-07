@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Web3 from 'web3';
-//import ChartQuartiles from './charts/ChartQuartiles';
 import Deposits from './Deposits';
 import AlAssets from './AlAssets';
 import Harvests from './Harvests';
@@ -11,7 +10,6 @@ import Overview from './Overview';
 //import Debt from './Debt';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
-import Elixir from './Elixir';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
@@ -91,7 +89,6 @@ export default class App extends React.Component {
     this.cvxAlUsd3CrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlUsd3CrvStakingContractAddress);
     this.cvxAlEthCrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlEthCrvStakingContractAddress);
     this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
-    //this.tAlcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.tAlcxAddress);
     this.alcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxAddress);
     this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.alcxEthSlpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxEthSlpAddress);
@@ -100,8 +97,6 @@ export default class App extends React.Component {
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
     this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
     this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
-    //this.feiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.feiAddress);
-    //this.lUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.lUsdAddress);
     this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
     this.alEthCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthCrvContractAddress);
     this.veSdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.veSdtContractAddress);
@@ -117,7 +112,6 @@ export default class App extends React.Component {
     this.maiOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.maiOptimismContractAddress);
     this.fraxOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFraxAddress);
     this.fxsEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFxsEthAddress);
-    //this.beetsVaultContract = new web3ftm.eth.Contract(abis.beetsVaultAbi, addresses.beetsVaultContractAddress);
     this.saddleFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.saddleFBPContractAddress);
     this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
     this.alUsdFraxBpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFBPCurveContractAddress);
@@ -163,7 +157,6 @@ export default class App extends React.Component {
         alUsdMarketcaps[counter] = Math.round(result.market_caps[i][1]/10000)/100;
         if(result.market_caps[i][1] !== 0) counter++;
       }
-      //console.log(result)
       this.setState({ dates: dates, prices: prices, volumes: volumes, alUsdMarketcaps: alUsdMarketcaps, alUsdMarketcapDates: alUsdMarketcapDates, alUsdLoading: false });
     }
   } 
@@ -762,6 +755,8 @@ export default class App extends React.Component {
     let sortedTreasuryAssets = [];
     let elixirAssets = {};
     let sortedElixirAssets = [];
+    let alUsd3CrvConvexId = '0x02e2151d4f351881017abdf2dd2b51150841d5b3';
+    let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69';
 
     let tempDebankCalc = {};
     let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs);
@@ -821,8 +816,6 @@ export default class App extends React.Component {
       largestValue = 0;
     }
 
-    console.log(elixirProtocolsConcat)
-
     //Calculate Elixirs
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
@@ -841,11 +834,14 @@ export default class App extends React.Component {
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
 
+    //console.log(elixirProtocolsConcat)
+
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
         for(let k=0;k<elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
           elixirAssets[elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD") alUsdInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsd3CrvConvexId) alUsdCrvInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
         }
       }
     }
@@ -873,8 +869,6 @@ export default class App extends React.Component {
       elixirLargestIndex = 0;
       elixirLargestValue = 0;
     }
-
-    console.log(sortedElixirAssets)
     
     let totalElixir = totalElixir3crv.total_usd_value + totalElixirAlUsdFraxBp.total_usd_value - alUsdInElixir;
 

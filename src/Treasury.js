@@ -18,6 +18,8 @@ import crvLogo from './logos/crv.png';
 import cvxLogo from './logos/cvx.png';
 import sdtLogo from './logos/stakedao.png';
 import veloLogo from './logos/velo_round.png';
+import auraLogo from './logos/aura.png';
+import yfiLogo from './logos/yearn.png';
 
 export default class Treasury extends React.Component {
 
@@ -62,6 +64,10 @@ export default class Treasury extends React.Component {
         case "SDT": returnLogo = sdtLogo;
         break;
         case "VELO": returnLogo = veloLogo;
+        break;
+        case "AURA": returnLogo = auraLogo;
+        break;
+        case "YFI": returnLogo = yfiLogo;
         break;
         default: returnLogo = otherLogo;
         }
@@ -124,25 +130,22 @@ export default class Treasury extends React.Component {
                             </div>
                         </div>
                 </div>}
-                {/*<div className="section-wrapper">
-                <div className="chart-title">
-                <h3>Curve Pool Ownership</h3>
-                {this.props.debankDataLoading ? "Loading..." :
-                        <ChartCrvPoolRatios 
-                            alAssetCrvSupply={this.props.alAssetCrvSupply}
-                            debankData={this.props.debankData}
-                            alEthCrvTotalValue={this.props.alEthCrvTotalValue}
+                <div className="section-wrapper">
+                    <div className="chart-title">
+                        <h3>Curve Pool Ownership</h3>
+                        {this.props.debankDataLoading ? "Loading..." :
+                            <ChartCrvPoolRatios 
+                                alAssetCrvSupply={this.props.alAssetCrvSupply}
+                                debankData={this.props.debankData}
+                                alEthCrvTotalValue={this.props.alEthCrvTotalValue}
                         />}
                     </div>
-            </div>*/}
+                </div>
             </div>
             
             
             </div>
-            <br/>
-            <div className="general-wrapper">
-               
-            </div>
+
             </>
         );
     }
