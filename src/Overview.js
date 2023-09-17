@@ -23,7 +23,7 @@ export default class Overview extends React.Component {
         let ethPriceChange = this.props.tokenPricesLoading ? 0 : Math.round((this.props.ethPrice[this.props.ethPrice.length-1]/this.props.ethPrice[this.props.ethPrice.length-31]-1)*10000)/100;
         let alUsdCollateralNotReceived = (stablecoinDeposits === 0 || this.props.debankData.alUsdCrvInElixir === 0 || this.props.alAssetSupply.alUsd === 0 || this.props.debankData.alUsdInElixir === 0 || this.props.debankData.alUsdFraxBpInElixir === 0);
         let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.debankData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.debankData.alEthInElixir === 0);
-        let alUsdCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.debankData.alUsdCrvInElixir + this.props.debankData.daiInElixir + this.props.debankData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.debankData.alUsdInElixir);
+        let alUsdCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.debankData.alUsdCrvInElixir + this.props.debankData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.debankData.alUsdInElixir);
         let alEthCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.debankData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.debankData.alEthInElixir);
 
         return (
