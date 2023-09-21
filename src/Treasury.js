@@ -20,6 +20,8 @@ import sdtLogo from './logos/stakedao.png';
 import veloLogo from './logos/velo_round.png';
 import auraLogo from './logos/aura.png';
 import yfiLogo from './logos/yearn.png';
+import alusdfraxbpLogo from './logos/frax_crv.png';
+import alusd3crvLogo from './logos/alusd_crv.png';
 
 export default class Treasury extends React.Component {
 
@@ -68,6 +70,10 @@ export default class Treasury extends React.Component {
         case "AURA": returnLogo = auraLogo;
         break;
         case "YFI": returnLogo = yfiLogo;
+        break;
+        case "alusdfraxbp": returnLogo = alusdfraxbpLogo;
+        break;
+        case "alusd3crv": returnLogo = alusd3crvLogo;
         break;
         default: returnLogo = otherLogo;
         }
@@ -121,11 +127,9 @@ export default class Treasury extends React.Component {
                             <h3>Elixir</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedElixirAssets).map((asset, index) => {
-                              return(
-                                <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
-                              )
-                            })}
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxbp")} alt="logo" className="image" />alUSD-FRAXBP</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFraxBpInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusd3crv")} alt="logo" className="image" />alUSD-3CRV</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdCrvInElixir)}</span></div>
+                              
                             <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">${styleNumber(this.props.debankData.totalElixir)}</span></div>
                             </div>
                         </div>
