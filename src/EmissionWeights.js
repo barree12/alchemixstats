@@ -22,29 +22,24 @@ export default class EmissionWeights extends React.Component {
                             </div>
                         </div>
                         <div className="weight-table-column">
-                            <span className="table-title">alAssets (64.5%)</span>
+                            <span className="table-title">alAssets (67%)</span>
                             <div className="weight-table-row">
                             <img src={ require('./logos/eth_aleth.png').default } alt="alETH-ETH" className="image" />
                             <div className="table-item-1">alETH Curve</div>
-                            <div className="table-item-2">29%</div>
+                            <div className="table-item-2">-</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/frax_crv.png').default } alt="d3pool" className="image" />
                             <div className="table-item-1">FraxBP Curve</div>
-                            <div className="table-item-2">29%</div>
+                            <div className="table-item-2">31%</div>
                             </div>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alusd_crv.png').default } alt="alUSD" className="image" />
                             <div className="table-item-1">alUSD3CRV</div>
-                            <div className="table-item-2">4.5%</div>
-                            </div>
-                            <div className="weight-table-row">
-                            <img src={ require('./logos/aleth_saddle.png').default } alt="alETH Saddle" className="image" />
-                            <div className="table-item-1">alETH Saddle</div>
-                            <div className="table-item-2">2%</div>
+                            <div className="table-item-2">5%</div>
                             </div>
                         </div>
-                        <div className="weight-table-column">
+                        {/*<div className="weight-table-column">
                             <span className="table-title">FTM & Arbitrum (2.5%)</span>
                             <div className="weight-table-row">
                             <img src={ require('./logos/alusd_beets.png').default } alt="alUSD-USDC pool" className="image" />
@@ -61,9 +56,10 @@ export default class EmissionWeights extends React.Component {
                             <div className="table-item-1">Saddle L2D4</div>
                             <div className="table-item-2">1%</div>
                             </div>
-                        </div>
+        </div>*/}
                     </div>
                     <br/>
+                    <span>alETH incentives were halted after the Curve hack. They are expected to be restarted after affected LPs are partially reimbursed.</span>
                     <span>Some gauges require a constant amount of rewards in terms of ALCX, so percentages can change slightly as a result of decreasing overall emissions.</span>
                 </div>
             </div>

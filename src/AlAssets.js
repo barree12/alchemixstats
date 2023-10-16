@@ -1,5 +1,5 @@
 import React from 'react';
-import ChartAlusdSupply from './charts/ChartAlusdSupply';
+//import ChartAlusdSupply from './charts/ChartAlusdSupply';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
 import ChartAlEthPrice from './charts/ChartAlEthPrice';
 //import ChartAlethSupply from './charts/ChartAlethSupply';
@@ -46,10 +46,10 @@ export default class AlAssets extends React.Component {
                 </div>
                 <AlUsdSummary lps={this.props.lps} />
                 <div className="section-wrapper">
-                    <div className="chart-title">
+                    {/*<div className="chart-title">
                         <h3>alUSD Total Supply</h3>
                         <ChartAlusdSupply marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
-                        </div>
+                    </div>*/}
                     <div className="chart-title">
                         <h3>alUSD Price</h3>
                         <div className="button-container">

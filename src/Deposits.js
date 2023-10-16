@@ -1,10 +1,8 @@
 import React from 'react';
 import ChartV2AlchemistTVL from './charts/ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './charts/ChartV2AlchemistEthTVL';
-import ChartV2AlchemistFtmTVL from './charts/ChartV2AlchemistFtmTVL';
 import ChartOptiAlchemistTVL from './charts/ChartOptiAlchemistTVL';
 import ChartOptiAlchemistEthTVL from './charts/ChartOptiAlchemistEthTVL';
-import FtmSummary from './FtmSummary';
 //import { Switch } from '@mui/material';
 import OptiSummary from './OptiSummary';
 
@@ -73,7 +71,7 @@ export default class Deposits extends React.Component {
                             <span className="small-table-row-2">TOTAL</span><span className="important-3">${Math.round((this.props.v2EthUsdTVL + this.props.v2aWethUsdTVL + this.props.v2RethUsdTVL + this.props.v2StethUsdTVL + this.props.v2sfrxEthUsdTVL)*100)/100}M</span>
                             </div>
                         </div>
-                        <div className="small-table">
+                        {/*<div className="small-table">
                             <h3>Staking TVL</h3>
                             <div className="small-table-inner-3">
                             <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
@@ -81,8 +79,8 @@ export default class Deposits extends React.Component {
                             <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX/ETH SLP" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
                             <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
                             </div>
-                        </div>
-                        </div>
+                        </div>*/}
+                    </div>
                 </div>
                 {/*<div className="section-wrapper">
                     <div className="chart-title">
@@ -120,13 +118,13 @@ export default class Deposits extends React.Component {
                     <ChartOptiAlchemistEthTVL optiTvl={this.props.optiTvl} />
                     </div>
                 </div>
-                <div className="section-wrapper">
+                {/*<div className="section-wrapper">
                     <FtmSummary v2Caps={this.props.v2Caps} ftmTvl={this.props.ftmTvl} />
                     <div className="chart-title">
                         <h3>Fantom Alchemist TVL</h3>
                         <ChartV2AlchemistFtmTVL ftmTvl={this.props.ftmTvl} />
                     </div>
-                </div>
+                </div>*/}
             </>
         );
     }
