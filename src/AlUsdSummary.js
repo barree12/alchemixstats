@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import { styleNumber } from './Functions';
 
 export default class AlUsdSummary extends React.Component {
 
     render(){
       const totalAlUsd3Crv = Math.round(this.props.lps.alUsdIn3Crv/10000+this.props.lps.crv3In3Crv/10000)/100;
       //const totalD4 = Math.round(this.props.lps.alUsdInD4/10000+this.props.lps.fraxInD4/10000+this.props.lps.feiInD4/10000+this.props.lps.lUsdInD4/10000)/100;
-      const totalL2d4 = Math.round(this.props.lps.alUsdInL2d4/10000+this.props.lps.fraxInL2d4/10000+this.props.lps.usxInL2d4/10000+this.props.lps.usdsInL2d4/10000)/100;
+      //const totalL2d4 = Math.round(this.props.lps.alUsdInL2d4/10000+this.props.lps.fraxInL2d4/10000+this.props.lps.usxInL2d4/10000+this.props.lps.usdsInL2d4/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
       //const totalAlUsdBeets = Math.round(this.props.lps.alUsdInBeets/10000+this.props.lps.usdInBeets/10000)/100;
       //const totalSaddleFBP = Math.round(this.props.lps.alUsdInSaddleFBP/10000+this.props.lps.fbpInSaddleFBP/10000)/100;
@@ -29,6 +30,9 @@ export default class AlUsdSummary extends React.Component {
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
                 <br/>
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
+                <h3>Backing surplus</h3>
+                <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdMainnet))} alUSD</b></span>
+                <span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   
@@ -116,7 +120,7 @@ export default class AlUsdSummary extends React.Component {
                 </div>
                 <div className="small-table-3">
 
-                <div className="small-table-inner-11">
+                {/*<div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/l2d4.png').default } alt="L2D4 logo" className="image" />
                       <span className="table-text-title">Saddle L2D4</span>
@@ -141,7 +145,7 @@ export default class AlUsdSummary extends React.Component {
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${totalL2d4}M</span>
                     </span>
-                  </div>
+        </div>*/}
 
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">

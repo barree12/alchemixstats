@@ -6,6 +6,7 @@ import ChartAlEthPrice from './charts/ChartAlEthPrice';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch, Button, ButtonGroup } from '@mui/material';
+import LoadingComponent from './LoadingComponent';
 
 export default class AlAssets extends React.Component {
     
@@ -14,12 +15,18 @@ export default class AlAssets extends React.Component {
         this.state = {
             alUsdPegToggle: true,
             alEthPegToggle: true,
-            alUsdPegActive: { dai: true, usdc: false, usdt: false }
+            alUsdPegActive: { dai: true, usdc: false, usdt: false },
+            surplus: {},
+            surplusLoading: true
         };
         this.toggleAlUsdPeg = this.toggleAlUsdPeg.bind(this);
         this.toggleAlEthPeg = this.toggleAlEthPeg.bind(this);
         this.alUsdPegClick = this.alUsdPegClick.bind(this);
     }
+
+    componentDidMount() {
+        this.getBacking();
+      }
 
     toggleAlUsdPeg(){
         this.setState({ alUsdPegToggle: !this.state.alUsdPegToggle });
@@ -37,6 +44,98 @@ export default class AlAssets extends React.Component {
         this.setState({ alUsdPegActive: alUsdPegActive });
     }
 
+    calculateBacking(mainnetDebt, v1Debt, optimismDebt){
+        let alUsdDebt = 0;
+        let alEthDebt = 0;
+        let alUsdOptimismDebt = 0;
+        let alEthOptimismDebt = 0;
+        let alUsdDebtV1 = 0;
+        let alEthDebtV1 = 0;
+        let alUsdInV1 = 316300;
+        for(let i=0;i<mainnetDebt.length;i++){
+            alUsdDebt += mainnetDebt[i].alusd_debt;
+            alEthDebt += mainnetDebt[i].aleth_debt;
+        }
+        for(let i=0;i<v1Debt.length;i++){
+            alUsdDebtV1 += v1Debt[i].alusd_debt;
+            alEthDebtV1 += v1Debt[i].aleth_debt;
+        }
+        for(let i=0;i<optimismDebt.length;i++){
+            alUsdOptimismDebt += optimismDebt[i].alusd_debt;
+            alEthOptimismDebt += optimismDebt[i].aleth_debt;
+        }
+        let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1;
+        let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;
+        let alUsdShouldHaveOptimism = this.props.alAssetSupply.alUsdOptimism - alUsdOptimismDebt - this.props.alAssetSupply.nextAlUsdOptimism;
+        let alUsdOwnedOptimism = this.props.debankData.alUsdInOptimismElixir
+        let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
+        let alUsdOptimismSurplus = alUsdOwnedOptimism - alUsdShouldHaveOptimism;
+        let surplus = { 
+            alUsdMainnet: alUsdMainnetSurplus,
+            alUsdOptimism: alUsdOptimismSurplus
+        }
+
+        this.setState({ surplus: surplus, surplusLoading: false })
+    }
+
+    getBacking(){
+        let authorizationHeader = {
+            method: 'GET',
+            headers: { 
+              'pinata_api_key': '7237805a818b4433e8a1',
+              'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
+            }
+          }
+
+        Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=mainnet_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+            fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=v1UserDebt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+            fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=optimism_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json())
+        ])
+        .then(([mainnetDebt, v1Debt, optimismDebt]) => {
+            let mainnetDebtUrl = "https://ipfs.imimim.info/ipfs/" + mainnetDebt.rows[0].ipfs_pin_hash;
+            let optimismDebtUrl = "https://ipfs.imimim.info/ipfs/" + optimismDebt.rows[0].ipfs_pin_hash;
+            let v1DebtUrl = "https://ipfs.imimim.info/ipfs/" + v1Debt.rows[0].ipfs_pin_hash;
+            Promise.all([fetch(mainnetDebtUrl).then(res => res.json()),
+                fetch(v1DebtUrl).then(res => res.json()),
+                fetch(optimismDebtUrl).then(res => res.json())])
+                .then(([mainnetDebtFinal, v1DebtFinal, optimismDebtFinal]) => {
+                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal)
+            })
+            .catch(function(err) {
+                console.log(err.message);
+            });
+
+        })
+        .catch(function(err) {
+            console.log(err.message);
+        });
+
+        /*fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=mainnet_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
+          (result) => { 
+            let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
+            fetch(url).then(res => res.json()).then(
+              (result2) => { 
+                this.calculateBacking(result2) 
+              },
+              (error) => { console.log(error) })
+          
+          },
+          (error) => { console.log(error) })
+        
+          fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=v1UserDebt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
+            (result) => { 
+              let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
+              fetch(url).then(res => res.json()).then(
+                (result2) => { 
+                  //this.calculateBacking(result2)
+                  console.log(result2) 
+                },
+                (error) => { console.log(error) })
+            
+            },
+            (error) => { console.log(error) })*/
+    }
+
     render(){
         return (
             <>
@@ -44,7 +143,9 @@ export default class AlAssets extends React.Component {
                     <img src={ require('./logos/alusd.svg').default } alt="alUSD logo" className="image3" />
                     <h2>alUSD</h2>
                 </div>
-                <AlUsdSummary lps={this.props.lps} />
+                {this.state.surplusLoading ? <LoadingComponent /> :
+                    <AlUsdSummary lps={this.props.lps} surplus={this.state.surplus} />
+                }
                 <div className="section-wrapper">
                     {/*<div className="chart-title">
                         <h3>alUSD Total Supply</h3>

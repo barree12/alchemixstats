@@ -67,6 +67,7 @@ export default class Revenues extends React.Component {
           
           },
           (error) => { console.log(error) })
+
     }
 
     render(){

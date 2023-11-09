@@ -98,7 +98,8 @@ export const addresses = {
     optiFraxAddress: '0x2E3D870790dC77A83DD1d18184Acc7439A53f475',
     optiFxsEthAddress: '0x6806411765Af15Bddd26f8f544A34cC40cb9838B',
     sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f',
-    veloStats: '0xd2b1d1b75a0f226722b3a174dae54e6dd14af1a1'
+    veloStats: '0xd2b1d1b75a0f226722b3a174dae54e6dd14af1a1',
+    nextAlUsdOptimism: '0x49000f5e208349D2fA678263418e21365208E498'
 }
 
 export const abis = {

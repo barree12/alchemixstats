@@ -112,6 +112,7 @@ export default class App extends React.Component {
     this.usdsArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsdsContractAddress);
     this.usxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsxContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
+    this.nextAlUsdOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.nextAlUsdOptimism);
 
   }
 
@@ -157,7 +158,7 @@ export default class App extends React.Component {
     let v2Caps = {}
     let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0 }
     let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, daiInMigrate: 0, wethInMigrate: 0 }
-    let alAssetSupply = {alEth: 0, alUsd: 0}
+    let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
 
     Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
       this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdcAddress).call(),
@@ -198,10 +199,12 @@ export default class App extends React.Component {
       this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
       this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
       this.alEthContract.methods.totalSupply().call(),
-      this.alUsdContract.methods.totalSupply().call()
+      this.alUsdContract.methods.totalSupply().call(),
+      this.alUsdOptimismContract.methods.totalSupply().call(),
+      this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply]) => {
+      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, nextAlUsdSupplyOptimism]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -259,6 +262,8 @@ export default class App extends React.Component {
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
         alAssetSupply.alUsd = alUsdSupply/Math.pow(10, 18);
+        alAssetSupply.alUsdOptimism = alUsdSupplyOptimism/Math.pow(10, 18);
+        alAssetSupply.nextAlUsdOptimism = nextAlUsdSupplyOptimism/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
     })
     .catch(function(err) {
@@ -291,7 +296,7 @@ export default class App extends React.Component {
     let maiAlUsd = "sAMMV2-alUSD/MAI";
     let frxEth = "sAMMV2-alETH/frxETH";
     let fraxUsd = "sAMMV2-FRAX/alUSD";
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alUsdInL2d4: 0, fraxInL2d4: 0, usxInL2d4: 0, usdsInL2d4: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
@@ -305,13 +310,13 @@ export default class App extends React.Component {
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.alUsdArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      this.fraxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      //this.alUsdArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      //this.fraxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      //this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
+      //this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, alUsdInL2d4, fraxInL2d4, usxInL2d4, usdsInL2d4, veloStats]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
       lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
@@ -325,10 +330,10 @@ export default class App extends React.Component {
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       //lps.alEthInPcs = alEthInPcs/Math.pow(10, 18);
       //lps.ethInPcs = ethInPcs/Math.pow(10, 18);
-      lps.alUsdInL2d4 = alUsdInL2d4/Math.pow(10, 18);
-      lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
-      lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
-      lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
+      //lps.alUsdInL2d4 = alUsdInL2d4/Math.pow(10, 18);
+      //lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
+      //lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
+      //lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
@@ -683,8 +688,12 @@ export default class App extends React.Component {
     let alEthCrvInTreasury = 0;
     let alUsdCrvInTreasury = 0;
     let alUsdInElixir = 0;
+    let alUsdAmountInElixir = 0;
     let alEthInElixir = 0;
     let alUsdFraxBpInElixir = 0;
+    let alUsdBackingTokensInElixir = 0;
+    let alEthTokensInElixir = 0;
+    let alUsdInOptimismElixir = 0;
     let symbols = [];
     let elixirSymbols = [];
     let treasuryAssets = {};
@@ -700,15 +709,17 @@ export default class App extends React.Component {
     let elixirTokensConcat = tokensElixir3crv.concat(tokensElixirAlUsdFraxBp);
     let elixirProtocolsConcat = elixir3crv.concat(elixirAlUsdFraxBp);
 
-
     //Calculate treasury
     for(let i=0;i<protocolsConcat.length;i++){
       for(let j=0;j<protocolsConcat[i].portfolio_item_list.length;j++){
         for(let k=0;k<protocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
           symbols[symbols.length] = protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol;
+          if(protocolsConcat[i].portfolio_item_list[j].pool.id === "0x172a58d5e8c11ee554b09d924d5e2c3afadd44c0" && (protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC")) alUsdInOptimismElixir += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
         }
       }
     }
+
+    console.log(alUsdInOptimismElixir)
 
     for(let i=0;i<tokensConcat.length;i++){
       symbols[symbols.length] = tokensConcat[i].symbol;
@@ -727,7 +738,6 @@ export default class App extends React.Component {
         }
       }
     }
-
     for(let i=0;i<tokensConcat.length;i++){
       treasuryAssets[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
       if(tokensConcat[i].symbol === "ALCX") alcxInTreasury += tokensConcat[i].amount * tokensConcat[i].price;
@@ -770,7 +780,7 @@ export default class App extends React.Component {
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
 
-    //console.log(elixirProtocolsConcat)
+    console.log(elixirProtocolsConcat)
 
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
@@ -778,13 +788,21 @@ export default class App extends React.Component {
           elixirAssets[elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsd3CrvConvexId) alUsdCrvInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" ||
+          elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX" ||
+          elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC" ||
+          elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "DAI" ||
+          elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDT") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
         }
       }
     }
 
     for(let i=0;i<elixirTokensConcat.length;i++){
       if(elixirTokensConcat[i].symbol !== "alUSD") elixirAssets[elixirTokensConcat[i].symbol] += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
-      if(elixirTokensConcat[i].symbol === "alUSD") alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+      if(elixirTokensConcat[i].symbol === "alUSD") {
+        alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+        alUsdAmountInElixir += elixirTokensConcat[i].amount;
+      }
     }
 
     let elixirLargestValue = 0;
@@ -823,6 +841,9 @@ export default class App extends React.Component {
       alUsdInElixir: alUsdInElixir,
       alEthInElixir: alEthInElixir,
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
+      alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
+      alUsdAmountInElixir:alUsdAmountInElixir,
+      alUsdInOptimismElixir: alUsdInOptimismElixir
     }
     this.setState({ debankDataLoading: false, debankData: tempDebankCalc })
   }
@@ -1214,9 +1235,10 @@ export default class App extends React.Component {
       v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} />
       }
 
-      {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading) ? "Loading..." :
+      {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.debankDataLoading) ? "Loading..." :
       <AlAssets 
           alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
+          alAssetSupply={this.state.alAssetSupply} debankData={this.state.debankData}
       />)
       }
 
