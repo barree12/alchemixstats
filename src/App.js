@@ -719,8 +719,6 @@ export default class App extends React.Component {
       }
     }
 
-    console.log(alUsdInOptimismElixir)
-
     for(let i=0;i<tokensConcat.length;i++){
       symbols[symbols.length] = tokensConcat[i].symbol;
     }
@@ -779,8 +777,6 @@ export default class App extends React.Component {
     for(let i=0;i<elixirFilteredSymbols.length;i++){
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
-
-    console.log(elixirProtocolsConcat)
 
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
@@ -1134,6 +1130,15 @@ export default class App extends React.Component {
                     <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Harvests</div>
                 </div>}
+                {this.state.activeTab === "other" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
+                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Other</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
+                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Other</div>
+                </div>}
             </div>
           </div>
       </div>
@@ -1202,7 +1207,19 @@ export default class App extends React.Component {
                 </div>}
             </div>
           </div>
-
+          <div className="general-switcher-container">
+              <div className="menu-switcher">
+                {this.state.activeTab === "other" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
+                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Other</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
+                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Other</div>
+                </div>}
+            </div>
+          </div>
       </div>
       <br/>
       <br/>
