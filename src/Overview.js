@@ -30,6 +30,9 @@ export default class Overview extends React.Component {
             <>
                 <h2>Protocol Summary</h2>
                 <div className="overview">
+                    <span>The Alchemix subgraph is currently down, so a large portion of the dashboard cannot be displayed.</span>
+                    <br/>
+                    <br/>
                     <span className="flex-row">
                         <span>Total Protocol TVL:&nbsp;</span>
                         <div className="important">${Math.round(deposits*100+this.props.debankData.totalElixir/10000)/100}M</div>
