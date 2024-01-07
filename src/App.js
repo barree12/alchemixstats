@@ -255,7 +255,7 @@ export default class App extends React.Component {
         deposit.aFrax = aFraxParams[8]/Math.pow(10, 24);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         deposit.vaUsdc = vaUsdcParams[8]/Math.pow(10, 24);
-        deposit.vaDai = vaDaiParams[8]/Math.pow(10, 12);
+        deposit.vaDai = vaDaiParams[8]/Math.pow(10, 24);
         deposit.vaFrax = vaFraxParams[8]/Math.pow(10, 24);
         deposit.vaEth = vaEthParams[8]/Math.pow(10, 18);
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);

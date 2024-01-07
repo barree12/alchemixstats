@@ -20,6 +20,7 @@ import sdtLogo from './logos/stakedao.png';
 import veloLogo from './logos/velo_round.png';
 import auraLogo from './logos/aura.png';
 import yfiLogo from './logos/yearn.png';
+import ramLogo from './logos/ram.png';
 import alusdfraxbpLogo from './logos/frax_crv.png';
 import alusd3crvLogo from './logos/alusd_crv.png';
 
@@ -59,7 +60,7 @@ export default class Treasury extends React.Component {
         break;
         case "ARB": returnLogo = arbLogo;
         break;
-        case "CRV": returnLogo = crvLogo;
+        case "sdCRV": returnLogo = crvLogo;
         break;
         case "CVX": returnLogo = cvxLogo;
         break;
@@ -70,6 +71,8 @@ export default class Treasury extends React.Component {
         case "AURA": returnLogo = auraLogo;
         break;
         case "YFI": returnLogo = yfiLogo;
+        break;
+        case "RAM": returnLogo = ramLogo;
         break;
         case "alusdfraxbp": returnLogo = alusdfraxbpLogo;
         break;
@@ -107,7 +110,9 @@ export default class Treasury extends React.Component {
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x06378717d86b8cd2dba58c87383da1eda92d3495">
                     alUSD-FRAXBP Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b">
                     alUSD-3CRV Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9fb54d1f6f506feb4c65b721be931e59bb538c63">
-                    alETH-frxETH Elixir</a>
+                    alETH-frxETH Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
+                    Optimism Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8">
+                    Arbitrum Elixir</a>
                 </span>
                 {this.props.debankDataLoading ? "Loading..." :
                 <div className="tvl-tables-2">

@@ -25,7 +25,6 @@ export default class Overview extends React.Component {
         let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.debankData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.debankData.alEthInElixir === 0);
         let alUsdCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.debankData.alUsdCrvInElixir + this.props.debankData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.debankData.alUsdInElixir);
         let alEthCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.debankData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.debankData.alEthInElixir);
-
         return (
             <>
                 <h2>Protocol Summary</h2>

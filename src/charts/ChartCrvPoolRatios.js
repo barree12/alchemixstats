@@ -14,13 +14,14 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUSDFRAXBP", "alUSD3CRV", "alETH Curve"],
+            labels: ["alUSDFRAXBP", "alUSD3CRV", "alETHfrxETH Curve"],
             datasets: [{
               label: 'Owned',
               data: [
                 Math.round(alUsdFraxBpCrvRatio*10000)/100,
                 Math.round(alUsd3CrvRatio*10000)/100,
-                Math.round(alEthCrvRatio*10000)/100                
+                //Math.round(alEthCrvRatio*10000)/100
+                100                
               ],
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(255,204,75,1)',
