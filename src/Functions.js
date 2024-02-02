@@ -97,3 +97,11 @@ export function styleNumber(number){
     else if(number > 1000) return Math.round(number/10)/100 + "K";
     else return Math.round(number*100)/100;
 }
+
+export function wait(ms) {
+    var start = Date.now(),
+        now = start;
+    while (now - start < ms) {
+      now = Date.now();
+    }
+}

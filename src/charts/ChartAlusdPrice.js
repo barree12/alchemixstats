@@ -6,11 +6,12 @@ import 'chartjs-adapter-date-fns';
 export default class ChartAlusdPrice extends React.Component {
 
   render(){  
-  let dates = this.props.active.dai ? [...this.props.data.dai.date] : (this.props.active.usdc ? [...this.props.data.usdc.date] : [...this.props.data.usdt.date]);
-  let values = this.props.active.dai ? [...this.props.data.dai.peg] : (this.props.active.usdc ? [...this.props.data.usdc.peg] : [...this.props.data.usdt.peg]);
-  let valuesPerc = this.props.active.dai ? [...this.props.data.dai.pegPerc] : (this.props.active.usdc ? [...this.props.data.usdc.pegPerc] : [...this.props.data.usdt.pegPerc]);
-  let values10m = this.props.active.dai ? [...this.props.data.dai.peg10m] : (this.props.active.usdc ? [...this.props.data.usdc.peg10m] : [...this.props.data.usdt.peg10m]);
-  let values10mPerc = this.props.active.dai ? [...this.props.data.dai.peg10mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.peg10mPerc] : [...this.props.data.usdt.peg10mPerc]);
+  //let dates = this.props.active.dai ? [...this.props.data.dai.date] : (this.props.active.usdc ? [...this.props.data.usdc.date] : [...this.props.data.usdt.date]);
+  let dates = [...this.props.data.usdc.date];
+  let values = [...this.props.data.usdc.peg];
+  let valuesPerc = [...this.props.data.usdc.pegPerc];
+  //let values10m = this.props.active.dai ? [...this.props.data.dai.peg10m] : (this.props.active.usdc ? [...this.props.data.usdc.peg10m] : [...this.props.data.usdt.peg10m]);
+  //let values10mPerc = this.props.active.dai ? [...this.props.data.dai.peg10mPerc] : (this.props.active.usdc ? [...this.props.data.usdc.peg10mPerc] : [...this.props.data.usdt.peg10mPerc]);
   //console.log(values)
   const helperPointer = this;
   
@@ -29,8 +30,8 @@ export default class ChartAlusdPrice extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: false,
-            },
-            {
+            }
+            /*{
               label: '10m trade',
               data: this.props.toggle ? values10mPerc : values10m,
               backgroundColor: 'rgba(255,255,255,0.8)',
@@ -40,7 +41,7 @@ export default class ChartAlusdPrice extends React.Component {
               pointBorderColor: '#ffffff',
               fill: false,
               hidden: true
-            }]
+            }*/]
           }}
           options={{
             hover: {
@@ -69,7 +70,7 @@ export default class ChartAlusdPrice extends React.Component {
                 }
               },
               legend: {
-                display: true,
+                display: false,
                 position: 'top',
                 labels: {
                   color: '#F5C09A',

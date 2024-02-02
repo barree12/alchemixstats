@@ -7,25 +7,31 @@ import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch, Button, ButtonGroup } from '@mui/material';
 import LoadingComponent from './LoadingComponent';
+import { addresses } from './Constants';
 
 export default class AlAssets extends React.Component {
     
     constructor(props) {
         super(props);
         this.state = {
+            alUsdPeg: {},
+            alEthPeg: {},
+            alUsdPegLoading: {},
+            alEthPegLoading: {},
             alUsdPegToggle: true,
             alEthPegToggle: true,
-            alUsdPegActive: { dai: true, usdc: false, usdt: false },
+            //alUsdPegActive: { dai: true, usdc: false, usdt: false },
             surplus: {},
             surplusLoading: true
         };
         this.toggleAlUsdPeg = this.toggleAlUsdPeg.bind(this);
         this.toggleAlEthPeg = this.toggleAlEthPeg.bind(this);
-        this.alUsdPegClick = this.alUsdPegClick.bind(this);
+        //this.alUsdPegClick = this.alUsdPegClick.bind(this);
     }
 
     componentDidMount() {
         this.getBacking();
+        this.getAlAssetPrice();
       }
 
     toggleAlUsdPeg(){
@@ -36,12 +42,86 @@ export default class AlAssets extends React.Component {
         this.setState({ alEthPegToggle: !this.state.alEthPegToggle });
     }
     
-    alUsdPegClick(token){
+    /*alUsdPegClick(token){
         let alUsdPegActive = { dai: false, usdc: false, usdt: false };
         if(token === "dai") alUsdPegActive.dai = true;
         if(token === "usdc") alUsdPegActive.usdc = true;
         if(token === "usdt") alUsdPegActive.usdt = true;
         this.setState({ alUsdPegActive: alUsdPegActive });
+    }*/
+
+    getSubgraphRequestOptions(query){
+        return {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query })
+        }
+    }
+
+    calculateAlEthPeg(result){
+        let alEthPeg = { date: [], peg: [], pegPerc: [] }
+        for(let i=0;i<result.length;i++){
+          try {
+            alEthPeg.date[i] = Number(result[i].timestamp*1000); 
+            alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
+            alEthPeg.pegPerc[i] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
+          }
+          catch (err) {
+            console.log(err);
+          }
+        }
+        this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
+      }
+    
+    calculateAlUsdPeg(usdcPeg){
+        let usdcIndex = 0;
+        let alUsdPeg = {usdc: { date: [], peg: [], pegPerc: [] } };
+        for(let i=0;i<usdcPeg.length;i++){
+          try {
+              alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
+              alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
+              alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
+              usdcIndex++;
+          }
+          catch (err) {
+            console.log(err)
+          }
+        }
+        this.setState({ alUsdPeg: alUsdPeg, alUsdPegLoading: false });
+    }
+
+    getPegQuery(alAsset, collateralToken, tradeSize, skip){
+        return `{
+          poolHistoricalRates(
+            first: 1000
+            skip: ` + skip + `
+            where: {inputToken: "` + alAsset + `", outputToken: "` + collateralToken + `", inputAmount: "` + tradeSize.toLocaleString('fullwide', {useGrouping:false}) + `"}
+            orderBy: timestamp
+            orderDirection: desc
+          ) {
+            outputAmount
+            timestamp
+          }
+        }`
+      }
+
+    getAlAssetPrice(){
+        const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0)
+        const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 1000)
+        const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0)
+        const alEthPegQuerySkip1000 = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 1000)
+        
+        Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuerySkip1000)).then(res => res.json())])
+            .then(([usdcPeg, usdcPegSkip1000, alEthPeg, alEthPegSkip1000]) => {
+                this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse())
+                this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.concat(alEthPegSkip1000.data.poolHistoricalRates).reverse())
+            })
+            .catch(function(err) {
+                console.log(err.message);
+            });
     }
 
     calculateBacking(mainnetDebt, v1Debt, optimismDebt){
@@ -154,16 +234,16 @@ export default class AlAssets extends React.Component {
                     <div className="chart-title">
                         <h3>alUSD Price</h3>
                         <div className="button-container">
-                            <ButtonGroup size="small">
+                            {/*<ButtonGroup size="small">
                             <Button variant={this.state.alUsdPegActive.dai ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("dai")}}>DAI</Button>
                             <Button variant={this.state.alUsdPegActive.usdc ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("usdc")}}>USDC</Button>
                             <Button variant={this.state.alUsdPegActive.usdt ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("usdt")}}>USDT</Button>
-                            </ButtonGroup>
+                            </ButtonGroup>*/}
                             <div className="toggle-text">
                             $<Switch onChange={this.toggleAlUsdPeg} checked={this.state.alUsdPegToggle} />%
                             </div>
                         </div>
-                        <ChartAlusdPrice data={this.props.alUsdPeg} active={this.state.alUsdPegActive} toggle={this.state.alUsdPegToggle} />
+                        <ChartAlusdPrice data={this.props.alUsdPeg} toggle={this.state.alUsdPegToggle} />
                     </div>
                 </div>
                 <div className="section-header">
@@ -178,10 +258,11 @@ export default class AlAssets extends React.Component {
         </div>*/}
                     <div className="chart-title">
                         <h3>alETH Price</h3>
-                        <div className="toggle-text">
+                        <div className="toggle-text">The subgraph is being updated, no price is currently available.</div>
+                        {/*<div className="toggle-text">
                             ETH<Switch onChange={this.toggleAlEthPeg} checked={this.state.alEthPegToggle} />%
                         </div>
-                        <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />
+    <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />*/}
                     </div>
                 </div>
             </>

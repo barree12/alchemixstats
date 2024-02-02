@@ -23,6 +23,7 @@ import yfiLogo from './logos/yearn.png';
 import ramLogo from './logos/ram.png';
 import alusdfraxbpLogo from './logos/frax_crv.png';
 import alusd3crvLogo from './logos/alusd_crv.png';
+import LoadingComponent from './LoadingComponent';
 
 export default class Treasury extends React.Component {
 
@@ -104,7 +105,7 @@ export default class Treasury extends React.Component {
                     Arbitrum Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401">
                     Base Multisig</a><br/>
                 </span><br/>
-                There are 3 addresses for the alUSD and alETH Elixirs.<br/>
+                There are 5 addresses for the alUSD and alETH Elixirs.<br/>
                 The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x06378717d86b8cd2dba58c87383da1eda92d3495">
@@ -114,7 +115,7 @@ export default class Treasury extends React.Component {
                     Optimism Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8">
                     Arbitrum Elixir</a>
                 </span>
-                {this.props.debankDataLoading ? "Loading..." :
+                {this.props.debankDataLoading ? <LoadingComponent /> :
                 <div className="tvl-tables-2">
                         <div className="small-table">
                             <h3>Treasury</h3>
@@ -142,7 +143,7 @@ export default class Treasury extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>Curve Pool Ownership</h3>
-                        {this.props.debankDataLoading ? "Loading..." :
+                        {this.props.debankDataLoading ? <LoadingComponent /> :
                             <ChartCrvPoolRatios 
                                 alAssetCrvSupply={this.props.alAssetCrvSupply}
                                 debankData={this.props.debankData}

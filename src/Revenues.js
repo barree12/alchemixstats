@@ -18,6 +18,7 @@ export default class Revenues extends React.Component {
     }
 
     getDetailedRevenue(revenues){
+      console.log(revenues)
       let revenueArray = {
         treasury: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         elixir: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -30,17 +31,18 @@ export default class Revenues extends React.Component {
       
         for(let i=0;i<revenues.length;i++){
           
-          let revenueDate = revenues[i].DateTime.split(" ")[0]
-          let [month, day, year] = revenueDate.split('/');
+          //let revenueDate = revenues[i].DateTime.split(" ")[0]
+          let [year, month, day] = revenues[i].date.split('-');
           let date = new Date(+year, month - 1, +day);
-
           let monthDifference = 12 * (currentDate.getFullYear() - date.getFullYear()) + (currentDate.getMonth() - date.getMonth());
           //let monthDifference = Math.floor((currentDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 31))
           //console.log(monthDifference)
           //if(month === currentDate.getMonth() && year === currentDate.getFullYear()){
-            if(revenues[i].Revenue_Type === 'Harvest') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].Value)
-            if(revenues[i].Revenue_Type === 'Treasury') revenueArray.treasury[monthDifference+1] += parseInt(revenues[i].Value)
-            if(revenues[i].Revenue_Type === 'Elixir_FRAX' || revenues[i].Revenue_Type === 'Elixir_alUSD' || revenues[i].Revenue_Type === 'Elixir_alETH') revenueArray.elixir[monthDifference+1] += parseInt(revenues[i].Value)
+            if(revenues[i].category === 'Harvest revenue') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].usdValue) 
+            if(revenues[i].category === 'Elixir Revenue') revenueArray.elixir[monthDifference+1] += parseInt(revenues[i].usdValue)
+            else { revenueArray.treasury[monthDifference+1] += parseInt(revenues[i].usdValue)
+            if(parseInt(revenues[i].usdValue) > 1000000) console.log(i)
+            }
           //}
         }
       this.setState({ revenueLoading: false, revenue: revenueArray })
@@ -55,7 +57,7 @@ export default class Revenues extends React.Component {
           'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
         }
       }
-      fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=protocol_revenue.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
+      fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=den_revenue.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
           (result) => { 
             console.log(result);
 

@@ -5,6 +5,8 @@ import ChartOptiAlchemistTVL from './charts/ChartOptiAlchemistTVL';
 import ChartOptiAlchemistEthTVL from './charts/ChartOptiAlchemistEthTVL';
 //import { Switch } from '@mui/material';
 import OptiSummary from './OptiSummary';
+import LoadingComponent from './LoadingComponent';
+import { formatDate, datesEqual, wait  } from './Functions';
 
 export default class Deposits extends React.Component {
     
@@ -12,13 +14,160 @@ export default class Deposits extends React.Component {
         super(props);
         this.state = {
           ethCurrencyToggle: true,
+          alchemistTvl: {},
+          alchemistTvlLoading: true
         };
         this.toggleEthCurrency = this.toggleEthCurrency.bind(this);
+      }
+
+      componentDidMount(){
+        this.getData();
       }
 
     toggleEthCurrency(){
         this.setState({ ethCurrencyToggle: !this.state.ethCurrencyToggle });
     }
+
+    calculateAlchemistTvl(result){
+        //console.log(result)
+        let startDate = new Date(1647385201*1000); //March 16th
+        let today = new Date();
+        let dateTracker = new Date(result[0].timestamp*1000);
+        let resultIndex = 0;
+        let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], aFrax: [], vaUsdc: [], vaDai: [], vaFrax: [], vaEth: [], frxEth: [] };
+        let tempYvDai = 0;
+        let tempYvUsdc = 0;
+        let tempYvUsdt = 0;
+        let tempADai = 0;
+        let tempAUsdc = 0;
+        let tempAUsdt = 0;
+        let tempAFrax = 0;
+        let tempVaUsdc = 0;
+        let tempVaDai = 0;
+        let tempVaFrax = 0;
+        let tempYvWeth = 0;
+        let tempAWeth = 0;
+        let tempWstEth = 0;
+        let tempReth = 0;
+        let tempVaEth = 0;
+        let tempFrxEth = 0;
+        for(let j=0;startDate<today;j++){
+    
+          for(let i=resultIndex;i<result.length;i++){
+            let tempDate = new Date(result[i].timestamp*1000);
+            if(tempDate>startDate) break;
+    
+            if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+    
+            tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempYvDai;
+            tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdc;
+            tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdt;
+            tempADai = result[i].token.symbol === "s_aDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempADai;
+            tempAFrax = result[i].token.symbol === "s_aFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempAFrax;
+            tempAUsdc = result[i].token.symbol === "s_aUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
+            tempAUsdt = result[i].token.symbol === "s_aUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdt;
+            tempVaUsdc = result[i].token.symbol === "vaUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaUsdc;
+            tempVaDai = result[i].token.symbol === "vaDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaDai;
+            tempVaFrax = result[i].token.symbol === "vaFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaFrax;
+            tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
+            tempAWeth = result[i].token.symbol === "s_aWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempAWeth;
+            tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
+            tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
+            tempVaEth = result[i].token.symbol === "vaETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempVaEth;
+            tempFrxEth = result[i].token.symbol === "sfrxETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempFrxEth;
+            resultIndex++;
+          }
+          alchemistTvl.yvDai[j] = Math.round(tempYvDai/10000)/100;
+          if(j>0 && !tempYvDai) alchemistTvl.yvDai[j] = alchemistTvl.yvDai[j-1];
+          alchemistTvl.yvUsdc[j] = Math.round(tempYvUsdc/10000)/100;
+          if(j>0 && !tempYvUsdc) alchemistTvl.yvUsdc[j] = alchemistTvl.yvUsdc[j-1];
+          alchemistTvl.yvUsdt[j] = Math.round(tempYvUsdt/10000)/100;
+          if(j>0 && !tempYvUsdt) alchemistTvl.yvUsdt[j] = alchemistTvl.yvUsdt[j-1];
+          alchemistTvl.aDai[j] = Math.round(tempADai/10000)/100;
+          if(j>0 && !tempADai) alchemistTvl.aDai[j] = alchemistTvl.aDai[j-1];
+          alchemistTvl.aUsdc[j] = Math.round(tempAUsdc/10000)/100;
+          if(j>0 && !tempAUsdc) alchemistTvl.aUsdc[j] = alchemistTvl.aUsdc[j-1];
+          alchemistTvl.aUsdt[j] = Math.round(tempAUsdt/10000)/100;
+          if(j>0 && !tempAUsdt) alchemistTvl.aUsdt[j] = alchemistTvl.aUsdt[j-1];
+          alchemistTvl.aFrax[j] = Math.round(tempAFrax/10000)/100;
+          if(j>0 && !tempAFrax) alchemistTvl.aFrax[j] = alchemistTvl.aFrax[j-1];
+          alchemistTvl.vaUsdc[j] = Math.round(tempVaUsdc/10000)/100;
+          if(j>0 && !tempVaUsdc) alchemistTvl.vaUsdc[j] = alchemistTvl.vaUsdc[j-1];
+          alchemistTvl.vaDai[j] = Math.round(tempVaDai/10000)/100;
+          if(j>0 && !tempVaDai) alchemistTvl.vaDai[j] = alchemistTvl.vaDai[j-1];
+          alchemistTvl.vaFrax[j] = Math.round(tempVaFrax/10000)/100;
+          if(j>0 && !tempVaFrax) alchemistTvl.vaFrax[j] = alchemistTvl.vaFrax[j-1];
+          alchemistTvl.yvWeth[j] = Math.round(tempYvWeth/10000)/100;
+          if(j>0 && !tempYvWeth) alchemistTvl.yvWeth[j] = alchemistTvl.yvWeth[j-1];
+          alchemistTvl.aWeth[j] = Math.round(tempAWeth/10000)/100;
+          if(j>0 && !tempAWeth) alchemistTvl.aWeth[j] = alchemistTvl.aWeth[j-1];
+          alchemistTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
+          if(j>0 && !tempWstEth) alchemistTvl.wstEth[j] = alchemistTvl.wstEth[j-1];
+          alchemistTvl.rEth[j] = Math.round(tempReth/10000)/100;
+          if(j>0 && !tempReth) alchemistTvl.rEth[j] = alchemistTvl.rEth[j-1];
+          alchemistTvl.vaEth[j] = Math.round(tempVaEth/10000)/100;
+          if(j>0 && !tempVaEth) alchemistTvl.vaEth[j] = alchemistTvl.vaEth[j-1];
+          alchemistTvl.frxEth[j] = Math.round(tempFrxEth/10000)/100;
+          if(j>0 && !tempFrxEth) alchemistTvl.frxEth[j] = alchemistTvl.frxEth[j-1];
+          alchemistTvl.date[j] = formatDate(startDate, 0);
+          startDate.setDate(startDate.getDate() + 1);
+          /*tempYvDai = 0;
+          tempYvUsdc = 0;
+          tempYvUsdt = 0;*/
+        }
+        this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
+      }
+
+      getAlchemistTvlQuery(skip){
+        return `{
+          alchemistTVLHistories(
+            first: 1000
+            skip: ` + skip + `
+            orderBy: timestamp
+            orderDirection: desc
+          )
+          {
+            token
+              {
+                symbol
+              }
+            amount
+            timestamp
+          }
+        }`
+      }
+
+    getSubgraphRequestOptions(query){
+        return {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query })
+        }
+      }
+
+    getData(){
+        const alchemistTvl = this.getAlchemistTvlQuery(0);
+        const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
+        const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
+        const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
+        const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
+        const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
+
+        Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json())])
+            .then(([tvl1, tvl2, tvl3]) => {
+                wait(1500);
+                Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
+                fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip4000)).then(res => res.json()),
+                fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip5000)).then(res => res.json())])
+                .then(([tvl4, tvl5, tvl6]) => {
+                    this.calculateAlchemistTvl(tvl6.data.alchemistTVLHistories.reverse().concat(tvl5.data.alchemistTVLHistories.reverse().concat(tvl4.data.alchemistTVLHistories.reverse().concat(tvl3.data.alchemistTVLHistories.reverse().concat(tvl2.data.alchemistTVLHistories.reverse().concat(tvl1.data.alchemistTVLHistories.reverse().concat()))))))
+                    }).catch(function(err) { console.log(err.message) });
+        }).catch(function(err) { console.log(err.message) });
+    }
+
+
 
     render(){
         return (
@@ -71,39 +220,19 @@ export default class Deposits extends React.Component {
                             <span className="small-table-row-2">TOTAL</span><span className="important-3">${Math.round((this.props.v2EthUsdTVL + this.props.v2aWethUsdTVL + this.props.v2RethUsdTVL + this.props.v2StethUsdTVL + this.props.v2sfrxEthUsdTVL)*100)/100}M</span>
                             </div>
                         </div>
-                        {/*<div className="small-table">
-                            <h3>Staking TVL</h3>
-                            <div className="small-table-inner-3">
-                            <span className="small-table-row"></span><span></span><span className="table-text-bold">Amount</span><span className="table-text-bold">USD value</span>
-                            <span className="small-table-row"><img src={ require('./logos/alcx_logo.png').default } alt="ALCX logo" className="image" /></span><span className="table-text-title">ALCX</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcx)}</span><span className="important-2">${Math.round(this.props.stakedAlcxValue/10000)/100}M</span>
-                            <span className="small-table-row"><img src={ require('./logos/alcx_eth_slp.png').default } alt="ALCX/ETH SLP" className="image" /></span><span className="table-text-title">ALCX/ETH SLP</span><span className="table-text-bold">{Math.round(this.props.alchemixStaking.alcxEthSlp)}</span><span className="important-2">${Math.round(this.props.stakingSlpValue/10000)/100}M</span>
-                            <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${Math.round((this.props.stakedAlcxValue + this.props.stakingSlpValue)/10000)/100}M</span>
-                            </div>
-                        </div>*/}
                     </div>
                 </div>
-                {/*<div className="section-wrapper">
-                    <div className="chart-title">
-                    <h3>DAI TVL V1</h3>
-                    <ChartDaiTVL tvlDates={this.props.vaultV1Tvls.daiTvlDates} daiAlchemistTVL={this.props.vaultV1Tvls.daiAlchemistTVL} daiTransmuterTVL={this.props.vaultV1Tvls.daiTransmuterTVL} />
-                    </div>
-                    <div className="chart-title">
-                    <h3>ETH TVL V1</h3>
-                    <div className="toggle-text">
-                        $<Switch onChange={this.toggleEthCurrency} checked={this.state.ethCurrencyToggle} />ETH
-                    </div>
-                    <ChartEthTVL toggle={this.state.ethCurrencyToggle} ethTVLDates={this.props.vaultV1Tvls.ethTVLDates} ethAlchemistTVL={[...this.props.vaultV1Tvls.ethAlchemistTVL]} ethTransmuterTVL={[...this.props.vaultV1Tvls.ethTransmuterTVL]} ethPricesForTVL={this.props.tokenPrices.eth} />
-                    </div>
-                    </div>*/}
 
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Alchemist V2 Stablecoin TVL</h3>
-                    <ChartV2AlchemistTVL alchemistTvl={this.props.alchemistTvl} />
+                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
+                    <ChartV2AlchemistTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL</h3>
-                    <ChartV2AlchemistEthTVL alchemistTvl={this.props.alchemistTvl} />
+                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
+                    <ChartV2AlchemistEthTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                 </div>
                 <OptiSummary v2Caps={this.props.v2Caps} optiTvl={this.props.optiTvl}
@@ -118,13 +247,6 @@ export default class Deposits extends React.Component {
                     <ChartOptiAlchemistEthTVL optiTvl={this.props.optiTvl} />
                     </div>
                 </div>
-                {/*<div className="section-wrapper">
-                    <FtmSummary v2Caps={this.props.v2Caps} ftmTvl={this.props.ftmTvl} />
-                    <div className="chart-title">
-                        <h3>Fantom Alchemist TVL</h3>
-                        <ChartV2AlchemistFtmTVL ftmTvl={this.props.ftmTvl} />
-                    </div>
-                </div>*/}
             </>
         );
     }

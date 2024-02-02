@@ -7,7 +7,6 @@ import AlAssets from './AlAssets';
 import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
-//import Debt from './Debt';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
 import { Link } from "react-router-dom";
@@ -310,10 +309,6 @@ export default class App extends React.Component {
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      //this.alUsdArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      //this.fraxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      //this.usxArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
-      //this.usdsArbitrumContract.methods.balanceOf(addresses.l2d4Address).call(),
       this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
     ])
     .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats]) => {
@@ -328,12 +323,6 @@ export default class App extends React.Component {
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
-      //lps.alEthInPcs = alEthInPcs/Math.pow(10, 18);
-      //lps.ethInPcs = ethInPcs/Math.pow(10, 18);
-      //lps.alUsdInL2d4 = alUsdInL2d4/Math.pow(10, 18);
-      //lps.fraxInL2d4 = fraxInL2d4/Math.pow(10, 18);
-      //lps.usxInL2d4 = usxInL2d4/Math.pow(10, 18);
-      //lps.usdsInL2d4 = usdsInL2d4/Math.pow(10, 18);
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
@@ -363,8 +352,8 @@ export default class App extends React.Component {
     });
   }
 
-  calculateTokenPrices(eth, rEth, wstEth, sfrxEth, cvx, sdt, crv){
-    let tokenPrices = { eth: [], rEth: [], wstEth: [], sfrxEth: [], cvx: [], sdt: [], crv: [] }
+  calculateTokenPrices(eth, rEth, wstEth, sfrxEth){
+    let tokenPrices = { eth: [], rEth: [], wstEth: [], sfrxEth: []}
     for(let i=0;i<eth.prices.length;i++){
       tokenPrices.eth[i] = eth.prices[i][1]; 
     }
@@ -377,30 +366,16 @@ export default class App extends React.Component {
     for(let i=0;i<sfrxEth.prices.length;i++){
       tokenPrices.sfrxEth[i] = sfrxEth.prices[i][1]; 
     }
-    for(let i=0;i<cvx.prices.length;i++){
-      tokenPrices.cvx[i] = cvx.prices[i][1]; 
-    }
-    for(let i=0;i<sdt.prices.length;i++){
-      tokenPrices.sdt[i] = sdt.prices[i][1]; 
-    }
-    for(let i=0;i<crv.prices.length;i++){
-      tokenPrices.crv[i] = crv.prices[i][1]; 
-    }
     this.setState({ tokenPrices: tokenPrices, tokenPricesLoading: false });
   }
 
-  calculateAlEthPeg(result, result5k){
-    let alEthPeg = { date: [], peg: [], pegPerc: [], peg5k: [], peg5kPerc: [] }
+  calculateAlEthPeg(result){
+    let alEthPeg = { date: [], peg: [], pegPerc: [] }
     for(let i=0;i<result.length;i++){
       try {
-        //alEthPeg.date[index] = formatDate(tempDate, 0);
         alEthPeg.date[i] = Number(result[i].timestamp*1000); 
         alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
         alEthPeg.pegPerc[i] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
-        if(result.length === result5k.length){
-          alEthPeg.peg5k[i] = result5k[i].outputAmount/Math.pow(10, 19)/500;
-          alEthPeg.peg5kPerc[i] = (1-result5k[i].outputAmount/Math.pow(10, 19)/500)*(-100);
-        }
       }
       catch (err) {
         console.log(err);
@@ -409,39 +384,15 @@ export default class App extends React.Component {
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
-  calculateAlUsdPeg(daiPeg, usdcPeg, usdtPeg, dai10mPeg, usdc10mPeg, usdt10mPeg){
-    let daiIndex = 0;
+  calculateAlUsdPeg(usdcPeg){
     let usdcIndex = 0;
-    let usdtIndex = 0;
-    let alUsdPeg = {dai: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdc: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }, usdt: { date: [], peg: [], pegPerc: [], peg10m: [], peg10mPerc: [] }};
-    for(let i=0;i<daiPeg.length;i++){
+    let alUsdPeg = { usdc: { date: [], peg: [], pegPerc: [] }};
+    for(let i=0;i<usdcPeg.length;i++){
       try {
-          alUsdPeg.dai.date[daiIndex] = Number(daiPeg[i].timestamp*1000);
-          alUsdPeg.dai.peg[daiIndex] = daiPeg[i].outputAmount/Math.pow(10, 24);
-          alUsdPeg.dai.pegPerc[daiIndex] = (1-daiPeg[i].outputAmount/Math.pow(10, 24))*(-100);
-          if(daiPeg.length === dai10mPeg.length){
-            alUsdPeg.dai.peg10m[daiIndex] = dai10mPeg[i].outputAmount/Math.pow(10, 25);
-            alUsdPeg.dai.peg10mPerc[daiIndex] = (1-dai10mPeg[i].outputAmount/Math.pow(10, 25))*(-100);
-          }
-          daiIndex++;
-
           alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
           alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
           alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
-          if(usdcPeg.length === usdc10mPeg.length){
-            alUsdPeg.usdc.peg10m[usdcIndex] = usdc10mPeg[i].outputAmount/Math.pow(10, 13);
-            alUsdPeg.usdc.peg10mPerc[usdcIndex] = (1-usdc10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
-          }
           usdcIndex++;
-
-          alUsdPeg.usdt.date[usdtIndex] = Number(usdtPeg[i].timestamp*1000);
-          alUsdPeg.usdt.peg[usdtIndex] = usdtPeg[i].outputAmount/Math.pow(10, 12);
-          alUsdPeg.usdt.pegPerc[usdtIndex] = (1-usdtPeg[i].outputAmount/Math.pow(10, 12))*(-100);
-          if(usdtPeg.length === usdt10mPeg.length){
-            alUsdPeg.usdt.peg10m[usdtIndex] = usdt10mPeg[i].outputAmount/Math.pow(10, 13);
-            alUsdPeg.usdt.peg10mPerc[usdtIndex] = (1-usdt10mPeg[i].outputAmount/Math.pow(10, 13))*(-100);
-          }
-          usdtIndex++;
       }
       catch (err) {
         console.log(err)
@@ -582,70 +533,6 @@ export default class App extends React.Component {
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
 
-  calculateHarvests(result){
-    //console.log(result)
-    let startDate = new Date(1648591199*1000); //March 29th
-    let today = new Date();
-    let dateTracker = new Date(result[0].timestamp*1000);
-    let resultIndex = 0;
-    let harvests = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], aDai: [], aUsdc: [], aUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: []};
-    let tempYvDai = 0;
-    let tempYvUsdc = 0;
-    let tempYvUsdt = 0;
-    let tempADai = 0;
-    let tempAUsdc = 0;
-    let tempAUsdt = 0;
-    let tempYvWeth = 0;
-    let tempWstEth = 0;
-    let tempReth = 0;
-    let tempAWeth = 0;
-    for(let j=0;startDate<today;j++){
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].timestamp*1000);
-        if(tempDate>startDate) break;
-
-        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-
-        tempYvDai = result[i].yieldToken === addresses.yvDaiAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvDai) : tempYvDai;
-        tempYvUsdc = result[i].yieldToken === addresses.yvUsdcAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdc) : tempYvUsdc;
-        tempYvUsdt = result[i].yieldToken === addresses.yvUsdtAddress ? (result[i].totalHarvested/Math.pow(10, 6) + tempYvUsdt) : tempYvUsdt;
-        tempADai = result[i].yieldToken === addresses.aDaiAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempADai) : tempADai;
-        tempAUsdc = result[i].yieldToken === addresses.aUsdcAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempAUsdc) : tempAUsdc;
-        tempAUsdt = result[i].yieldToken === addresses.aUsdtAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempAUsdt) : tempAUsdt;
-        tempYvWeth = result[i].yieldToken === addresses.yvWethAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempYvWeth) : tempYvWeth;
-        tempWstEth = result[i].yieldToken === addresses.wstEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempWstEth) : tempWstEth;
-        tempReth = result[i].yieldToken === addresses.rEthAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempReth) : tempReth;
-        tempAWeth = result[i].yieldToken === addresses.aWethAddress ? (result[i].totalHarvested/Math.pow(10, 18) + tempAWeth) : tempAWeth;
-        resultIndex++;
-      }
-      harvests.yvDai[j] = Math.round(tempYvDai);
-      harvests.yvUsdc[j] = Math.round(tempYvUsdc);
-      harvests.yvUsdt[j] = Math.round(tempYvUsdt);
-      harvests.aDai[j] = Math.round(tempADai);
-      harvests.aUsdc[j] = Math.round(tempAUsdc);
-      harvests.aUsdt[j] = Math.round(tempAUsdt);
-      harvests.yvWeth[j] = Math.round(tempYvWeth*1000)/1000;
-      harvests.wstEth[j] = Math.round(tempWstEth*1000)/1000;
-      harvests.rEth[j] = Math.round(tempReth*1000)/1000;
-      harvests.aWeth[j] = Math.round(tempAWeth*1000)/1000;
-      harvests.date[j] = formatDate(startDate, 0);
-      startDate.setDate(startDate.getDate() + 1);
-      tempYvDai = 0;
-      tempYvUsdc = 0;
-      tempYvUsdt = 0;
-      tempADai = 0;
-      tempAUsdc = 0;
-      tempAUsdt = 0;
-      tempYvWeth = 0;
-      tempWstEth = 0;
-      tempReth = 0;
-      tempAWeth = 0;
-    }
-    //console.log(harvests)
-    this.setState({ harvests: harvests, harvestsLoading: false });
-  }
-
   calculateAlcxArrays(result){
     //let burnAmount = 478612;
     let alcxData = { 
@@ -658,20 +545,16 @@ export default class App extends React.Component {
       alcxDataLoading: false 
     });
   }
-  
+
   getCoinGeckoData(){
     Promise.all([fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/wrapped-steth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/rocket-pool-eth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/staked-frax-ether/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/convex-finance/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/stake-dao/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/curve-dao-token/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      //fetch("https://api.coingecko.com/api/v3/coins/alchemix-usd/market_chart?vs_currency=usd&days=max&interval=daily").then(res => res.json()),
       fetch("https://api.coingecko.com/api/v3/coins/alchemix/market_chart?vs_currency=usd&days=max&interval=daily").then(res => res.json())
     ])
-      .then(([ethPrice, wstEthPrice, rEthPrice, sfrxEthPrice, cvxPrice, sdtPrice, crvPrice, alcxData]) => {
-        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, sfrxEthPrice, cvxPrice, sdtPrice, crvPrice);
+      .then(([ethPrice, wstEthPrice, rEthPrice, sfrxEthPrice, alcxData]) => {
+        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, sfrxEthPrice);
         this.calculateAlcxArrays(alcxData);
     })
     .catch(function(err) {
@@ -924,74 +807,25 @@ export default class App extends React.Component {
   }
 
   getAlUsdPeg(){
-    const daiPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24), 0)
-    const daiPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 24), 1000)
-    const daiPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25), 0)
-    const daiPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.daiAddress, Math.pow(10, 25), 1000)
-    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0)
-    const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 1000)
-    const usdcPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25), 0)
-    const usdcPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 25), 1000)
-    const usdtPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24), 0)
-    const usdtPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 24), 1000)
-    const usdtPeg10mQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25), 0)
-    const usdtPeg10mQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdtAddress, Math.pow(10, 25), 1000)
-    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0)
-    const alEthPeg5kQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5, 0)
-    const alEthPegQuerySkip1000 = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 1000)
-    const alEthPeg5kQuerySkip1000 = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10, 21)*5, 1000)
-    const alchemistTvl = this.getAlchemistTvlQuery(0)
-    const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
+    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0);
+    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0);
+    const alchemistTvl = this.getAlchemistTvlQuery(0);
+    /*const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
     const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
     const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
     const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
     const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
-    const harvestsQuery = `{
-      alchemistHarvestEvents(
-        first: 1000
-        orderBy: timestamp
-        orderDirection: desc
-        ){
-        timestamp,
-        yieldToken,
-        totalHarvested,
-        contract {
-          id
-        }
-      }
-    }`
+    */
 
-    Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPegQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(daiPeg10mQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPeg10mQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdcPeg10mQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPegQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPegQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(usdtPeg10mQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPeg5kQuery)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPegQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alEthPeg5kQuerySkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip4000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(alchemistTvlSkip5000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_dev", this.getSubgraphRequestOptions(harvestsQuery)).then(res => res.json())])
-      .then(([daiPeg, daiPegSkip1000, dai10mPeg, dai10mPegSkip1000, usdcPeg, usdcPegSkip1000, usdc10mPeg, usdc10mPegSkip1000, usdtPeg, usdtPegSkip1000, usdt10mPeg, usdt10mPegSkip1000, alEthPeg, alEth5kPeg, alEthPegSkip1000, alEth5kPegSkip1000, alchemistTvl, alchemistTvlSkip1000, alchemistTvlSkip2000, alchemistTvlSkip3000, alchemistTvlSkip4000, alchemistTvlSkip5000, optiAlchemistTvl, optiAlchemistTvlSkip1000, harvests]) => {
-        this.calculateAlUsdPeg(daiPeg.data.poolHistoricalRates.concat(daiPegSkip1000.data.poolHistoricalRates).reverse(), usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse(), usdtPeg.data.poolHistoricalRates.concat(usdtPegSkip1000.data.poolHistoricalRates).reverse(), dai10mPeg.data.poolHistoricalRates.concat(dai10mPegSkip1000.data.poolHistoricalRates).reverse(), usdc10mPeg.data.poolHistoricalRates.concat(usdc10mPegSkip1000.data.poolHistoricalRates).reverse(), usdt10mPeg.data.poolHistoricalRates.concat(usdt10mPegSkip1000.data.poolHistoricalRates).reverse())
-        this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.concat(alEthPegSkip1000.data.poolHistoricalRates).reverse(), alEth5kPeg.data.poolHistoricalRates.concat(alEth5kPegSkip1000.data.poolHistoricalRates).reverse())
-        this.calculateHarvests(harvests.data.alchemistHarvestEvents.reverse())
-        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.concat(optiAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
-        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.concat(alchemistTvlSkip1000.data.alchemistTVLHistories.concat(alchemistTvlSkip2000.data.alchemistTVLHistories.concat(alchemistTvlSkip3000.data.alchemistTVLHistories.concat(alchemistTvlSkip4000.data.alchemistTVLHistories.concat(alchemistTvlSkip5000.data.alchemistTVLHistories))))).reverse())
+    Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+      fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+      fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
+      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl]) => {
+        this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
+        this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
+        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.reverse())
+        this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
     })
     .catch(function(err) {
       console.log(err.message);
@@ -1259,8 +1093,8 @@ export default class App extends React.Component {
       />)
       }
 
-      {this.state.activeTab !== "harvests" ? "" : (this.state.harvestsLoading ? "Loading..." :
-      <Harvests harvests={this.state.harvests} />)
+      {this.state.activeTab !== "harvests" ? "" :
+      <Harvests harvests={this.state.harvests} />
       }
 
     </div>
