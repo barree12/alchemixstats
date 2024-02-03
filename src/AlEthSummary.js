@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 export default class AlEthSummary extends React.Component {
 
     render(){
-        const alEthInCrvUsd = Math.round(this.props.lps.alEthInCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInCrvUsd = Math.round(this.props.lps.alEthInAlEthWethCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const alEthInSaddleUsd = Math.round(this.props.lps.alEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const ethInCrvUsd = Math.round(this.props.lps.ethInAlEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const ethInCrvUsd = Math.round(this.props.lps.wethInAlEthWethCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const wethInSaddleUsd = Math.round(this.props.lps.wethInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
         const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
@@ -35,26 +35,26 @@ export default class AlEthSummary extends React.Component {
                 <div className="small-table-3">
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/eth_aleth.png').default } alt="alUsd logo" className="image" />
-                      <span className="table-text-title">Curve alETH</span>
+                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth FrxEth logo" className="image" />
+                      <span className="table-text-title">Curve frxETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
-                      <span className="important-2">${alEthInCrvUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInCrv)})</i></span>
-                    </span> 
+                      <span className="important-2">${alEthInFrxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInFrxEthCrv)})</i></span>
+                    </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">ETH</span>
-                      <span className="important-2">${ethInCrvUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.ethInAlEthCrv)})</i></span>
-                    </span>  
-                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">frxETH</span>
+                      <span className="important-2">${frxEthInFrxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.frxEthInFrxEthCrv)})</i></span>
+                    </span>
+                    <span className="small-table-cell-disappear">
                       <span></span>
                       <span></span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${Math.round((alEthInCrvUsd + ethInCrvUsd)*100)/100}M</span>
+                      <span className="important-2">${Math.round((alEthInFrxEthCrvUsd + frxEthInFrxEthCrvUsd)*100)/100}M</span>
                     </span>
                   </div>
                   <div className="small-table-inner-5">
@@ -83,27 +83,26 @@ export default class AlEthSummary extends React.Component {
                   </div>
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/aleth_saddle.png').default } alt="alEth Saddle logo" className="image" />
-                      <span className="table-text-title">Saddle alETH</span>
+                      <img src={ require('./logos/eth_aleth.png').default } alt="alUsd logo" className="image" />
+                      <span className="table-text-title">Curve alETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
-                      <span className="important-2">${alEthInSaddleUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInSaddle)})</i></span>
-                    </span>
+                      <span className="important-2">${alEthInCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInAlEthWethCrv)})</i></span>
+                    </span> 
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">ETH</span>
-                      <span className="important-2">${wethInSaddleUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.wethInSaddle)})</i></span>
-                    </span>
+                      <span className="important-2">${ethInCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.wethInAlEthWethCrv)})</i></span>
+                    </span>  
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">sETH</span>
-                      <span className="important-2">${sEthInSaddleUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.sEthInSaddle)})</i></span>
+                      <span></span>
+                      <span></span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
+                      <span className="important-2">${Math.round((alEthInCrvUsd + ethInCrvUsd)*100)/100}M</span>
                     </span>
                   </div>
                 </div>
@@ -132,28 +131,29 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2">${Math.round((alEthInVeloFxsEthAlEthUsd + fxsEthInVeloFxsEthAlEthUsd)*100)/100}M</span>
                     </span>
                   </div>
-                  <div className="small-table-inner-13">
+                  <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth FrxEth logo" className="image" />
-                      <span className="table-text-title">Curve frxETH</span>
+                      <img src={ require('./logos/aleth_saddle.png').default } alt="alEth Saddle logo" className="image" />
+                      <span className="table-text-title">Saddle alETH</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alETH</span>
-                      <span className="important-2">${alEthInFrxEthCrvUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInFrxEthCrv)})</i></span>
+                      <span className="important-2">${alEthInSaddleUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInSaddle)})</i></span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">frxETH</span>
-                      <span className="important-2">${frxEthInFrxEthCrvUsd}M</span>
-                      <span className="important-2"><i>({Math.round(this.props.lps.frxEthInFrxEthCrv)})</i></span>
+                      <span className="table-text-bold-2">ETH</span>
+                      <span className="important-2">${wethInSaddleUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.wethInSaddle)})</i></span>
                     </span>
-                    <span className="small-table-cell-disappear">
-                      <span></span>
-                      <span></span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">sETH</span>
+                      <span className="important-2">${sEthInSaddleUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.sEthInSaddle)})</i></span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${Math.round((alEthInFrxEthCrvUsd + frxEthInFrxEthCrvUsd)*100)/100}M</span>
+                      <span className="important-2">${Math.round((alEthInSaddleUsd + wethInSaddleUsd + sEthInSaddleUsd)*100)/100}M</span>
                     </span>
                   </div>
                 </div>

@@ -51,7 +51,6 @@ export const addresses = {
     alUsd3CrvContractAddress: '0x43b4fdfd4ff969587185cdb6f0bd875c5fc83f8c',
     d3CrvContractAddress: '0xbaaa1f5dba42c3389bdbc2c9d2de134f5cd0dc89',
     saddled4ContractAddress: '0xc69ddcd4dfef25d8a793241834d4cc4b3668ead6',
-    alEthCrvContractAddress: '0xc4c319e2d4d66cca4464c0c2b32c9bd23ebe784e',
     frxEthAlEthContractAddress: '0xb657b895b265c38c53fff00166cf7f6a3c70587d',
     veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
     sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
@@ -99,7 +98,8 @@ export const addresses = {
     optiFxsEthAddress: '0x6806411765Af15Bddd26f8f544A34cC40cb9838B',
     sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f',
     veloStats: '0xd2b1d1b75a0f226722b3a174dae54e6dd14af1a1',
-    nextAlUsdOptimism: '0x49000f5e208349D2fA678263418e21365208E498'
+    nextAlUsdOptimism: '0x49000f5e208349D2fA678263418e21365208E498',
+    curveAlEthWethPoolContractAddress: '0x8efd02a0a40545f32dba5d664cbbc1570d3fedf6'
 }
 
 export const abis = {
@@ -169,7 +169,19 @@ export const abis = {
     payable: false,
     stateMutability: 'view',
     type: 'function'
-    }],
+    },
+    {
+        constant: true,
+        inputs: [],
+        name: 'get_virtual_price',
+        outputs: [{
+            name: 'price',
+            type: 'uint256'
+            }],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+        }],
     masterChefAbi: [{
     constant: true,
     inputs: [{

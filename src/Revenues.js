@@ -18,7 +18,6 @@ export default class Revenues extends React.Component {
     }
 
     getDetailedRevenue(revenues){
-      console.log(revenues)
       let revenueArray = {
         treasury: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         elixir: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -41,7 +40,7 @@ export default class Revenues extends React.Component {
             if(revenues[i].category === 'Harvest revenue') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].usdValue) 
             if(revenues[i].category === 'Elixir Revenue') revenueArray.elixir[monthDifference+1] += parseInt(revenues[i].usdValue)
             else { revenueArray.treasury[monthDifference+1] += parseInt(revenues[i].usdValue)
-            if(parseInt(revenues[i].usdValue) > 1000000) console.log(i)
+            //if(parseInt(revenues[i].usdValue) > 1000000) console.log(i)
             }
           //}
         }
@@ -59,7 +58,7 @@ export default class Revenues extends React.Component {
       }
       fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=den_revenue.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
           (result) => { 
-            console.log(result);
+            //console.log(result);
 
             let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
             fetch(url).then(res => res.json()).then(

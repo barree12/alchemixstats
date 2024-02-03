@@ -90,7 +90,7 @@ export default class App extends React.Component {
     this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
     this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
     this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
-    this.alEthCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthCrvContractAddress);
+    this.alEthFrxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.frxEthAlEthContractAddress);
     this.veSdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.veSdtContractAddress);
     this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
     this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
@@ -271,16 +271,16 @@ export default class App extends React.Component {
   }
 
   getCurvePoolBalances(){
-    let alAssetCrvSupply = { alUsd3Crv: 0, alEthCrv: 0, alUsdFraxBp: 0 };
+    let alAssetCrvSupply = { alUsd3Crv: 0, alEthFrxEthValue: 0, alUsdFraxBp: 0 };
     Promise.all([
-      //this.alcxContract.methods.balanceOf(addresses.alchemixStakingAddress).call(),
       this.alUsd3CrvContract.methods.totalSupply().call(),
-      //this.alEthCrvContract.methods.totalSupply().call(),
+      this.alEthFrxEthContract.methods.totalSupply().call(),
+      this.alEthFrxEthContract.methods.get_virtual_price().call(),
       this.alUsdFraxBpContract.methods.totalSupply().call(),
     ])
-    .then(([alUsd3CrvSupply, alUsdFraxBpCrvSupply]) => {
+    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply]) => {
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
-      //alAssetCrvSupply.alEthCrv = alEthCrvSupply/Math.pow(10, 18);
+      alAssetCrvSupply.alEthFrxEthValue = (alEthFrxEthSupply/Math.pow(10, 18))*(alEthFrxEthVirtualPrice/Math.pow(10, 18));
       alAssetCrvSupply.alUsdFraxBp = alUsdFraxBpCrvSupply/Math.pow(10, 18);
       this.setState({ alAssetCrvSupply: alAssetCrvSupply, stakingLoading: false })
     })
@@ -295,32 +295,32 @@ export default class App extends React.Component {
     let maiAlUsd = "sAMMV2-alUSD/MAI";
     let frxEth = "sAMMV2-alETH/frxETH";
     let fraxUsd = "sAMMV2-FRAX/alUSD";
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alEthInCrv: 0, ethInAlEthCrv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
-      this.alEthContract.methods.balanceOf(addresses.alEthCrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
-      web3.eth.getBalance(addresses.alEthCrvContractAddress),
       this.wethContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.sEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
       this.frxEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
+      this.alEthContract.methods.balanceOf(addresses.curveAlEthWethPoolContractAddress).call(),
+      this.wethContract.methods.balanceOf(addresses.curveAlEthWethPoolContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInCrv, alEthInSaddle, ethInAlEthCrv, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
-      lps.alEthInCrv = alEthInCrv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
-      lps.ethInAlEthCrv = ethInAlEthCrv/Math.pow(10, 18);
       lps.wethInSaddle = wethInSaddle/Math.pow(10, 18);
       lps.sEthInSaddle = sEthInSaddle/Math.pow(10, 18);
       lps.alEthInFrxEthCrv = alEthInFrxEthCrv/Math.pow(10, 18);
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
+      lps.alEthInAlEthWethCrv = alEthInAlEthWethCrv/Math.pow(10, 18);
+      lps.wethInAlEthWethCrv = wethInAlEthWethCrv/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       for(let i=0;i<veloStats.length;i++){
@@ -562,20 +562,18 @@ export default class App extends React.Component {
     });
   }
 
-  calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp){
+  calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, elixirAlEthFrxEth, totalElixir3crv, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, tokensElixir3crv, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth){
     let totalTreasury = totalTreasury1.total_usd_value + totalTreasury2.total_usd_value + totalSdCrvController.total_usd_value + totalOptimismMs.total_usd_value + totalArbitrumMs.total_usd_value;
     let alcxInTreasury = 0;
-    let alEthCrvInElixir = 0;
-    let alEthCrvEthInElixir = 0;
     let alUsdCrvInElixir = 0;
-    let alEthCrvInTreasury = 0;
-    let alUsdCrvInTreasury = 0;
     let alUsdInElixir = 0;
     let alUsdAmountInElixir = 0;
     let alEthInElixir = 0;
+    let alEthAmountInElixir = 0;
     let alUsdFraxBpInElixir = 0;
+    let alEthFrxEthInElixir = 0;
     let alUsdBackingTokensInElixir = 0;
-    let alEthTokensInElixir = 0;
+    let alEthBackingTokensInElixir = 0;
     let alUsdInOptimismElixir = 0;
     let symbols = [];
     let elixirSymbols = [];
@@ -584,13 +582,16 @@ export default class App extends React.Component {
     let elixirAssets = {};
     let sortedElixirAssets = [];
     let alUsd3CrvConvexId = '0x02e2151d4f351881017abdf2dd2b51150841d5b3';
-    let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69';
+    let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:19';
+    let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
 
     let tempDebankCalc = {};
     let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs);
     let protocolsConcat = treasury1.concat(treasury2).concat(sdCrvController).concat(optimismMs).concat(arbitrumMs);
-    let elixirTokensConcat = tokensElixir3crv.concat(tokensElixirAlUsdFraxBp);
-    let elixirProtocolsConcat = elixir3crv.concat(elixirAlUsdFraxBp);
+    let elixirTokensConcat = tokensElixir3crv.concat(tokensElixirAlUsdFraxBp).concat(tokensElixirAlEthFrxEth);
+    let elixirProtocolsConcat = elixir3crv.concat(elixirAlUsdFraxBp).concat(elixirAlEthFrxEth);
+
+    console.log(elixirProtocolsConcat)
 
     //Calculate treasury
     for(let i=0;i<protocolsConcat.length;i++){
@@ -666,25 +667,32 @@ export default class App extends React.Component {
         for(let k=0;k<elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
           elixirAssets[elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsd3CrvConvexId) alUsdCrvInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.controller === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthConvexId) alEthFrxEthInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" ||
           elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX" ||
           elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC" ||
           elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "DAI" ||
           elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDT") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" ||
+          elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
         }
       }
     }
 
     for(let i=0;i<elixirTokensConcat.length;i++){
-      if(elixirTokensConcat[i].symbol !== "alUSD") elixirAssets[elixirTokensConcat[i].symbol] += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+      //if(elixirTokensConcat[i].symbol !== "alUSD") elixirAssets[elixirTokensConcat[i].symbol] += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
       if(elixirTokensConcat[i].symbol === "alUSD") {
         alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
         alUsdAmountInElixir += elixirTokensConcat[i].amount;
       }
+      if(elixirTokensConcat[i].symbol === "alETH") {
+        alEthInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+        alEthAmountInElixir += elixirTokensConcat[i].amount;
+      }
     }
 
-    let elixirLargestValue = 0;
+    /*let elixirLargestValue = 0;
     let elixirLargestIndex = 0;
     for(let i=0;i<elixirFilteredSymbols.length;i++){
       for(let j=0;j<elixirFilteredSymbols.length;j++){
@@ -701,9 +709,9 @@ export default class App extends React.Component {
       elixirFilteredSymbols.splice(elixirLargestIndex, 1);
       elixirLargestIndex = 0;
       elixirLargestValue = 0;
-    }
+    }*/
     
-    let totalElixir = totalElixir3crv.total_usd_value + totalElixirAlUsdFraxBp.total_usd_value - alUsdInElixir;
+    let totalElixir = totalElixir3crv.total_usd_value + totalElixirAlUsdFraxBp.total_usd_value + totalElixirAlEthFrxEth.total_usd_value - alUsdInElixir - alEthInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -712,11 +720,8 @@ export default class App extends React.Component {
       sortedElixirAssets: sortedElixirAssets,
       nonAlcxTreasury: totalTreasury - alcxInTreasury,
       alcxInTreasury: alcxInTreasury,
-      alEthCrvInElixir: alEthCrvInElixir,
-      alEthCrvEthInElixir: alEthCrvEthInElixir,
+      alEthFrxEthInElixir: alEthFrxEthInElixir,
       alUsdCrvInElixir: alUsdCrvInElixir,
-      alEthCrvInTreasury: alEthCrvInTreasury,
-      alUsdCrvInTreasury: alUsdCrvInTreasury,
       alUsdInElixir: alUsdInElixir,
       alEthInElixir: alEthInElixir,
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
@@ -753,13 +758,16 @@ export default class App extends React.Component {
     fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_id=arb&is_all=false", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_ids=eth", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_ids=eth", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_ids=eth", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_ids=eth", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9735f7d3ea56b454b24ffd74c58e9bd85cfad31b&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
     fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
+    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
     ])
-    .then(([treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp]) => {
-          this.calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, totalElixir3crv, totalElixirAlUsdFraxBp, tokensElixir3crv, tokensElixirAlUsdFraxBp)
+    .then(([treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, elixirAlEthFrxEth, totalElixir3crv, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, tokensElixir3crv, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth]) => {
+          this.calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, totalTreasury1, totalTreasury2, totalSdCrvController, totalOptimismMs, totalArbitrumMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, elixir3crv, elixirAlUsdFraxBp, elixirAlEthFrxEth, totalElixir3crv, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, tokensElixir3crv, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth)
       }).catch(function(err) { console.log(err) });
     
   }
@@ -810,12 +818,6 @@ export default class App extends React.Component {
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0);
     const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0);
     const alchemistTvl = this.getAlchemistTvlQuery(0);
-    /*const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000)
-    const alchemistTvlSkip2000 = this.getAlchemistTvlQuery(2000)
-    const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
-    const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
-    const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
-    */
 
     Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
       fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
@@ -860,7 +862,7 @@ export default class App extends React.Component {
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
   //let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.debankDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.debankData.alcxInTreasury/10000)/100;
-  let alEthCrvTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthCrv * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
+  let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/Math.pow(10,6);
   ChartJS.register(
     CategoryScale,
@@ -1077,7 +1079,7 @@ export default class App extends React.Component {
         debankData={this.state.debankData}
         debankDataLoading={this.state.debankDataLoading}
         alAssetCrvSupply={this.state.alAssetCrvSupply}
-        alEthCrvTotalValue={alEthCrvTotalValue}
+        alEthFrxEthTotalValue={alEthFrxEthTotalValue}
         />}
       
       {this.state.activeTab !== "revenues" ? "" : 
