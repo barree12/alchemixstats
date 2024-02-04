@@ -28,12 +28,12 @@ import LoadingComponent from './LoadingComponent';
 
 export default class Treasury extends React.Component {
 
-    formatArrays(array){
-        let calcArray = array.slice(15);
-        let resultArray = array.slice(0,15);
+    formatArrays(array, length, other){
+        let calcArray = array.slice(length);
+        let resultArray = array.slice(0,length);
         let totalRest = { symbol: "Other", amount: 0};
         for(let i=0;i<calcArray.length;i++) totalRest.amount += calcArray[i].amount;
-        if(array.length > 15) resultArray.push(totalRest);
+        if(array.length > length && other) resultArray.push(totalRest);
         return resultArray;
     }
 
@@ -121,10 +121,22 @@ export default class Treasury extends React.Component {
                 {this.props.debankDataLoading ? <LoadingComponent /> :
                 <div className="tvl-tables-2">
                         <div className="small-table">
-                            <h3>Treasury</h3>
+                            <h3>Strategic Holdings</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryAssets).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 8, false).map((asset, index) => {
+                              return(
+                                <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
+                              )
+                            })}
+                            <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">${styleNumber(this.props.debankData.totalTreasuryStrategic)}</span></div>
+                            </div>
+                        </div>
+                        <div className="small-table">
+                            <h3>Liquid Treasury</h3>
+                            <div className="small-table-inner-map">
+                            <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
+                            {this.formatArrays(this.props.debankData.sortedTreasuryAssets, 10, true).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )

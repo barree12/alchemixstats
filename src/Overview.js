@@ -24,7 +24,7 @@ export default class Overview extends React.Component {
         let alUsdCollateralNotReceived = (stablecoinDeposits === 0 || this.props.debankData.alUsdCrvInElixir === 0 || this.props.alAssetSupply.alUsd === 0 || this.props.debankData.alUsdInElixir === 0 || this.props.debankData.alUsdFraxBpInElixir === 0);
         let alEthCollateralNotReceived = (ethDeposits === 0 || this.props.debankData.alEthCrvEthInElixir === 0 || this.props.alAssetSupply.alEth === 0 || this.props.debankData.alEthInElixir === 0);
         let alUsdCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (stablecoinDeposits*1000000 + this.props.debankData.alUsdCrvInElixir + this.props.debankData.alUsdFraxBpInElixir) / (this.props.alAssetSupply.alUsd - this.props.debankData.alUsdInElixir);
-        let alEthCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.debankData.alEthCrvEthInElixir) / (this.props.alAssetSupply.alEth - this.props.debankData.alEthInElixir);
+        let alEthCollateralRatio = (this.props.debankDataLoading || this.props.v2CurrentLoading) ? 0 : (ethDeposits + this.props.debankData.alEthFrxEthInElixir) / (this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir);
         return (
             <>
                 <h2>Protocol Summary</h2>
@@ -54,7 +54,7 @@ export default class Overview extends React.Component {
                                 <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="alethcurve logo" className="image" /></span><span className="table-text-bold">alETH</span><span></span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">Total liquidity</span><span className="important-5">${alEthLiquidity}M</span>
                                 <span className="small-table-row"></span><span className="table-text-title-margin">alETH price</span><span className="important-5">{Math.round(this.props.alEthPeg.peg[this.props.alEthPeg.peg.length-1]*10000)/10000}</span>
-                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{alEthCollateralNotReceived ? "-" : Math.round(alEthCollateralRatio*100)}%</span>
+                                <span className="small-table-row"></span><span className="table-text-title-margin">Collat. ratio</span><span className="important-5">{/*alEthCollateralNotReceived ? "-" : Math.round(alEthCollateralRatio*100)*/}-</span>
                             </div>
                         </div>
                         <div className="small-table-4">
@@ -83,7 +83,7 @@ export default class Overview extends React.Component {
                             <h3>Treasury and Elixirs</h3>
                             <div className="small-table-inner-9">
                                 <span className="small-table-row"></span><span className="table-text-bold">Treasury</span><span>USD value</span>
-                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round(this.props.debankData.totalTreasury/10000)/100}M</span>
+                                <span className="small-table-row"><img src={ require('./logos/treasury_thin.svg').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Total Treasury</span><span className="important-2">${Math.round((this.props.debankData.totalTreasury + this.props.debankData.totalTreasuryStrategic)/10000)/100}M</span>
                                 <span className="small-table-row"><img src={ require('./logos/other_logo.png').default } alt="alusd3crv logo" className="image" /></span><span className="table-text-title">Non-ALCX Treasury</span><span className="important-2">${Math.round(this.props.debankData.nonAlcxTreasury/10000)/100}M</span>
                                 <span className="small-table-row"></span><span className="important-4"></span><span className="table-text-bold"></span>
                                 <span className="small-table-row"></span><span className="table-text-bold">Elixirs</span><span>USD value</span>
