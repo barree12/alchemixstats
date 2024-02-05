@@ -24,6 +24,8 @@ import ramLogo from './logos/ram.png';
 import alusdfraxbpLogo from './logos/frax_crv.png';
 import alusd3crvLogo from './logos/alusd_crv.png';
 import alEthFrxEthCurveLogo from './logos/aleth_frxeth.png';
+import fxsLogo from './logos/fxs.png';
+import aeroLogo from './logos/aero.png';
 import LoadingComponent from './LoadingComponent';
 
 export default class Treasury extends React.Component {
@@ -82,6 +84,10 @@ export default class Treasury extends React.Component {
         break;
         case "alethfrxethcurve": returnLogo = alEthFrxEthCurveLogo;
         break;
+        case "FXS": returnLogo = fxsLogo;
+        break;
+        case "AERO": returnLogo = aeroLogo;
+        break;
         default: returnLogo = otherLogo;
         }
         return returnLogo;
@@ -124,7 +130,7 @@ export default class Treasury extends React.Component {
                             <h3>Strategic Holdings</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 8, false).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 9, false).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )
