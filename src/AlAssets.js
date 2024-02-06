@@ -131,7 +131,7 @@ export default class AlAssets extends React.Component {
         let alEthOptimismDebt = 0;
         let alUsdDebtV1 = 0;
         let alEthDebtV1 = 0;
-        let alUsdInV1 = 316300;
+        let alUsdInV1 = 12000;
         for(let i=0;i<mainnetDebt.length;i++){
             alUsdDebt += mainnetDebt[i].alusd_debt;
             alEthDebt += mainnetDebt[i].aleth_debt;
