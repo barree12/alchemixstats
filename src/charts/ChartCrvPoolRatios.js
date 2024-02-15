@@ -7,7 +7,6 @@ export default class ChartCrvPoolRatios extends React.Component {
   let alUsd3CrvRatio = this.props.debankData.alUsdCrvInElixir / this.props.alAssetCrvSupply.alUsd3Crv;
   let alEthFrxEthRatio = this.props.debankData.alEthFrxEthInElixir / this.props.alEthFrxEthTotalValue;
   let alUsdFraxBpCrvRatio = this.props.debankData.alUsdFraxBpInElixir / this.props.alAssetCrvSupply.alUsdFraxBp;
-  console.log(alEthFrxEthRatio)
   const helperPointer = this;
 
   return (

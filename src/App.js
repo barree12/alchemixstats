@@ -601,7 +601,7 @@ export default class App extends React.Component {
     let elixirTokensConcat = tokensElixir3crv.concat(tokensElixirAlUsdFraxBp).concat(tokensElixirAlEthFrxEth);
     let elixirProtocolsConcat = elixir3crv.concat(elixirAlUsdFraxBp).concat(elixirAlEthFrxEth);
 
-    console.log(elixirProtocolsConcat)
+    //console.log(elixirProtocolsConcat)
 
     //Calculate treasury
     for(let i=0;i<protocolsConcat.length;i++){
@@ -789,6 +789,7 @@ export default class App extends React.Component {
       alEthAmountInElixir: alEthAmountInElixir,
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
       alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
+      alEthBackingTokensInElixir: alEthBackingTokensInElixir,
       alUsdAmountInElixir:alUsdAmountInElixir,
       alUsdInOptimismElixir: alUsdInOptimismElixir
     }

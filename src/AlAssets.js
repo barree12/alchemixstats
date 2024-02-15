@@ -130,15 +130,17 @@ export default class AlAssets extends React.Component {
         let alUsdOptimismDebt = 0;
         let alEthOptimismDebt = 0;
         let alUsdDebtV1 = 0;
-        let alEthDebtV1 = 0;
+        let alEthDebtV1 = 31;
         let alUsdInV1 = 12000;
+        let alEthInV1 = 8;
+        let alEthInTransmuter = 122;
+        let alEthInOldElixir = 24101;
         for(let i=0;i<mainnetDebt.length;i++){
             alUsdDebt += mainnetDebt[i].alusd_debt;
             alEthDebt += mainnetDebt[i].aleth_debt;
         }
         for(let i=0;i<v1Debt.length;i++){
             alUsdDebtV1 += v1Debt[i].alusd_debt;
-            alEthDebtV1 += v1Debt[i].aleth_debt;
         }
         for(let i=0;i<optimismDebt.length;i++){
             alUsdOptimismDebt += optimismDebt[i].alusd_debt;
@@ -150,9 +152,15 @@ export default class AlAssets extends React.Component {
         let alUsdOwnedOptimism = this.props.debankData.alUsdInOptimismElixir
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
         let alUsdOptimismSurplus = alUsdOwnedOptimism - alUsdShouldHaveOptimism;
+        let alEthOwned = this.props.debankData.alEthBackingTokensInElixir + alEthInV1 + alEthInTransmuter;
+        let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1 - alEthInOldElixir;
+        let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
+        
+        console.log(alEthShouldHave)
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
-            alUsdOptimism: alUsdOptimismSurplus
+            alUsdOptimism: alUsdOptimismSurplus,
+            alEthMainnet: alEthMainnetSurplus
         }
 
         this.setState({ surplus: surplus, surplusLoading: false })
@@ -250,7 +258,7 @@ export default class AlAssets extends React.Component {
                     <img src={ require('./logos/aleth_blue.svg').default } alt="alETH logo" className="image3" />
                     <h2>alETH</h2>
                 </div>
-                <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} />
+                <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} surplus={this.state.surplus} />
                 <div className="section-wrapper">
                     {/*<div className="chart-title">
                         <h3>alETH Total Supply</h3>

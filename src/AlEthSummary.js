@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import { styleNumber } from './Functions';
 
 export default class AlEthSummary extends React.Component {
 
@@ -31,6 +32,8 @@ export default class AlEthSummary extends React.Component {
                 Thus it is an important goal of the protocol to maintain a price that is reasonably close to 1 ETH for alETH.<br/>
                 <br/>
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
+                <h3>Backing surplus</h3>
+                <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alEthMainnet))} alETH</b></span>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   <div className="small-table-inner-5">
