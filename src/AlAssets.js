@@ -1,13 +1,14 @@
 import React from 'react';
-//import ChartAlusdSupply from './charts/ChartAlusdSupply';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
 import ChartAlEthPrice from './charts/ChartAlEthPrice';
-//import ChartAlethSupply from './charts/ChartAlethSupply';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch, Button, ButtonGroup } from '@mui/material';
 import LoadingComponent from './LoadingComponent';
-import { addresses } from './Constants';
+import { abis, addresses } from './Constants';
+import Web3 from 'web3';
+
+const web3 = new Web3('https://rpc.ankr.com/eth');
 
 export default class AlAssets extends React.Component {
     
@@ -27,6 +28,12 @@ export default class AlAssets extends React.Component {
         this.toggleAlUsdPeg = this.toggleAlUsdPeg.bind(this);
         this.toggleAlEthPeg = this.toggleAlEthPeg.bind(this);
         //this.alUsdPegClick = this.alUsdPegClick.bind(this);
+        this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
+        this.wethContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.wethAddress);
+        this.daiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.daiAddress);
+        this.usdcContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.usdtAddress);
+        this.usdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.usdcAddress);
+
     }
 
     componentDidMount() {
@@ -41,14 +48,6 @@ export default class AlAssets extends React.Component {
     toggleAlEthPeg(){
         this.setState({ alEthPegToggle: !this.state.alEthPegToggle });
     }
-    
-    /*alUsdPegClick(token){
-        let alUsdPegActive = { dai: false, usdc: false, usdt: false };
-        if(token === "dai") alUsdPegActive.dai = true;
-        if(token === "usdc") alUsdPegActive.usdc = true;
-        if(token === "usdt") alUsdPegActive.usdt = true;
-        this.setState({ alUsdPegActive: alUsdPegActive });
-    }*/
 
     getSubgraphRequestOptions(query){
         return {
@@ -124,7 +123,7 @@ export default class AlAssets extends React.Component {
             });
     }
 
-    calculateBacking(mainnetDebt, v1Debt, optimismDebt){
+    calculateBacking(mainnetDebt, v1Debt, optimismDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer){
         let alUsdDebt = 0;
         let alEthDebt = 0;
         let alUsdOptimismDebt = 0;
@@ -133,8 +132,9 @@ export default class AlAssets extends React.Component {
         let alEthDebtV1 = 31;
         let alUsdInV1 = 12000;
         let alEthInV1 = 8;
-        let alEthInTransmuter = 122;
         let alEthInOldElixir = 24101;
+        let ethInTransmuterBuffer = wethInTransmuterBuffer / Math.pow(10,18);
+        let stablesInTransmuterBuffer = daiInTransmuterBuffer / Math.pow(10,18) + usdcInTransmuterBuffer / Math.pow(10,6) + usdtInTransmuterBuffer / Math.pow(10,6) + fraxInTransmuterBuffer / Math.pow(10,18);
         for(let i=0;i<mainnetDebt.length;i++){
             alUsdDebt += mainnetDebt[i].alusd_debt;
             alEthDebt += mainnetDebt[i].aleth_debt;
@@ -146,17 +146,18 @@ export default class AlAssets extends React.Component {
             alUsdOptimismDebt += optimismDebt[i].alusd_debt;
             alEthOptimismDebt += optimismDebt[i].aleth_debt;
         }
-        let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1;
+        let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
         let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;
         let alUsdShouldHaveOptimism = this.props.alAssetSupply.alUsdOptimism - alUsdOptimismDebt - this.props.alAssetSupply.nextAlUsdOptimism;
         let alUsdOwnedOptimism = this.props.debankData.alUsdInOptimismElixir
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
         let alUsdOptimismSurplus = alUsdOwnedOptimism - alUsdShouldHaveOptimism;
-        let alEthOwned = this.props.debankData.alEthBackingTokensInElixir + alEthInV1 + alEthInTransmuter;
+        let alEthOwned = this.props.debankData.alEthBackingTokensInElixir + alEthInV1 + ethInTransmuterBuffer;
         let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1 - alEthInOldElixir;
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
-        console.log(alEthShouldHave)
+        //console.log(ethInTransmuterBuffer)
+        //console.log(stablesInTransmuterBuffer)
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
             alUsdOptimism: alUsdOptimismSurplus,
@@ -177,9 +178,14 @@ export default class AlAssets extends React.Component {
 
         Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=mainnet_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
             fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=v1UserDebt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
-            fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=optimism_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json())
+            fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=optimism_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+            this.daiContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
+            this.usdcContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
+            this.usdtContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
+            this.fraxContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
+            this.wethContract.methods.balanceOf(addresses.alEthMainnetTransmuterBuffer).call()
         ])
-        .then(([mainnetDebt, v1Debt, optimismDebt]) => {
+        .then(([mainnetDebt, v1Debt, optimismDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer]) => {
             let mainnetDebtUrl = "https://ipfs.imimim.info/ipfs/" + mainnetDebt.rows[0].ipfs_pin_hash;
             let optimismDebtUrl = "https://ipfs.imimim.info/ipfs/" + optimismDebt.rows[0].ipfs_pin_hash;
             let v1DebtUrl = "https://ipfs.imimim.info/ipfs/" + v1Debt.rows[0].ipfs_pin_hash;
@@ -187,7 +193,7 @@ export default class AlAssets extends React.Component {
                 fetch(v1DebtUrl).then(res => res.json()),
                 fetch(optimismDebtUrl).then(res => res.json())])
                 .then(([mainnetDebtFinal, v1DebtFinal, optimismDebtFinal]) => {
-                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal)
+                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer)
             })
             .catch(function(err) {
                 console.log(err.message);

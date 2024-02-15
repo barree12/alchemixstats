@@ -99,7 +99,9 @@ export const addresses = {
     sfrxEthAddress: '0xac3e018457b222d93114458476f3e3416abbe38f',
     veloStats: '0xd2b1d1b75a0f226722b3a174dae54e6dd14af1a1',
     nextAlUsdOptimism: '0x49000f5e208349D2fA678263418e21365208E498',
-    curveAlEthWethPoolContractAddress: '0x8efd02a0a40545f32dba5d664cbbc1570d3fedf6'
+    curveAlEthWethPoolContractAddress: '0x8efd02a0a40545f32dba5d664cbbc1570d3fedf6',
+    alUsdMainnetTransmuterBuffer: '0x1eed2dbeb9fc23ab483f447f38f289ca15f79bac',
+    alEthMainnetTransmuterBuffer: '0xbc2FB245594a68c927C930FBE2d00680A8C90B9e'
 }
 
 export const abis = {
