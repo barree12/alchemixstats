@@ -564,7 +564,7 @@ export default class App extends React.Component {
 
   isStrategic(object){
     if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "AURA" || object === "FXS" || object === "RAM" || object === "PREMIA") return true;
+    object === "AURA" || object === "FXS" || object === "RAM" || object === "PREMIA" || object === "sdFXS") return true;
     else return false;
   }
 
