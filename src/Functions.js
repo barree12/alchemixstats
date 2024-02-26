@@ -9,8 +9,8 @@ export function emissionWeek(){
 }
 
 export function tokenEmission(){
-    let weeksLeft = 156-emissionWeek();
-    return 2200+weeksLeft*130;
+    //let weeksLeft = 156-emissionWeek();
+    return 2200;
 }
 
 export function currentStats(){

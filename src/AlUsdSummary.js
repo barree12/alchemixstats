@@ -32,7 +32,7 @@ export default class AlUsdSummary extends React.Component {
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
                 <h3>Backing surplus</h3>
                 <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdMainnet))} alUSD</b></span>
-                {/*<span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>*/}
+                {<span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>}
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   
