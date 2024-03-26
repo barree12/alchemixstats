@@ -21,7 +21,7 @@ export default class EarnConvex extends Component {
   parseResult(result){
     console.log(result)
     let apr3Crv = result.apys["37"].baseApy + result.apys["37"].crvApy;
-    let aprAlEth = result.apys["factory-v2-38"].baseApy + result.apys["factory-v2-38"].crvApy;
+    let aprAlEth = result.apys["factory-stable-ng-36"].baseApy + result.apys["factory-stable-ng-36"].crvApy;
     let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;
     let aprFrxEth = result.apys["factory-v2-253"].baseApy + result.apys["factory-v2-253"].crvApy;
     this.setState({ aprLoading: false, 
@@ -74,7 +74,7 @@ export default class EarnConvex extends Component {
               {this.state.aprLoading ? "0" : Math.round(this.state.apr3Crv*100)/100}%
             </div>
             <div className="earn-yield-link">
-              <a href="https://curve.fi/alusd" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://curve.fi/#/ethereum/pools/alusd/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 
@@ -98,14 +98,14 @@ export default class EarnConvex extends Component {
               {this.state.aprLoading ? "0" : Math.round(this.state.aprFrax*100)/100}%
             </div>
             <div className="earn-yield-link">
-              <a href="https://curve.fi/factory/147" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://curve.fi/#/ethereum/pools/factory-v2-147/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
           
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alETHCrv
+              alETHwETHCrv
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
@@ -122,7 +122,7 @@ export default class EarnConvex extends Component {
               {this.state.aprLoading ? "0" : Math.round(this.state.aprAlEth*100)/100}%
             </div>
             <div className="earn-yield-link">
-              <a href="https://curve.fi/factory/38" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://curve.fi/#/ethereum/pools/factory-stable-ng-36/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 
@@ -146,7 +146,7 @@ export default class EarnConvex extends Component {
               {this.state.aprLoading ? "0" : Math.round(this.state.aprFrxEth*100)/100}%
             </div>
             <div className="earn-yield-link">
-              <a href="https://curve.fi/factory/253" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://curve.fi/#/ethereum/pools/factory-v2-253/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
       </div>);

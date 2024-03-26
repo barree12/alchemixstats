@@ -101,7 +101,7 @@ export default class Earn extends Component {
           </div>
             
           <br/>
-          <h2>Other Opportunities</h2>
+          {/*<h2>Other Opportunities</h2>
           <span>
             Some of the opportunities below might utilize liquidity pools in the background.
             <br/>We separated them out into this section, as they enable different/interesting use-cases on top of those liquidity pools.
@@ -131,10 +131,10 @@ export default class Earn extends Component {
             </div>
           </div>
           <EarnPremia />
-          {/*<EarnTokemak />*/}
+          {/*<EarnTokemak />}
           <EarnIdle />
-          {/*<EarnElement />*/}
-        </div>
+          {<EarnElement />}
+  </div>*/}
       </div>
       <br/>
       <h2>Protocol Descriptions</h2>

@@ -35,7 +35,7 @@ export default class Overview extends React.Component {
                     </span>
                     <br/>
                     <span>
-                        The Q3 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
+                        The Q4 2023 Financial report is now available! Access the reports in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
                         A new <a target="_blank" rel="noreferrer" href="https://app.alphaday.com/b/alchemix/">information dashboard</a> has been released by Alphaday, where you can keep up to date with all things Alchemix!
                     </span>
                     {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.debankDataLoading) ? <LoadingComponent /> :

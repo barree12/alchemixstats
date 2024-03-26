@@ -309,7 +309,7 @@ export default class App extends React.Component {
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.veloStatsContract.methods.all(1000,0,"0x0000000000000000000000000000000000000000").call()
+      this.veloStatsContract.methods.all(300,0,"0x0000000000000000000000000000000000000000").call()
     ])
     .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
@@ -323,6 +323,7 @@ export default class App extends React.Component {
       lps.wethInAlEthWethCrv = wethInAlEthWethCrv/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
+      console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
@@ -722,7 +723,7 @@ export default class App extends React.Component {
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
 
-    console.log(elixirProtocolsConcat)
+    //console.log(elixirProtocolsConcat)
 
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){

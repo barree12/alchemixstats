@@ -16,6 +16,7 @@ export default class Emissions extends React.Component {
                 </div>
                 <div className="summary">
                     <span>We are in <span className="important">Week {emissionWeek()}</span> of  emissions.</span>
+                    <snap>Tail emissions have been reached.</snap>
                     <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
                     <span>Current inflation is <span className="important">{currentStats().currentInflationAnnual}%/year</span></span>
                     <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({formatDate(new Date(), 1)}): <span className="important">{futureInflation(1).totalInflation}%</span><br/>
