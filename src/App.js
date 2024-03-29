@@ -56,6 +56,7 @@ export default class App extends React.Component {
       lps: {},
       alchemistTvl: {},
       optiTvl: {},
+      arbiTvl: {},
       harvests: {},
       alAssetCrvSupply: {},
       debankData: {},
@@ -69,6 +70,7 @@ export default class App extends React.Component {
       alcxDataLoading: true,
       alchemistTvlLoading: true,
       optiTvlLoading: true,
+      arbiTvlLoading: true,
       harvestsLoading: true,
       alUsdLoading: true,
       debankDataLoading: true,
@@ -323,7 +325,6 @@ export default class App extends React.Component {
       lps.wethInAlEthWethCrv = wethInAlEthWethCrv/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
-      console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
@@ -353,20 +354,12 @@ export default class App extends React.Component {
     });
   }
 
-  calculateTokenPrices(eth, rEth, wstEth, sfrxEth){
-    let tokenPrices = { eth: [], rEth: [], wstEth: [], sfrxEth: []}
-    for(let i=0;i<eth.prices.length;i++){
-      tokenPrices.eth[i] = eth.prices[i][1]; 
-    }
-    for(let i=0;i<rEth.prices.length;i++){
-      tokenPrices.rEth[i] = rEth.prices[i][1]; 
-    }
-    for(let i=0;i<wstEth.prices.length;i++){
-      tokenPrices.wstEth[i] = wstEth.prices[i][1]; 
-    }
-    for(let i=0;i<sfrxEth.prices.length;i++){
-      tokenPrices.sfrxEth[i] = sfrxEth.prices[i][1]; 
-    }
+  calculateTokenPrices(prices){
+    let tokenPrices = { eth: 0, rEth: 0, wstEth: 0, sfrxEth: 0}
+    tokenPrices.eth = Math.round(prices.coins["coingecko:ethereum"].price*100)/100
+    tokenPrices.rEth = Math.round(prices.coins["coingecko:rocket-pool-eth"].price*100)/100
+    tokenPrices.wstEth = Math.round(prices.coins["coingecko:wrapped-steth"].price*100)/100
+    tokenPrices.sfrxEth = Math.round(prices.coins["coingecko:staked-frax-ether"].price*100)/100
     this.setState({ tokenPrices: tokenPrices, tokenPricesLoading: false });
   }
 
@@ -442,6 +435,38 @@ export default class App extends React.Component {
       tempaUsdt = 0;*/
     }
     this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
+  }
+
+  calculateArbiTvl(result){
+    console.log(result)
+    let startDate = new Date(1711407600*1000); //2024-03-26
+    let today = new Date();
+    let dateTracker = new Date(result[0].timestamp*1000);
+    let resultIndex = 0;
+    let arbiTvl = { date:[], wstEth: [], aUsdc: [] };
+    let tempWstEth = 0;
+    let tempAUsdc = 0;
+    for(let j=0;startDate<today;j++){
+
+      for(let i=resultIndex;i<result.length;i++){
+        let tempDate = new Date(result[i].timestamp*1000);
+        if(tempDate>startDate) break;
+
+        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
+
+        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempWstEth;
+        tempAUsdc = result[i].token.symbol === "s_aArbUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
+        resultIndex++;
+      }
+      arbiTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
+      if(j>0 && !tempWstEth) arbiTvl.wstEth[j] = arbiTvl.wstEth[j-1];
+      arbiTvl.aUsdc[j] = Math.round(tempAUsdc/10000)/100;
+      if(j>0 && !tempAUsdc) arbiTvl.aUsdc[j] = arbiTvl.aUsdc[j-1];
+      arbiTvl.date[j] = formatDate(startDate, 0);
+      startDate.setDate(startDate.getDate() + 1);
+    }
+    console.log(arbiTvl)
+    this.setState({ arbiTvl: arbiTvl, arbiTvlLoading: false });
   }
 
   calculateAlchemistTvl(result){
@@ -534,12 +559,12 @@ export default class App extends React.Component {
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
 
-  calculateAlcxArrays(result){
+  calculateAlcxData(prices, alcxSupply){
     //let burnAmount = 478612;
     let alcxData = { 
-      currentSupply: Math.round(result.market_caps[result.market_caps.length-1][1]/result.prices[result.prices.length-1][1]), 
-      price: Math.round(result.prices[result.prices.length-1][1]*100)/100,
-      marketcap: Math.round(result.market_caps[result.market_caps.length-1][1]/10000)/100
+      currentSupply: Math.round(alcxSupply/Math.pow(10,18)), 
+      price: Math.round(prices.coins["coingecko:alchemix"].price*100)/100,
+      marketcap: Math.round(alcxSupply/Math.pow(10,18)*prices.coins["coingecko:alchemix"].price/10000)/100
     }
     this.setState({ 
       alcxData: alcxData,
@@ -548,15 +573,11 @@ export default class App extends React.Component {
   }
 
   getCoinGeckoData(){
-    Promise.all([fetch("https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/wrapped-steth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/rocket-pool-eth/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/staked-frax-ether/market_chart/range?vs_currency=usd&from=1627596000&to=4627596000").then(res => res.json()),
-      fetch("https://api.coingecko.com/api/v3/coins/alchemix/market_chart?vs_currency=usd&days=max&interval=daily").then(res => res.json())
-    ])
-      .then(([ethPrice, wstEthPrice, rEthPrice, sfrxEthPrice, alcxData]) => {
-        this.calculateTokenPrices(ethPrice, rEthPrice, wstEthPrice, sfrxEthPrice);
-        this.calculateAlcxArrays(alcxData);
+    Promise.all([fetch("https://coins.llama.fi/prices/current/coingecko:ethereum,coingecko:wrapped-steth,coingecko:rocket-pool-eth,coingecko:staked-frax-ether,coingecko:alchemix?searchWidth=4h").then(res => res.json()),
+      this.alcxContract.methods.totalSupply().call()])
+      .then(([prices, alcxSupply]) => {
+        this.calculateTokenPrices(prices)
+        this.calculateAlcxData(prices, alcxSupply);
     })
     .catch(function(err) {
       console.log(err.message);
@@ -905,16 +926,19 @@ export default class App extends React.Component {
       fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json())])
-      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000]) => {
+      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
+      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000, arbiAlchemistTvl]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
         this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.concat(optiAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
+        this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
     })
     .catch(function(err) {
       console.log(err.message);
     });
+    
   }
 
   render() {
@@ -930,23 +954,23 @@ export default class App extends React.Component {
   let v2vaDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaDai*this.state.tokensPerShare.vaDai*100)/100;
   let v2vaFraxTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaFrax*this.state.tokensPerShare.vaFrax*100)/100;
   let v2EthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.eth*this.state.tokensPerShare.eth);
-  let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2vaEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaEth*this.state.tokensPerShare.vaEth);
-  let v2vaEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2vaEthTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let v2vaEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2vaEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2aWethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aWeth*this.state.tokensPerShare.aWeth);
-  let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth/10000)/100;
   let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aWeth[this.state.optiTvl.aWeth.length-1]*100)/100;
-  let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/10000)/100;
+  let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
-  let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth[this.state.tokenPrices.rEth.length-1]/10000)/100;
+  let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth/10000)/100;
   let v2SfrxEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokensPerShare.sfrxEth);
-  let v2SfrxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokenPrices.sfrxEth[this.state.tokenPrices.sfrxEth.length-1]/10000)/100;
+  let v2SfrxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokenPrices.sfrxEth/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
-  let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth[this.state.tokenPrices.wstEth.length-1]/10000)/100;
+  let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth/10000)/100;
   //let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.debankDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.debankData.alcxInTreasury/10000)/100;
-  let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1];
-  let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth[this.state.tokenPrices.eth.length-1]/Math.pow(10,6);
+  let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth;
+  let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth/Math.pow(10,6);
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -983,7 +1007,7 @@ export default class App extends React.Component {
         v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
         v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
         v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
-        tokenPrices={this.state.tokenPrices} alAssetSupply={this.state.alAssetSupply}
+        alAssetSupply={this.state.alAssetSupply}
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
         tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData} tokensPerShare={this.state.tokensPerShare}
@@ -1145,14 +1169,14 @@ export default class App extends React.Component {
       {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) ? "Loading..." :
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) || this.state.arbiTvlLoading ? "Loading..." :
         <Deposits
           v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} v2vaUsdcTVL={v2vaUsdcTVL} v2vaDaiTVL={v2vaDaiTVL} v2vaEthTVL={v2vaEthTVL} v2vaEthUsdTVL={v2vaEthUsdTVL} 
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
           v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
-          tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
+          tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
           v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
         />)}

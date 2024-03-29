@@ -1,9 +1,9 @@
 import React from 'react';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
-import ChartAlEthPrice from './charts/ChartAlEthPrice';
+//import ChartAlEthPrice from './charts/ChartAlEthPrice';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
-import { Switch, Button, ButtonGroup } from '@mui/material';
+import { Switch } from '@mui/material';
 import LoadingComponent from './LoadingComponent';
 import { abis, addresses } from './Constants';
 import Web3 from 'web3';

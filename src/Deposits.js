@@ -3,8 +3,11 @@ import ChartV2AlchemistTVL from './charts/ChartV2AlchemistTVL';
 import ChartV2AlchemistEthTVL from './charts/ChartV2AlchemistEthTVL';
 import ChartOptiAlchemistTVL from './charts/ChartOptiAlchemistTVL';
 import ChartOptiAlchemistEthTVL from './charts/ChartOptiAlchemistEthTVL';
+//import ChartArbiAlchemistTVL from './charts/ChartArbiAlchemistTVL';
+//import ChartArbiAlchemistEthTVL from './charts/ChartArbiAlchemistEthTVL';
 //import { Switch } from '@mui/material';
 import OptiSummary from './OptiSummary';
+//import ArbiSummary from './ArbiSummary';
 import LoadingComponent from './LoadingComponent';
 import { formatDate, datesEqual, wait  } from './Functions';
 
@@ -247,6 +250,19 @@ export default class Deposits extends React.Component {
                     <ChartOptiAlchemistEthTVL optiTvl={this.props.optiTvl} />
                     </div>
                 </div>
+                {/*}
+                <ArbiSummary v2Caps={this.props.v2Caps} arbiTvl={this.props.arbiTvl}
+                    optiAWethTVL={this.props.optiAWethTVL} optiAWethUsdTVL={this.props.optiAWethUsdTVL} />
+                <div className="section-wrapper">
+                    <div className="chart-title">
+                    <h3>Arbitrum Stablecoin TVL</h3>
+                    <ChartArbiAlchemistTVL arbiTvl={this.props.arbiTvl} />
+                    </div>
+                    <div className="chart-title">
+                    <h3>Arbitrum Eth TVL</h3>
+                    <ChartArbiAlchemistEthTVL arbiTvl={this.props.arbiTvl} />
+                    </div>
+        </div>*/}
             </>
         );
     }

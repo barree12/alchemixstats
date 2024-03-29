@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import EarnPremia from './EarnPremia';
+//import EarnPremia from './EarnPremia';
 import EarnConvex from './EarnConvex';
 import EarnVelo from './EarnVelo';
-import EarnIdle from './EarnIdle';
+//import EarnIdle from './EarnIdle';
 //import EarnPancakeSwap from './EarnPancakeSwap';
 import '../App.css';
 import ConvexDescription from './description/ConvexDescription';

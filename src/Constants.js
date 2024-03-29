@@ -10,7 +10,6 @@ export const addresses = {
     tokeStakingContractAddress: '0x96f98ed74639689c3a11daf38ef86e59f43417d3',
     masterChefAddress: '0xef0881ec094552b2e128cf945ef17a6752b4ec5d',
     alcxEthSlpAddress: '0xc3f279090a47e80990fe3a9c30d24cb117ef91a8',
-    abraAlcxCauldronAddress: '0x7b7473a76d6ae86ce19f7352a1e89f6c9dc39020',
     alchemistEthV2Address: '0x062bf725dc4cdf947aa79ca2aaccd4f385b13b5c',
     alchemistV2Address: '0x5c6374a2ac4ebc38dea0fc1f8716e5ea1add94dd',
     alchemistOptiAddress: '0x10294d57a419c8eb78c648372c5baa27fd1484af',
