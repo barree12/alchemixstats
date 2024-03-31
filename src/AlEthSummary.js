@@ -5,17 +5,17 @@ import { styleNumber } from './Functions';
 export default class AlEthSummary extends React.Component {
 
     render(){
-        const alEthInCrvUsd = Math.round(this.props.lps.alEthInAlEthWethCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const alEthInSaddleUsd = Math.round(this.props.lps.alEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const ethInCrvUsd = Math.round(this.props.lps.wethInAlEthWethCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const wethInSaddleUsd = Math.round(this.props.lps.wethInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const alEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.alEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const fxsEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const alEthInFrxEthCrvUsd = Math.round(this.props.lps.alEthInFrxEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const frxEthInFrxEthCrvUsd = Math.round(this.props.lps.frxEthInFrxEthCrv*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        const alEthInCrvUsd = Math.round(this.props.lps.alEthInAlEthWethCrv*this.props.ethPrice/10000)/100;
+        const alEthInSaddleUsd = Math.round(this.props.lps.alEthInSaddle*this.props.ethPrice/10000)/100;
+        const ethInCrvUsd = Math.round(this.props.lps.wethInAlEthWethCrv*this.props.ethPrice/10000)/100;
+        const wethInSaddleUsd = Math.round(this.props.lps.wethInSaddle*this.props.ethPrice/10000)/100;
+        const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice/10000)/100;
+        const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice/10000)/100;
+        const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice/10000)/100;
+        const alEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.alEthInVeloFxsEthAlEth*this.props.ethPrice/10000)/100;
+        const fxsEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth*this.props.ethPrice/10000)/100;
+        const alEthInFrxEthCrvUsd = Math.round(this.props.lps.alEthInFrxEthCrv*this.props.ethPrice/10000)/100;
+        const frxEthInFrxEthCrvUsd = Math.round(this.props.lps.frxEthInFrxEthCrv*this.props.ethPrice/10000)/100;
         return (
             <div className="summary">
                 alETH supply grows when people deposit collateral assets and borrow alETH against them.<br/>

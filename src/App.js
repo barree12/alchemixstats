@@ -560,11 +560,11 @@ export default class App extends React.Component {
   }
 
   calculateAlcxData(prices, alcxSupply){
-    //let burnAmount = 478612;
+    let burnAmount = 478612;
     let alcxData = { 
-      currentSupply: Math.round(alcxSupply/Math.pow(10,18)), 
+      currentSupply: Math.round(alcxSupply/Math.pow(10,18)-burnAmount), 
       price: Math.round(prices.coins["coingecko:alchemix"].price*100)/100,
-      marketcap: Math.round(alcxSupply/Math.pow(10,18)*prices.coins["coingecko:alchemix"].price/10000)/100
+      marketcap: Math.round((alcxSupply/Math.pow(10,18)-burnAmount)*prices.coins["coingecko:alchemix"].price/10000)/100
     }
     this.setState({ 
       alcxData: alcxData,

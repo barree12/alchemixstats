@@ -19,16 +19,14 @@ export default class Emissions extends React.Component {
                     <snap>Tail emissions have been reached.</snap>
                     <span>The protocol is currently emitting <span className="important">{tokenEmission()} <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX/week.</span></span>
                     <span>Current inflation is <span className="important">{currentStats().currentInflationAnnual}%/year</span></span>
-                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 1 year from now ({formatDate(new Date(), 1)}): <span className="important">{futureInflation(1).totalInflation}%</span><br/>
-                    Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
-                    <span><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX supply growth compared to today, 2 years from now ({formatDate(new Date(), 2)}): <span className="important">{futureInflation(2).totalInflation}%</span><br/>
-                    Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
+                    <span>Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
+                    <span>Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
                     <br/>
                     <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/alchemix-dao/alcx-token-distribution/alcx-emissions-schedule">ALCX Monetary Policy</a></span>
                     <br/>
                     {this.props.alcxDataLoading ? "Loading..." : 
                     <span>
-                        <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.props.alcxData.price}</span> <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX circulating supply: <span className="important">{this.props.alcxData.currentSupply}</span> Circulating Marketcap: <span className="important">${this.props.alcxData.marketcap}M</span> Total Marketcap (incl. treasury): <span className="important">${this.props.alcxTotalMarketcap}M</span>
+                        <img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX price: <span className="important">${this.props.alcxData.price}</span> <br/><img src={ require('./logos/alcx_logo.png').default } alt="ALCX" className="image2" />ALCX circulating supply: <span className="important">{this.props.alcxData.currentSupply}</span> <br/>Circulating Marketcap: <span className="important">${this.props.alcxData.marketcap}M</span> <br/>Total Marketcap (incl. treasury): <span className="important">${this.props.alcxTotalMarketcap}M</span>
                     </span>
                     }
                 </div>
