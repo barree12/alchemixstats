@@ -2,16 +2,16 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Web3 from 'web3';
-import Deposits from './Deposits';
-import AlAssets from './AlAssets';
-import Harvests from './Harvests';
-import Emissions from './Emissions';
-import Overview from './Overview';
+import ChartAlusdPrice from './charts/ChartAlusdPrice';
+//import ChartAlEthPrice from './charts/ChartAlEthPrice';
+import ArbitrumTop from './ArbitrumTop';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
+import ChartArbiAlchemistTVL from './charts/ChartArbiAlchemistTVL';
+import ChartArbiAlchemistEthTVL from './charts/ChartArbiAlchemistEthTVL';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,6 +26,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
+import LoadingComponent from './LoadingComponent';
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 //const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
@@ -35,7 +36,7 @@ const web3 = new Web3('https://rpc.ankr.com/eth');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
 
-export default class App extends React.Component {
+export default class Arbitrum extends React.Component {
 
   constructor(props) {
     super(props);
@@ -364,7 +365,6 @@ export default class App extends React.Component {
   }
 
   calculateAlEthPeg(result){
-    console.log(result)
     let alEthPeg = { date: [], peg: [], pegPerc: [] }
     for(let i=0;i<result.length;i++){
       try {
@@ -386,8 +386,8 @@ export default class App extends React.Component {
     for(let i=0;i<usdcPeg.length;i++){
       try {
           alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
-          alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 9);
-          alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 9))*(-100);
+          alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
+          alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
           usdcIndex++;
       }
       catch (err) {
@@ -898,7 +898,6 @@ export default class App extends React.Component {
         orderBy: timestamp
         orderDirection: desc
       ) {
-        inputAmount
         outputAmount
         timestamp
         inputToken
@@ -935,8 +934,8 @@ export default class App extends React.Component {
   }
 
   getAlUsdPeg(){
-    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
-    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.frxEthAddress, Math.pow(10,20)*5, 0);
+    const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0);
+    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.wethAddress, Math.pow(10,20)*5, 0);
     const alchemistTvl = this.getAlchemistTvlQuery(0);
     const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000);
 
@@ -1019,210 +1018,54 @@ export default class App extends React.Component {
         </div>
       </div>
       <br/>
-      <Overview 
-        v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} v2vaUsdcTVL={v2vaUsdcTVL} v2vaDaiTVL={v2vaDaiTVL} v2vaEthTVL={v2vaEthTVL} v2vaEthUsdTVL={v2vaEthUsdTVL}
-        v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
-        v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
-        v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
-        v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
-        alAssetSupply={this.state.alAssetSupply}
-        alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
-        tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData} tokensPerShare={this.state.tokensPerShare}
-        alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
-        lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
-        v2CurrentLoading={this.state.v2CurrentLoading} debankDataLoading={this.state.debankDataLoading}
-      />
-      <div className="button-group-large-screen">
-      <div className="general-switcher-container">
-    
-            <div className="menu-switcher">
-                {this.state.activeTab === "treasury" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
-                    <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Holdings</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
-                    <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Holdings</div>
-                </div>}
-                {this.state.activeTab === "emissions" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
-                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
-                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
-                </div>}
-                {this.state.activeTab === "deposits" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Deposits</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Deposits</div>
-                </div>}
-                {this.state.activeTab === "revenues" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Revenue</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Revenue</div>
-                </div>}
-                {this.state.activeTab === "alassets" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
-                    <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">alAssets</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
-                    <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">alAssets</div>
-                </div>}
-                {this.state.activeTab === "harvests" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div>}
-                {this.state.activeTab === "other" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div>}
-            </div>
+      <ArbitrumTop />
+      {this.state.arbiTvlLoading ? <LoadingComponent /> :
+      <div className="section-wrapper">
+          <div className="chart-title">
+            <h3>Arbitrum Stablecoin TVL</h3>
+            <ChartArbiAlchemistTVL arbiTvl={this.state.arbiTvl} />
           </div>
-      </div>
-      <br/>
-      <div className="button-group-small-screen">
-          <div className="general-switcher-container">
-    
-            <div className="menu-switcher">
-                {this.state.activeTab === "treasury" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
-                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Holdings</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("treasury")}}>
-                    <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Holdings</div>
-                </div>}
-                {this.state.activeTab === "emissions" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("emissions")}}>
-                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("emissions")}}>
-                    <img src={ require('./logos/alcx_logo_only.svg').default } alt="alcx logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">ALCX Emissions</div>
-                </div>}
-                {this.state.activeTab === "deposits" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Deposits</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("deposits")}}>
-                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Deposits</div>
-                </div>}
+          <div className="chart-title">
+            <h3>Arbitrum Eth TVL</h3>
+            <ChartArbiAlchemistEthTVL arbiTvl={this.state.arbiTvl} />
+          </div>
+      </div>}
+      <div className="section-wrapper">
+        <div className="tvl-tables-2">
+          <div className="small-table">
+              <h3>ARB distributed to Depositors</h3>
+              <div className="small-table-inner-map">
+              <div className="map-row"><span className="small-table-row">Week of Distribution</span><span className="table-text-bold">ARB amount</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-01</span><span className="table-text-bold">800</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-08</span><span className="table-text-bold">800</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-15</span><span className="table-text-bold">800</span></div>
+                
+              <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">75k</span></div>
               </div>
-            </div>
-          <div className="general-switcher-container">
-              <div className="menu-switcher">
-                {this.state.activeTab === "revenues" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Revenue</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("revenues")}}>
-                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Revenue</div>
-                </div>}
-                {this.state.activeTab === "alassets" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("alassets")}}>
-                    <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">alAssets</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("alassets")}}>
-                    <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">alAssets</div>
-                </div>}
-                {this.state.activeTab === "harvests" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div>}
-            </div>
           </div>
-          <div className="general-switcher-container">
-              <div className="menu-switcher">
-                {this.state.activeTab === "other" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div>}
-            </div>
+          <div className="small-table">
+              <h3>ARB distributed to LPs</h3>
+              <div className="small-table-inner-map">
+              <div className="map-row"><span className="small-table-row">Week of Distribution</span><span className="table-text-bold">ARB amount</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-01</span><span className="table-text-bold">800</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-08</span><span className="table-text-bold">800</span></div>
+              <div className="map-row"><span className="small-table-row">2024-06-15</span><span className="table-text-bold">800</span></div>
+                
+              <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">75k</span></div>
+              </div>
           </div>
+        </div>
       </div>
-      <br/>
-      <br/>
-      {this.state.activeTab !== "emissions" ? "" :
-      <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
-      }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) || this.state.arbiTvlLoading ? "Loading..." :
-        <Deposits
-          v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} v2vaUsdcTVL={v2vaUsdcTVL} v2vaDaiTVL={v2vaDaiTVL} v2vaEthTVL={v2vaEthTVL} v2vaEthUsdTVL={v2vaEthUsdTVL} 
-          v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
-          v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
-          v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
-          v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
-          tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
-          alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
-          v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
-        />)}
 
-      {this.state.activeTab !== "treasury" ? "" :
-      <Treasury
-        debankData={this.state.debankData}
-        debankDataLoading={this.state.debankDataLoading}
-        alAssetCrvSupply={this.state.alAssetCrvSupply}
-        alEthFrxEthTotalValue={alEthFrxEthTotalValue}
-        />}
-      
-      {this.state.activeTab !== "revenues" ? "" : 
-      <Revenues ethPrice={this.state.tokenPrices.eth} v2EthTVL={v2EthTVL} v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL}
-      v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL}
-      v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} />
-      }
+      <div className="section-wrapper">
+        <div className="chart-title">
+          <h3>alUSD Price</h3>          
+          {this.state.alUsdPegLoading ? <LoadingComponent /> :
+          <ChartAlusdPrice data={this.state.alUsdPeg} />}
+        </div>
+      </div>
 
-      {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.debankDataLoading) ? "Loading..." :
-      <AlAssets 
-          alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-          alAssetSupply={this.state.alAssetSupply} debankData={this.state.debankData}
-      />)
-      }
-
-      {this.state.activeTab !== "harvests" ? "" :
-      <Harvests harvests={this.state.harvests} />
-      }
+      <iframe src="https://dune.com/embeds/3596721/6059721/" width="100%" height="400" ></iframe>
 
     </div>
   );

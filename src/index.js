@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App';
 import Earn from './earn/Earn';
-import Treasury from './Treasury';
+import Arbitrum from './Arbitrum';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,7 +11,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="earn" element={<Earn />} />
-        <Route path="treasury" element={<Treasury />} />
+        <Route path="arbitrum" element={<Arbitrum />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

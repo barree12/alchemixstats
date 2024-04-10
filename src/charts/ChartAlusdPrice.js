@@ -22,7 +22,7 @@ export default class ChartAlusdPrice extends React.Component {
           data={{
             labels: dates,
             datasets: [{
-              label: '1m trade',
+              label: '$1k trade',
               data: this.props.toggle ? valuesPerc : values,
               backgroundColor: 'rgba(240,238,129,0.8)',
               borderColor: 'rgba(240,238,129,1)',
