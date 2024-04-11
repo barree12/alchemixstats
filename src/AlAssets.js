@@ -1,6 +1,6 @@
 import React from 'react';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
-//import ChartAlEthPrice from './charts/ChartAlEthPrice';
+import ChartAlEthPrice from './charts/ChartAlEthPrice';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 import { Switch } from '@mui/material';
@@ -274,11 +274,10 @@ export default class AlAssets extends React.Component {
         </div>*/}
                     <div className="chart-title">
                         <h3>alETH Price</h3>
-                        <div className="toggle-text">The subgraph is being updated, no price is currently available.</div>
-                        {/*<div className="toggle-text">
+                        <div className="toggle-text">
                             ETH<Switch onChange={this.toggleAlEthPeg} checked={this.state.alEthPegToggle} />%
                         </div>
-    <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />*/}
+                        <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />
                     </div>
                 </div>
             </>

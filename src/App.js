@@ -366,17 +366,19 @@ export default class App extends React.Component {
   calculateAlEthPeg(result){
     console.log(result)
     let alEthPeg = { date: [], peg: [], pegPerc: [] }
+    let inputAmount = 2 * Math.pow(10,18);
     for(let i=0;i<result.length;i++){
       try {
         alEthPeg.date[i] = Number(result[i].timestamp*1000); 
-        alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
-        alEthPeg.pegPerc[i] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
+        alEthPeg.peg[i] = inputAmount/result[i].outputAmount;
+        //alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
+        alEthPeg.pegPerc[i] = (1-alEthPeg.peg[i])*(-100);
       }
       catch (err) {
         console.log(err);
       }
     }
-    console.log(alEthPeg)
+    console.log(alEthPeg.pegPerc)
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
@@ -936,13 +938,13 @@ export default class App extends React.Component {
 
   getAlUsdPeg(){
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
-    const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.frxEthAddress, Math.pow(10,20)*5, 0);
+    const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
     const alchemistTvl = this.getAlchemistTvlQuery(0);
     const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000);
 
-    Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-      fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
-      fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+    Promise.all([fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
