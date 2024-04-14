@@ -12,7 +12,7 @@ export default class ChartDebtUsd extends React.Component {
           data={{
             labels: this.props.debt.date,
             datasets: [{
-              label: 'Alchemist stablecoin debt on Ethereum',
+              label: 'Alchemist stablecoin debt',
               data: this.props.debt.usd,
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(240,238,129,1)',

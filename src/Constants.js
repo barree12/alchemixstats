@@ -14,6 +14,8 @@ export const addresses = {
     alchemistV2Address: '0x5c6374a2ac4ebc38dea0fc1f8716e5ea1add94dd',
     alchemistOptiAddress: '0x10294d57a419c8eb78c648372c5baa27fd1484af',
     alchemistEthOptiAddress: '0xe04bb5b4de60fa2fba69a93ade13a8b3b569d5b4',
+    alchemistArbiAddress: '0xb46ee2e4165f629b4abce04b7eb4237f951ac66f',
+    alchemistArbiEthAddress: '0x654e16a0b161b150f5d1c8a5ba6e7a7b7760703a',
     alUsdAddress: '0xbc6da0fe9ad5f3b0d58160288917aa56653660e9',
     alEthAddress: '0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6',
     frxEthAddress: '0x5e8422345238f34275888049021821e8e08caa1f',

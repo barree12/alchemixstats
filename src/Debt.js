@@ -4,6 +4,20 @@ import ChartDebtEth from './charts/ChartDebtEth';
 import LoadingComponent from './LoadingComponent';
 import { addresses } from './Constants';
 import { formatDate, datesEqual} from './Functions';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
 
 export default class Debt extends React.Component {
     
@@ -26,7 +40,8 @@ export default class Debt extends React.Component {
     }
 
     calculateGlobalDebt(result){
-        let startDate = new Date(1647385201*1000); //March 16th
+      console.log(result)
+        let startDate = new Date(1711407600*1000); //March 16th
         let today = new Date();
         let dateTracker = new Date(result[0].block.timestamp*1000);
         let resultIndex = 0;
@@ -41,8 +56,8 @@ export default class Debt extends React.Component {
     
             if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
             //console.log(result[i].alchemist.id === addresses.alchemistV2Address)
-            tempUsd = result[i].alchemist.id === addresses.alchemistV2Address ? result[i].debt/Math.pow(10, 18) : tempUsd;
-            tempEth = result[i].alchemist.id === addresses.alchemistEthV2Address ? result[i].debt/Math.pow(10, 12) : tempEth;
+            tempUsd = result[i].alchemist.id === addresses.alchemistArbiAddress ? result[i].debt/Math.pow(10, 18) : tempUsd;
+            tempEth = result[i].alchemist.id === addresses.alchemistArbiEthAddress ? result[i].debt/Math.pow(10, 12) : tempEth;
             resultIndex++;
           }
           debt.usd[j] = Math.round(tempUsd/10000)/100;
@@ -54,6 +69,7 @@ export default class Debt extends React.Component {
           tempUsd = 0;
           tempEth = 0;
         }
+        console.log(debt)
         this.setState({ debt: debt, debtLoading: false });
       }
 
@@ -89,22 +105,34 @@ export default class Debt extends React.Component {
         const globalDebtSkip1000 = this.getDebtQuery(1000);
         const globalDebtSkip2000 = this.getDebtQuery(2000);
     
-        Promise.all([fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json()),
-          fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip1000)).then(res => res.json()),
-          fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2", this.getSubgraphRequestOptions(globalDebtSkip2000)).then(res => res.json())])
-          .then(([globalDebt, globalDebtSkip1000, globalDebtSkip2000]) => {
-            this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.concat(globalDebtSkip1000.data.alchemistGlobalDebtHistories.concat(globalDebtSkip2000.data.alchemistGlobalDebtHistories)).reverse())
+        Promise.all([fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json())])
+          .then(([globalDebt]) => {
+            this.calculateGlobalDebt(globalDebt.data.alchemistGlobalDebtHistories.reverse())
         })
       }
 
     render(){
-        const ethAlchemistUsd = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
-        const totalDebt = this.state.debtLoading ? 0 : Math.round((this.state.debt.usd[this.state.debt.usd.length-1]+ethAlchemistUsd)*100)/100;
-        const ethTvl = this.props.v2EthTVL + this.props.v2aWethTVL + this.props.v2StethTVL + this.props.v2RethTVL;
-        const ethLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]/ethTvl*10000)/100;
-        const stableTvl = this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL;
-        const stableLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.usd[this.state.debt.usd.length-1]/stableTvl*10000)/100;
-        console.log(stableTvl)
+        //const ethAlchemistUsd = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]*this.props.ethPrice[this.props.ethPrice.length-1]/10000)/100;
+        //const totalDebt = this.state.debtLoading ? 0 : Math.round((this.state.debt.usd[this.state.debt.usd.length-1]+ethAlchemistUsd)*100)/100;
+        //const ethTvl = this.props.v2EthTVL + this.props.v2aWethTVL + this.props.v2StethTVL + this.props.v2RethTVL;
+        //const ethLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.eth[this.state.debt.eth.length-1]/ethTvl*10000)/100;
+        //const stableTvl = this.props.v2DaiTVL + this.props.v2UsdcTVL + this.props.v2UsdtTVL + this.props.v2aDaiTVL + this.props.v2aUsdcTVL + this.props.v2aUsdtTVL;
+        //const stableLtv = this.state.debtLoading ? 0 : Math.round(this.state.debt.usd[this.state.debt.usd.length-1]/stableTvl*10000)/100;
+        //console.log(stableTvl)
+
+        ChartJS.register(
+          CategoryScale,
+          LinearScale,
+          TimeScale,
+          PointElement,
+          LineElement,
+          BarElement,
+          ArcElement,
+          Title,
+          Tooltip,
+          Legend,
+          Filler
+        )
         return (
             <>
                 <div className="section-header">
@@ -120,28 +148,27 @@ export default class Debt extends React.Component {
                     The table and charts below only show V2 metrics, as V1 is being sunset soon.
                     <div className="small-table">
                     <h3>Current V2 global debt</h3>
-                    {this.state.debtLoading ? <LoadingComponent /> :
+                    {/*this.state.debtLoading ? <LoadingComponent /> :
                     <div className="small-table-inner-12">
                         <span className="small-table-row"></span><span></span><span className="table-text-title">Amount</span><span className="table-text-title">USD value</span><span className="table-text-title">LTV</span>
                         <span className="small-table-row"><img src={ require('./logos/alusd.svg').default } alt="alusd logo" className="image" /></span><span className="table-text-title">alUSD</span><span className="table-text-bold">{Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">${Math.round(this.state.debt.usd[this.state.debt.usd.length-1]*100)/100}M</span><span className="important-2">{stableLtv}%</span>
                         <span className="small-table-row"><img src={ require('./logos/aleth_blue.svg').default } alt="aleth logo" className="image" /></span><span className="table-text-title">alETH</span><span className="table-text-bold">{Math.round(this.state.debt.eth[this.state.debt.eth.length-1])}</span><span className="important-2">${ethAlchemistUsd}M</span><span className="important-2">{ethLtv}%</span>
-                        {/*<span className="small-table-row"><img src={ require('./logos/alusd_ftm.png').default } alt="alusd ftm logo" className="image" /></span><span className="table-text-title">alUSD FTM</span><span className="table-text-bold">{}M</span><span className="important-2">${}M</span>*/}
                         <span className="small-table-row-2"></span><span></span><span className="important-3">Total</span><span className="important-3">${totalDebt}M</span>
-                    </div>}
+                    </div>*/}
                     </div>
                 </div>
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alUSD Alchemist debt</h3>
                         {this.state.debtLoading ? <LoadingComponent /> :
-                        <ChartDebtUsd debt={this.state.debt} toggle={this.state.ethCurrencyToggle} />}
+                        <ChartDebtUsd debt={this.state.debt} />}
                         </div>
                     <div className="chart-title">
                         <h3>alETH Alchemist debt</h3>
                         {this.state.debtLoading ? <LoadingComponent /> :
                         <ChartDebtEth debt={this.state.debt} />}
                     </div>
-                </div>
+                  </div>
             </>
         );
     }
