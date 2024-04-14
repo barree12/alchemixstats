@@ -986,17 +986,24 @@ export default class Arbitrum extends React.Component {
       </div>
       <br/>
       <ArbitrumTop />
-      {this.state.arbiTvlLoading ? <LoadingComponent /> :
-      <div className="section-wrapper">
-          <div className="chart-title">
-            <h3>Arbitrum Stablecoin TVL</h3>
-            <ChartArbiAlchemistTVL arbiTvl={this.state.arbiTvl} />
-          </div>
-          <div className="chart-title">
-            <h3>Arbitrum Eth TVL</h3>
-            <ChartArbiAlchemistEthTVL arbiTvl={this.state.arbiTvl} />
-          </div>
-      </div>}
+
+      <h1>General metrics</h1>
+
+      1+2<br/>
+      Daily Active Users - unique addresses for transmuter, alchemists, all asset swaps<br/>
+      Daily User Growth - # of unique addresses that have interacted with any alchemix contract<br/>
+      <iframe src="https://dune.com/embeds/3598809/6063422/" width="100%" height="400" />
+
+      3<br/>
+      Daily Transaction Count - Alchemist daily, Transmuter Daily, including alAsset and ALCX swaps<br/>
+      <iframe src="https://dune.com/embeds/3596709/6059711/" width="100%" height="400" />
+
+      4<br/>
+      Protocol fees - missing<br/>
+
+      5+6<br/>
+      ARB Expenditure for Depositors<br/>
+      ARB Expenditure for LPers<br/>
       <div className="section-wrapper">
         <div className="tvl-tables-2">
           <div className="small-table">
@@ -1023,7 +1030,55 @@ export default class Arbitrum extends React.Component {
           </div>
         </div>
       </div>
+      7<br/>
+      Incentivized Users and their current deposit in Alchemix - Need to check this<br/>
 
+      <h1>CDP metrics</h1>
+      1<br/>
+      Arbitrum TVL<br/>
+      {this.state.arbiTvlLoading ? <LoadingComponent /> :
+      <div className="section-wrapper">
+          <div className="chart-title">
+            <h3>Arbitrum Stablecoin TVL</h3>
+            <ChartArbiAlchemistTVL arbiTvl={this.state.arbiTvl} />
+          </div>
+          <div className="chart-title">
+            <h3>Arbitrum Eth TVL</h3>
+            <ChartArbiAlchemistEthTVL arbiTvl={this.state.arbiTvl} />
+          </div>
+      </div>}
+
+      2<br/>
+      Borrowed Amounts - Gotta check debt Arbi balances<br/>
+
+      3<br/>
+      Trading Volume (alAssets on Dexes) - alETH and alUSD Daily Dex Swaps Volume in USD<br/>
+      <iframe src="https://dune.com/embeds/3596721/6059721/" width="100%" height="400" />
+
+      4<br/>
+      Daily Borrowing Volume<br/>
+      <iframe src="https://dune.com/embeds/3596725/6059726/" width="100%" height="400" />
+
+      5<br/>
+      Total Circulating Debt Asset<br/>
+      <iframe src="https://dune.com/embeds/3598906/6063602/" width="100%" height="400" />
+      <iframe src="https://dune.com/embeds/3598873/6063582/" width="100%" height="400" />
+
+      6<br/>
+      List of Depositors<br/>
+      <iframe src="https://dune.com/embeds/3596688/6059673/" width="100%" height="400" />
+
+      7<br/>
+      List of Borrowers<br/>
+      <iframe src="https://dune.com/embeds/3596950/6060151/" width="100%" height="400" />
+
+      8<br/>
+      Usage Breakdown (where do alAssets go?)<br/>
+      <iframe src="https://dune.com/embeds/3599123/6063967/" width="100%" height="400" />
+      <iframe src="https://dune.com/embeds/3599181/6064068/" width="100%" height="400" />
+
+      9<br/>
+      alAsset Price relative to Underlying<br/>
       <div className="section-wrapper">
         <div className="chart-title">
           <h3>alUSD Price</h3>          
@@ -1039,8 +1094,6 @@ export default class Arbitrum extends React.Component {
           <ChartAlEthPrice alEthPeg={this.state.alEthPeg} />}
         </div>
       </div>
-
-      <iframe src="https://dune.com/embeds/3596721/6059721/" width="100%" height="400" ></iframe>
 
     </div>
   );

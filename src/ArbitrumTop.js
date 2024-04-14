@@ -19,12 +19,11 @@ export default class ArbitrumTop extends React.Component {
                     </span>
                     <br/>
                     <span className="flex-row">
-                        <span>Arbitrum ETH Vault TVL:&nbsp;</span>
+                        <span>Number of users with active loans:&nbsp;</span>
                         <div className="important">${}M</div>
                     </span>
                     <span className="flex-row">
-                        <span>Arbitrum Stablecoin Vault TVL:&nbsp;</span>
-                        <div className="important">${}M</div>
+
                     </span>
                     
                     
