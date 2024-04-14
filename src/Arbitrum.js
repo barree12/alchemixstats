@@ -63,6 +63,7 @@ export default class Arbitrum extends React.Component {
       alAssetCrvSupply: {},
       debankData: {},
       alAssetSupply: {},
+      positionCount: 0,
       tokenPricesLoading: true,
       v2CurrentLoading: true,
       stakingLoading: true,
@@ -77,6 +78,7 @@ export default class Arbitrum extends React.Component {
       alUsdLoading: true,
       debankDataLoading: true,
       debtLoading: true,
+      positionCountLoading: true,
       activeTab: 'treasury'
     };
     this.selectTab = this.selectTab.bind(this);
@@ -368,7 +370,7 @@ export default class Arbitrum extends React.Component {
   }
 
   calculateAlEthPeg(result){
-    console.log(result)
+    //console.log(result)
     let alEthPeg = { date: [], peg: [], pegPerc: [] }
     let inputAmount = 2 * Math.pow(10,18);
     for(let i=0;i<result.length;i++){
@@ -382,7 +384,7 @@ export default class Arbitrum extends React.Component {
         console.log(err);
       }
     }
-    console.log(alEthPeg.pegPerc)
+    //console.log(alEthPeg.pegPerc)
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
@@ -446,7 +448,7 @@ export default class Arbitrum extends React.Component {
   }
 
   calculateArbiTvl(result){
-    console.log(result)
+    //console.log(result)
     let startDate = new Date(1711407600*1000); //2024-03-26
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
@@ -473,7 +475,7 @@ export default class Arbitrum extends React.Component {
       arbiTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
     }
-    console.log(arbiTvl)
+    //console.log(arbiTvl)
     this.setState({ arbiTvl: arbiTvl, arbiTvlLoading: false });
   }
 
@@ -878,7 +880,7 @@ export default class Arbitrum extends React.Component {
   }
 
   calculateGlobalDebt(result){
-    console.log(result)
+    //console.log(result)
       let startDate = new Date(1711407600*1000); //March 16th
       let today = new Date();
       let dateTracker = new Date(result[0].block.timestamp*1000);
@@ -907,8 +909,18 @@ export default class Arbitrum extends React.Component {
         tempUsd = 0;
         tempEth = 0;
       }
-      console.log(debt)
+      //console.log(debt)
       this.setState({ debt: debt, debtLoading: false });
+    }
+
+    calculateUsersWithPositions(result){
+      console.log(result)
+      let ids = {}
+      for(let i=0;i<result.length;i++){
+        ids[result[i].account.id] = 1;
+      }
+      console.log(Object.keys(ids))
+      this.setState({ positionCountLoading: false, positionCount: Object.keys(ids).length })
     }
 
   getDebtQuery(skip){
@@ -988,6 +1000,26 @@ export default class Arbitrum extends React.Component {
     }`
   }
 
+  getUsersWithPositionsQuery(){
+    return `{
+      alchemistBalanceHistories {
+        account {
+          id
+        }
+        timestamp
+        underlyingValue
+        alchemist {
+          id
+        }
+        yieldToken {
+          id
+          name
+          symbol
+        }
+      }
+    }`
+  }
+
   getSubgraphRequestOptions(query){
     return {
       method: 'POST',
@@ -999,6 +1031,7 @@ export default class Arbitrum extends React.Component {
   getAlUsdPeg(){
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
     const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
+    const usersWithPositions = this.getUsersWithPositionsQuery();
     const alchemistTvl = this.getAlchemistTvlQuery(0);
     const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000);
 
@@ -1007,13 +1040,15 @@ export default class Arbitrum extends React.Component {
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(usersWithPositions)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
-      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000, arbiAlchemistTvl]) => {
+      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000, arbiUsersWithPositions, arbiAlchemistTvl]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
         this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.concat(optiAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
         this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
+        this.calculateUsersWithPositions(arbiUsersWithPositions.data.alchemistBalanceHistories)
     })
     .catch(function(err) {
       console.log(err.message);
@@ -1052,8 +1087,9 @@ export default class Arbitrum extends React.Component {
         </div>
       </div>
       <br/>
-      {this.state.arbiTvlLoading ? "sdasd" : <ArbitrumTop arbiTvl={this.state.arbiTvl} arbiTvlLoading={this.state.arbiTvlLoading} 
-      tokenPrices={this.state.tokenPrices} tokenPricesLoading={this.state.tokenPricesLoading} />}
+      <ArbitrumTop arbiTvl={this.state.arbiTvl} arbiTvlLoading={this.state.arbiTvlLoading} 
+      tokenPrices={this.state.tokenPrices} tokenPricesLoading={this.state.tokenPricesLoading}
+      positionCountLoading={this.state.positionCountLoading} positionCount={this.state.positionCount} />
 
       <h1>General metrics</h1>
 
