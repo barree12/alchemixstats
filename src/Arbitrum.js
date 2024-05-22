@@ -12,6 +12,7 @@ import ChartArbiAlchemistTVL from './charts/ChartArbiAlchemistTVL';
 import ChartArbiAlchemistEthTVL from './charts/ChartArbiAlchemistEthTVL';
 import ChartDebtUsd from './charts/ChartDebtUsd';
 import ChartDebtEth from './charts/ChartDebtEth';
+import DataTable from 'react-data-table-component';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -914,13 +915,17 @@ export default class Arbitrum extends React.Component {
     }
 
     calculateUsersWithPositions(result){
-      console.log(result)
+      //console.log(result)
       let ids = {}
+      let id = 0;
+      const data = []
       for(let i=0;i<result.length;i++){
         ids[result[i].account.id] = 1;
+        data.push({ id: id, account: result[i].account.id, token: result[i].yieldToken.symbol, amount: result[i].underlyingValue})
+        id++;
       }
-      console.log(Object.keys(ids))
-      this.setState({ positionCountLoading: false, positionCount: Object.keys(ids).length })
+      console.log(data)
+      this.setState({ positionCountLoading: false, positionCount: Object.keys(ids).length, depositorPositions: data })
     }
 
   getDebtQuery(skip){
@@ -1071,6 +1076,22 @@ export default class Arbitrum extends React.Component {
     Filler
   )
 
+  const columns = [
+    {
+      name: 'Account',
+      selector: row => row.account,
+    },
+    {
+      name: 'Token',
+      selector: row => row.token,
+    },
+    {
+      name: 'Amount',
+      selector: row => row.amount,
+    }
+  ];
+
+
   return (
     <div className="App">
       <div className="header-container">
@@ -1091,23 +1112,21 @@ export default class Arbitrum extends React.Component {
       tokenPrices={this.state.tokenPrices} tokenPricesLoading={this.state.tokenPricesLoading}
       positionCountLoading={this.state.positionCountLoading} positionCount={this.state.positionCount} />
 
+    {this.state.positionCountLoading ? "" : <DataTable
+			columns={columns}
+			data={this.state.depositorPositions}
+      pagination
+		/>}
+
       <h1>General metrics</h1>
 
-      1+2<br/>
-      Daily Active Users - unique addresses for transmuter, alchemists, all asset swaps<br/>
-      Daily User Growth - # of unique addresses that have interacted with any alchemix contract<br/>
       <iframe src="https://dune.com/embeds/3598809/6063422/" width="100%" height="400" title="Chart 1" />
 
-      3<br/>
-      Daily Transaction Count - Alchemist daily, Transmuter Daily, including alAsset and ALCX swaps<br/>
       <iframe src="https://dune.com/embeds/3596709/6059711/" width="100%" height="400" title="Chart 2" />
 
       4<br/>
       Protocol fees - missing<br/>
 
-      5+6<br/>
-      ARB Expenditure for Depositors<br/>
-      ARB Expenditure for LPers<br/>
       <div className="section-wrapper">
         <div className="tvl-tables-2">
           <div className="small-table">
@@ -1137,9 +1156,7 @@ export default class Arbitrum extends React.Component {
       7<br/>
       Incentivized Users and their current deposit in Alchemix - Need to check this<br/>
 
-      <h1>CDP metrics</h1>
-      1<br/>
-      Arbitrum TVL<br/>
+      <h1 id="tvl">CDP metrics</h1>
       {this.state.arbiTvlLoading ? <LoadingComponent /> :
       <div className="section-wrapper">
           <div className="chart-title">
@@ -1152,8 +1169,6 @@ export default class Arbitrum extends React.Component {
           </div>
       </div>}
 
-      2<br/>
-      Borrowed Amounts<br/>
       <div className="section-wrapper">
         <div className="chart-title">
             <h3>alUSD Alchemist debt</h3>
@@ -1167,34 +1182,20 @@ export default class Arbitrum extends React.Component {
         </div>
       </div>
 
-      3<br/>
-      Trading Volume (alAssets on Dexes) - alETH and alUSD Daily Dex Swaps Volume in USD<br/>
       <iframe src="https://dune.com/embeds/3596721/6059721/" width="100%" height="400" title="Chart 3" />
 
-      4<br/>
-      Daily Borrowing Volume<br/>
       <iframe src="https://dune.com/embeds/3596725/6059726/" width="100%" height="400" title="Chart 4" />
 
-      5<br/>
-      Total Circulating Debt Asset<br/>
       <iframe src="https://dune.com/embeds/3598906/6063602/" width="100%" height="400" title="Chart 5" />
       <iframe src="https://dune.com/embeds/3598873/6063582/" width="100%" height="400" title="Chart 6" />
 
-      6<br/>
-      List of Depositors<br/>
       <iframe src="https://dune.com/embeds/3596688/6059673/" width="100%" height="400" title="Chart 7" />
 
-      7<br/>
-      List of Borrowers<br/>
       <iframe src="https://dune.com/embeds/3596950/6060151/" width="100%" height="400" title="Chart 8" />
 
-      8<br/>
-      Usage Breakdown (where do alAssets go?)<br/>
       <iframe src="https://dune.com/embeds/3599123/6063967/" width="100%" height="400" title="Chart 9" />
       <iframe src="https://dune.com/embeds/3599181/6064068/" width="100%" height="400" title="Chart 10" />
 
-      9<br/>
-      alAsset Price relative to Underlying<br/>
       <div className="section-wrapper">
         <div className="chart-title">
           <h3>alUSD Price</h3>          
@@ -1210,6 +1211,11 @@ export default class Arbitrum extends React.Component {
           <ChartAlEthPrice alEthPeg={this.state.alEthPeg} />}
         </div>
       </div>
+
+      <iframe src="https://dune.com/embeds/3601394/6067906/" width="100%" height="400" title="Chart 11" />
+      <iframe src="https://dune.com/embeds/3601388/6067895/" width="100%" height="400" title="Chart 12" />
+      <iframe src="https://dune.com/embeds/3601391/6067901/" width="100%" height="400" title="Chart 13" />
+      <iframe src="https://dune.com/embeds/3603283/6071135/" width="100%" height="400" title="Chart 14" />
 
     </div>
   );

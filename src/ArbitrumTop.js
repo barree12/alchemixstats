@@ -1,5 +1,6 @@
 import React from 'react';
 import LoadingComponent from './LoadingComponent';
+import { HashLink as Link } from 'react-router-hash-link';
 //import { formatDateNumber } from './Functions';
 
 export default class ArbitrumTop extends React.Component { 
@@ -21,6 +22,7 @@ export default class ArbitrumTop extends React.Component {
                         <span>Total Arbitrum Vault TVL:&nbsp;</span>
                         <div className="important">${Math.round(totalTvl/10000)/100}M</div>
                     </span>
+                    <Link to="/arbitrum#tvl">Jump to Chart</Link>
                     <br/>
                     <span className="flex-row">
                         <span>Number of users with active loans:&nbsp;</span>

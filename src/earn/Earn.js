@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import EarnPremia from './EarnPremia';
 import EarnConvex from './EarnConvex';
 import EarnVelo from './EarnVelo';
-//import EarnIdle from './EarnIdle';
+import EarnRamses from './EarnRamses';
 //import EarnPancakeSwap from './EarnPancakeSwap';
 import '../App.css';
 import ConvexDescription from './description/ConvexDescription';
@@ -69,6 +69,7 @@ export default class Earn extends Component {
           
           <EarnConvex />
           <EarnVelo />
+          <EarnRamses />
           {/*<EarnPancakeSwap />*/}
           </div>
           <br/>
