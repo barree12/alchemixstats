@@ -947,9 +947,9 @@ export default class App extends React.Component {
     Promise.all([fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.thegraph.com/subgraphs/name/alchemix-finance/alchemix_v2_optimisim", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
-      fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
+      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/optimism-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/optimism-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/arbitrum-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
       .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000, arbiAlchemistTvl]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
