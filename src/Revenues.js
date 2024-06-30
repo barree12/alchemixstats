@@ -85,8 +85,8 @@ export default class Revenues extends React.Component {
                 <div className="summary">
                   Alchemix collects revenue from 3 main sources.<br/>
                   <span><b>1. Harvests:</b> User deposits in Alchemix vaults generate yield.<br/>The system periodically harvests the yield and currently takes a 10% fee from the harvested amount.<br/>The composition of user deposits is visible under the <i>Deposits</i> tab.</span>
-                  <span><b>2. Treasury:</b> The protocol owns a large amount of assets to provide a runway for operations and to serve the strategic needs of the system.<br/>The exact contents of the treasury are shown under the <i>Treasury</i> tab.</span>
-                  <span><b>3. Elixirs:</b> This the the PCV (Protocol Controlled Value) of Alchemix.<br/>The protocol does not own these funds, but temporarily has access to the funds and is free to use them and earn money on them.<br/>The exact contents of the elixirs are shown under the <i>Elixir</i> tab.</span>
+                  <span><b>2. Treasury:</b> The protocol owns a large amount of assets to provide a runway for operations and to serve the strategic needs of the system.<br/>The exact contents of the treasury are shown under the <i>Holdings</i> tab.</span>
+                  <span><b>3. Elixirs:</b> This the the PCV (Protocol Controlled Value) of Alchemix.<br/>The protocol does not own these funds, but temporarily has access to the funds and is free to use them and earn money on them.<br/>The exact contents of the elixirs are shown under the <i>Holdings</i> tab.</span>
                   <span>*USD values are calculated when the revenues are claimed.</span>
                     <br/>The table below shows annualized revenue based on the last 3 full months of data.
                     <div className="small-table">

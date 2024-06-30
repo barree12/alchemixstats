@@ -9,6 +9,7 @@ import Emissions from './Emissions';
 import Overview from './Overview';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
+import Transmuters from './Transmuters';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
@@ -58,6 +59,7 @@ export default class App extends React.Component {
       optiTvl: {},
       arbiTvl: {},
       harvests: {},
+      transmuters: {},
       alAssetCrvSupply: {},
       debankData: {},
       alAssetSupply: {},
@@ -1093,12 +1095,12 @@ export default class App extends React.Component {
                     <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Harvests</div>
                 </div>}
-                {this.state.activeTab === "other" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
+                {this.state.activeTab === "transmuters" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
                     <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Other</div>
                 </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
                     <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Other</div>
                 </div>}
@@ -1172,12 +1174,12 @@ export default class App extends React.Component {
           </div>
           <div className="general-switcher-container">
               <div className="menu-switcher">
-                {this.state.activeTab === "other" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("other")}}>
+                {this.state.activeTab === "transmuters" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
                     <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Other</div>
                 </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("other")}}>
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
                     <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Other</div>
                 </div>}
@@ -1224,6 +1226,10 @@ export default class App extends React.Component {
 
       {this.state.activeTab !== "harvests" ? "" :
       <Harvests harvests={this.state.harvests} />
+      }
+
+      {this.state.activeTab !== "transmuters" ? "" :
+      <Transmuters transmuters={this.state.transmuters} />
       }
 
     </div>
