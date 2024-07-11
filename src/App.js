@@ -380,7 +380,7 @@ export default class App extends React.Component {
         console.log(err);
       }
     }
-    console.log(alEthPeg.pegPerc)
+    //console.log(alEthPeg.pegPerc)
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
@@ -402,16 +402,20 @@ export default class App extends React.Component {
   }
 
   calculateOptiTvl(result){
-    //console.log(result)
-    let startDate = new Date(1664365762*1000); //Sept 28th
+    console.log(result)
+    let startDate = new Date(1664365762*1000); //2022 Sept 28th
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
     let resultIndex = 0;
-    let optiTvl = { date:[], aDai: [], aUsdc: [], aUsdt: [], aWeth: [] };
+    let optiTvl = { date:[], aDai: [], aUsdc: [], aUsdt: [], aWeth: [], yvDai: [], yvUsdc: [], wstETH: [], yvWeth: [] };
     let tempaDai = 0;
     let tempaUsdc = 0;
     let tempaUsdt = 0;
     let tempaWeth = 0;
+    let tempYvDai = 0;
+    let tempYvUsdc = 0;
+    let tempYvWeth = 0;
+    let tempWstEth = 0;
     for(let j=0;startDate<today;j++){
 
       for(let i=resultIndex;i<result.length;i++){
@@ -424,6 +428,10 @@ export default class App extends React.Component {
         tempaUsdc = result[i].token.symbol === "s_aOptUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdc;
         tempaUsdt = result[i].token.symbol === "s_aOptUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdt;
         tempaWeth = result[i].token.symbol === "s_aOptWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempaWeth;
+        tempYvDai = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempYvDai;
+        tempYvUsdc = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvUsdc;
+        tempYvWeth = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
+        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
         resultIndex++;
       }
       optiTvl.aDai[j] = Math.round(tempaDai/10000)/100;
@@ -434,17 +442,20 @@ export default class App extends React.Component {
       if(j>0 && !tempaUsdt) optiTvl.aUsdt[j] = optiTvl.aUsdt[j-1];
       optiTvl.aWeth[j] = Math.round(tempaWeth/10000)/100;
       if(j>0 && !tempaWeth) optiTvl.aWeth[j] = optiTvl.aWeth[j-1];
+      optiTvl.wstETH[j] = Math.round(tempWstEth/10000)/100;
+      if(j>0 && !tempWstEth) optiTvl.wstETH[j] = optiTvl.wstETH[j-1];
       optiTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
       /*tempaDai = 0;
       tempaUsdc = 0;
       tempaUsdt = 0;*/
     }
+    console.log(optiTvl)
     this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
   }
 
   calculateArbiTvl(result){
-    console.log(result)
+    //console.log(result)
     let startDate = new Date(1711407600*1000); //2024-03-26
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
@@ -471,7 +482,7 @@ export default class App extends React.Component {
       arbiTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
     }
-    console.log(arbiTvl)
+    //console.log(arbiTvl)
     this.setState({ arbiTvl: arbiTvl, arbiTvlLoading: false });
   }
 
@@ -837,7 +848,7 @@ export default class App extends React.Component {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'AccessKey': 'a200a96baf7b82432d441cfab1307dcc6a7d7cf3'
+        'AccessKey': '472fd8246ad62e329d470811c36759d49708c2fc'
       }
     }
 
@@ -983,6 +994,8 @@ export default class App extends React.Component {
   let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth/10000)/100;
   let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aWeth[this.state.optiTvl.aWeth.length-1]*100)/100;
   let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth/10000)/100;
+  let optiWstEthTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.wstETH[this.state.optiTvl.wstETH.length-1]*100)/100;
+  let optiWstEthUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiWstEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth/10000)/100;
   let v2SfrxEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokensPerShare.sfrxEth);
@@ -1200,7 +1213,7 @@ export default class App extends React.Component {
           v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
           tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
-          v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
+          v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL} optiWstEthTVL={optiWstEthTVL} optiWstEthUsdTVL={optiWstEthUsdTVL}
         />)}
 
       {this.state.activeTab !== "treasury" ? "" :

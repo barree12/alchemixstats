@@ -20,7 +20,18 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
-            }]
+            },
+            {
+              label: 'aWETH',
+              data: this.props.optiTvl.wstETH,
+              backgroundColor: 'rgba(102,102,102,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            }
+          ]
           }}
             options={{
               hover: {
