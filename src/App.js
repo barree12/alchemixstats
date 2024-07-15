@@ -402,6 +402,25 @@ export default class App extends React.Component {
   }
 
   calculateOptiTvl(result){
+    let dayTracker = 0;
+    let alchemistTvl = { date:[], ysDAI: [], aOptDAI: [], ysUSDC: [], aOptUSDC: [], wstETH: [], ysWETH: [], aOptUSDT: [], aOptWETH: [] };
+    for(let i=0;i<result.length;i++){
+      if(i!=0 && result[i].day != result[i-1].day) dayTracker++;
+      alchemistTvl.date[dayTracker] = result[i].day.split(" ")[0];
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptDAI") alchemistTvl.aOptDAI[dayTracker] = Math.round(result[i].balance/10000)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "ysUSDC") alchemistTvl.ysUSDC[dayTracker] = Math.round(result[i].balance/10000)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptUSDC") alchemistTvl.aOptUSDC[dayTracker] = Math.round(result[i].balance/10000)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "ysDAI") alchemistTvl.ysDAI[dayTracker] = Math.round(result[i].balance/10000)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptUSDT") alchemistTvl.aOptUSDT[dayTracker] = Math.round(result[i].balance/10000)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "ysWETH") alchemistTvl.ysWETH[dayTracker] = Math.round(result[i].balance*100)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptWETH") alchemistTvl.aOptWETH[dayTracker] = Math.round(result[i].balance*100)/100;
+      if(result[i].blockchain === "optimism" && result[i].token_symbol === "wstETH") alchemistTvl.wstETH[dayTracker] = Math.round(result[i].balance*100)/100;
+    }
+    console.log(alchemistTvl)
+    this.setState({ optiTvl: alchemistTvl, optiTvlLoading: false })
+  }
+
+  /*calculateOptiTvl(result){
     console.log(result)
     let startDate = new Date(1664365762*1000); //2022 Sept 28th
     let today = new Date();
@@ -448,11 +467,11 @@ export default class App extends React.Component {
       startDate.setDate(startDate.getDate() + 1);
       /*tempaDai = 0;
       tempaUsdc = 0;
-      tempaUsdt = 0;*/
+      tempaUsdt = 0;
     }
     console.log(optiTvl)
     this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
-  }
+  }*/
 
   calculateArbiTvl(result){
     //console.log(result)
@@ -953,18 +972,16 @@ export default class App extends React.Component {
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
     const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
     const alchemistTvl = this.getAlchemistTvlQuery(0);
-    const alchemistTvlSkip1000 = this.getAlchemistTvlQuery(1000);
 
     Promise.all([fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/optimism-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/optimism-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+      fetch("https://api.dune.com/api/v1/query/3906195/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/arbitrum-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
-      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, optiAlchemistTvlSkip1000, arbiAlchemistTvl]) => {
+      .then(([usdcPeg, alEthPeg, alchemistTvl, optiAlchemistTvl, arbiAlchemistTvl]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
-        this.calculateOptiTvl(optiAlchemistTvl.data.alchemistTVLHistories.concat(optiAlchemistTvlSkip1000.data.alchemistTVLHistories).reverse())
+        this.calculateOptiTvl(optiAlchemistTvl.result.rows)
         this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
     })
@@ -992,7 +1009,7 @@ export default class App extends React.Component {
   let v2vaEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2vaEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2aWethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aWeth*this.state.tokensPerShare.aWeth);
   let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth/10000)/100;
-  let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aWeth[this.state.optiTvl.aWeth.length-1]*100)/100;
+  let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aOptWETH[this.state.optiTvl.aOptWETH.length-1]*100)/100;
   let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth/10000)/100;
   let optiWstEthTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.wstETH[this.state.optiTvl.wstETH.length-1]*100)/100;
   let optiWstEthUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiWstEthTVL*this.state.tokenPrices.eth/10000)/100;

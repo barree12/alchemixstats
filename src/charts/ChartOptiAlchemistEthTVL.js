@@ -13,7 +13,7 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
             labels: this.props.optiTvl.date,
             datasets: [{
               label: 'aWETH',
-              data: this.props.optiTvl.aWeth,
+              data: this.props.optiTvl.aOptWETH,
               backgroundColor: 'rgba(115,136,255,0.9)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -22,8 +22,18 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'aWETH',
+              label: 'wstETH',
               data: this.props.optiTvl.wstETH,
+              backgroundColor: 'rgba(102,102,102,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
+            },
+            {
+              label: 'ysWETH',
+              data: this.props.optiTvl.ysWETH,
               backgroundColor: 'rgba(102,102,102,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,

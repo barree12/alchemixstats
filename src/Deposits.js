@@ -158,7 +158,8 @@ export default class Deposits extends React.Component {
 
         Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
             fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json())])
+            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json())
+          ])
             .then(([tvl1, tvl2, tvl3]) => {
                 wait(1500);
                 Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
@@ -229,12 +230,12 @@ export default class Deposits extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Alchemist V2 Stablecoin TVL</h3>
-                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
+                    {true ? <LoadingComponent /> :
                     <ChartV2AlchemistTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL</h3>
-                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
+                    {true ? <LoadingComponent /> :
                     <ChartV2AlchemistEthTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                 </div>
