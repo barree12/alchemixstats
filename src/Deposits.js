@@ -156,15 +156,15 @@ export default class Deposits extends React.Component {
         const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
         const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
 
-        Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json())
+        Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
+            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
+            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip2000)).then(res => res.json())
           ])
             .then(([tvl1, tvl2, tvl3]) => {
                 wait(1500);
-                Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
-                fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip4000)).then(res => res.json()),
-                fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alchemistTvlSkip5000)).then(res => res.json())])
+                Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip3000)).then(res => res.json()),
+                fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip4000)).then(res => res.json()),
+                fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip5000)).then(res => res.json())])
                 .then(([tvl4, tvl5, tvl6]) => {
                     this.calculateAlchemistTvl(tvl6.data.alchemistTVLHistories.reverse().concat(tvl5.data.alchemistTVLHistories.reverse().concat(tvl4.data.alchemistTVLHistories.reverse().concat(tvl3.data.alchemistTVLHistories.reverse().concat(tvl2.data.alchemistTVLHistories.reverse().concat(tvl1.data.alchemistTVLHistories.reverse().concat()))))))
                     }).catch(function(err) { console.log(err.message) });
@@ -230,12 +230,12 @@ export default class Deposits extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Alchemist V2 Stablecoin TVL</h3>
-                    {true ? <LoadingComponent /> :
+                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
                     <ChartV2AlchemistTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                     <div className="chart-title">
                     <h3>Alchemist V2 Eth TVL</h3>
-                    {true ? <LoadingComponent /> :
+                    {this.state.alchemistTvlLoading ? <LoadingComponent /> :
                     <ChartV2AlchemistEthTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                 </div>
@@ -254,7 +254,7 @@ export default class Deposits extends React.Component {
                 </div>
                 
                 <ArbiSummary v2Caps={this.props.v2Caps} arbiTvl={this.props.arbiTvl}
-                    optiAWethTVL={this.props.optiAWethTVL} optiAWethUsdTVL={this.props.optiAWethUsdTVL} />
+                    arbiWstEthUsdTVL={this.props.arbiWstEthUsdTVL} />
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Arbitrum Stablecoin TVL</h3>

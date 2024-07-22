@@ -38,7 +38,7 @@ export default class AlAssets extends React.Component {
 
     componentDidMount() {
         this.getBacking();
-        this.getAlAssetPrice();
+        //this.getAlAssetPrice();
       }
 
     toggleAlUsdPeg(){
@@ -49,7 +49,7 @@ export default class AlAssets extends React.Component {
         this.setState({ alEthPegToggle: !this.state.alEthPegToggle });
     }
 
-    getSubgraphRequestOptions(query){
+    /*getSubgraphRequestOptions(query){
         return {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -73,6 +73,7 @@ export default class AlAssets extends React.Component {
       }
     
     calculateAlUsdPeg(usdcPeg){
+      console.log(usdcPeg)
         let usdcIndex = 0;
         let alUsdPeg = {usdc: { date: [], peg: [], pegPerc: [] } };
         for(let i=0;i<usdcPeg.length;i++){
@@ -98,22 +99,25 @@ export default class AlAssets extends React.Component {
             orderBy: timestamp
             orderDirection: desc
           ) {
+            inputAmount
             outputAmount
             timestamp
           }
         }`
       }
 
+
+
     getAlAssetPrice(){
-        const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 0)
-        const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 24), 1000)
+        const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0)
+        const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 1000)
         const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0)
         const alEthPegQuerySkip1000 = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 1000)
         
-        Promise.all([fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
-            fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(alEthPegQuerySkip1000)).then(res => res.json())])
+        Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
+            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuerySkip1000)).then(res => res.json())])
             .then(([usdcPeg, usdcPegSkip1000, alEthPeg, alEthPegSkip1000]) => {
                 this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse())
                 this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.concat(alEthPegSkip1000.data.poolHistoricalRates).reverse())
@@ -121,7 +125,7 @@ export default class AlAssets extends React.Component {
             .catch(function(err) {
                 console.log(err.message);
             });
-    }
+    }*/
 
     calculateBacking(mainnetDebt, v1Debt, optimismDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer){
         let alUsdDebt = 0;
@@ -157,8 +161,8 @@ export default class AlAssets extends React.Component {
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
 
-        console.log(this.props.debankData.alUsdBackingTokensInElixir)
-        console.log(this.props.debankData.alUsdAmountInElixir)
+        //console.log(this.props.debankData.alUsdBackingTokensInElixir)
+        //console.log(this.props.debankData.alUsdAmountInElixir)
         //console.log(this.props.alAssetSupply.nextAlUsdOptimism)
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
