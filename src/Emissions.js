@@ -1,5 +1,5 @@
 import React from 'react';
-import {emissionWeek, tokenEmission, currentStats, futureInflation, formatDate } from './Functions';
+import {emissionWeek, tokenEmission, currentStats, futureInflation } from './Functions';
 import EmissionWeights from './EmissionWeights';
 import ChartDonut from './charts/ChartDonut';
 import ChartEmissions from './charts/ChartEmissions';

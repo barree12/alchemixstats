@@ -24,6 +24,10 @@ import ramLogo from './logos/ram.png';
 import alusdfraxbpLogo from './logos/frax_crv.png';
 import alusd3crvLogo from './logos/alusd_crv.png';
 import alEthFrxEthCurveLogo from './logos/aleth_frxeth.png';
+import alEthWethVelodromeLogo from './logos/aleth_opti.png';
+import alUsdUsdcVelodromeLogo from './logos/alusd_opti.png';
+import alEthFrxEthRamsesLogo from './logos/aleth_arbi.png';
+import alUsdFraxRamsesLogo from './logos/alusd_arbi.png';
 import fxsLogo from './logos/fxs.png';
 import aeroLogo from './logos/aero.png';
 import LoadingComponent from './LoadingComponent';
@@ -85,6 +89,14 @@ export default class Treasury extends React.Component {
         case "alusd3crv": returnLogo = alusd3crvLogo;
         break;
         case "alethfrxethcurve": returnLogo = alEthFrxEthCurveLogo;
+        break;
+        case "alethwethvelo": returnLogo = alEthWethVelodromeLogo;
+        break;
+        case "alusdusdcvelo": returnLogo = alUsdUsdcVelodromeLogo;
+        break;
+        case "alethfrxethramses": returnLogo = alEthFrxEthRamsesLogo;
+        break;
+        case "alusdfraxramses": returnLogo = alUsdFraxRamsesLogo;
         break;
         case "FXS": returnLogo = fxsLogo;
         break;
@@ -159,6 +171,10 @@ export default class Treasury extends React.Component {
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxbp")} alt="logo" className="image" />alUSD-FRAXBP</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFraxBpInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethcurve")} alt="logo" className="image" />alETH-frxETH</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthFrxEthInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />alETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthWethVeloInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdusdcvelo")} alt="logo" className="image" />alUSD Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdUsdcVeloInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethramses")} alt="logo" className="image" />alETH Ramses</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthFrxEthRamsesInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxramses")} alt="logo" className="image" />alUSD Ramses</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFraxRamsesInElixir)}</span></div>
                               
                             <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">${styleNumber(this.props.debankData.totalElixir)}</span></div>
                             </div>
