@@ -21,9 +21,10 @@ export default class Transmuters extends React.Component {
         fetch("https://api.dune.com/api/v1/query/3861243/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json()),
         fetch("https://api.dune.com/api/v1/query/3862748/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json()),
         fetch("https://api.dune.com/api/v1/query/3888361/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json()),
+        fetch("https://api.dune.com/api/v1/query/3947029/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json()),
         fetch("https://api.dune.com/api/v1/query/3890313/results?api_key=VirLip4gHVafKLfK4VBzK8E9SaUaskGE").then(res => res.json())
         ])
-        .then(([mainnetEth, mainnetUsdc, optiEth, arbiEth, mainnetDai]) => {
+        .then(([mainnetEth, mainnetUsdc, optiEth, arbiEth, arbiUsdc, mainnetDai]) => {
           let transmuters = { 
             mainnetEth: mainnetEth.result.rows[0].projected_yield_rate,
             mainnetEthTime: mainnetEth.result.rows[0].time_to_transmute,
@@ -33,6 +34,8 @@ export default class Transmuters extends React.Component {
             optiEthTime: optiEth.result.rows[0].time_to_transmute,
             arbiEth: arbiEth.result.rows[0].projected_yield_rate,
             arbiEthTime: arbiEth.result.rows[0].time_to_transmute,
+            arbiUsdc: arbiUsdc.result.rows[0].projected_yield_rate,
+            arbiUsdcTime: arbiUsdc.result.rows[0].time_to_transmute,
             mainnetDai: mainnetDai.result.rows[0].projected_yield_rate,
             mainnetDaiTime: mainnetDai.result.rows[0].time_to_transmute
           }
@@ -66,6 +69,7 @@ export default class Transmuters extends React.Component {
                         <span className="table-text-title">Mainnet Dai</span><span className="table-text-bold">{Math.round(this.state.transmuters.mainnetDai*100)/100}%</span><span className="table-text-bold">{Math.round(this.state.transmuters.mainnetDaiTime*365)} days</span>
                         <span className="table-text-title">Optimism ETH</span><span className="table-text-bold">{Math.round(this.state.transmuters.optiEth*100)/100}%</span><span className="table-text-bold">{Math.round(this.state.transmuters.optiEthTime*365)} days</span>
                         <span className="table-text-title">Arbitrum ETH</span><span className="table-text-bold">{Math.round(this.state.transmuters.arbiEth*100)/100}%</span><span className="table-text-bold">{Math.round(this.state.transmuters.arbiEthTime*365)} days</span>
+                        <span className="table-text-title">Arbitrum USDC</span><span className="table-text-bold">{Math.round(this.state.transmuters.arbiUsdc*100)/100}%</span><span className="table-text-bold">{Math.round(this.state.transmuters.arbiUsdcTime*365)} days</span>
                     </div>}
                     </div>
                 </div>
