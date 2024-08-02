@@ -406,7 +406,7 @@ export default class App extends React.Component {
     let dayTracker = 0;
     let alchemistTvl = { date:[], ysDAI: [], aOptDAI: [], ysUSDC: [], aOptUSDC: [], wstETH: [], ysWETH: [], aOptUSDT: [], aOptWETH: [] };
     for(let i=0;i<result.length;i++){
-      if(i!=0 && result[i].day != result[i-1].day) dayTracker++;
+      if(i!==0 && result[i].day !== result[i-1].day) dayTracker++;
       alchemistTvl.date[dayTracker] = result[i].day.split(" ")[0];
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptDAI") alchemistTvl.aOptDAI[dayTracker] = Math.round(result[i].balance/10000)/100;
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "ysUSDC") alchemistTvl.ysUSDC[dayTracker] = Math.round(result[i].balance/10000)/100;
@@ -872,12 +872,11 @@ export default class App extends React.Component {
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
       alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
       alEthBackingTokensInElixir: alEthBackingTokensInElixir,
-      alUsdAmountInElixir:alUsdAmountInElixir,
-      alUsdInOptimismElixir: alUsdInOptimismElixir,
-      ramsesAlEthFrxEthPool: ramsesAlEthFrxEthPool,
-      ramsesAlUsdFraxPool: ramsesAlUsdFraxPool,
-      veloAlEthWethPool: veloAlEthWethPool,
-      veloAlUsdUsdcPool: veloAlUsdUsdcPool 
+      alUsdAmountInElixir: alUsdAmountInElixir,
+      ramsesAlEthFrxEthPool: ramsesAlEthFrxEthPool.total_usd_value,
+      ramsesAlUsdFraxPool: ramsesAlUsdFraxPool.total_usd_value,
+      veloAlEthWethPool: veloAlEthWethPool.total_usd_value,
+      veloAlUsdUsdcPool: veloAlUsdUsdcPool.total_usd_value 
     }
     this.setState({ debankDataLoading: false, debankData: tempDebankCalc })
   }
