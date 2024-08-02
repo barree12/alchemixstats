@@ -28,7 +28,7 @@ export default class EarnVelo extends Component {
   }
     
   parseResult(result, prices){
-    console.log(prices);
+    //console.log(prices);
     let tokenPrices = { eth: 0, velo: 0, op: 0 }
     tokenPrices.eth = Math.round(prices.coins["coingecko:ethereum"].price*100)/100
     tokenPrices.velo = Math.round(prices.coins["coingecko:velodrome-finance"].price*100)/100

@@ -21,7 +21,7 @@ export default class EarnConvex extends Component {
   }
     
   parseResult(result){
-    console.log(result)
+    //console.log(result)
     let apr3Crv = result.apys["37"].baseApy + result.apys["37"].crvApy;
     let aprAlEth = result.apys["factory-stable-ng-36"].baseApy + result.apys["factory-stable-ng-36"].crvApy;
     let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;

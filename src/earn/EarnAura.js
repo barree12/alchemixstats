@@ -40,7 +40,7 @@ export default class EarnAura extends Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result)
+          //console.log(result)
           this.setState({ aprLoading: false, apr: result.data.pool.aprs.total })
         },
         (error) => {
