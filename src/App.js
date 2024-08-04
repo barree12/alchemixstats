@@ -1049,6 +1049,7 @@ export default class App extends React.Component {
   let v2EthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2EthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2vaEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaEth*this.state.tokensPerShare.vaEth);
   let v2vaEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2vaEthTVL*this.state.tokenPrices.eth/10000)/100;
+  let arbiAUsdcTVL = this.state.arbiTvlLoading ? 0 : Math.round(this.state.arbiTvl.aUsdc[this.state.arbiTvl.aUsdc.length-1]*100)/100;
   let v2aWethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aWeth*this.state.tokensPerShare.aWeth);
   let v2aWethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2aWethTVL*this.state.tokenPrices.eth/10000)/100;
   let optiAWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.aOptWETH[this.state.optiTvl.aOptWETH.length-1]*100)/100;
@@ -1069,7 +1070,7 @@ export default class App extends React.Component {
   let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth;
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth/Math.pow(10,6);
   let ethDeposits = this.props.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wethInMigrate + v2EthTVL + v2aWethTVL + v2StethTVL + v2RethTVL + v2vaEthTVL + v2SfrxEthTVL + optiAWethTVL + optiWstEthTVL + optiYvWethTVL + arbiWstEthTVL);
-  let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.state.v2Deposit.daiInMigrate + v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2aDaiTVL + v2aUsdcTVL + v2aUsdtTVL + v2vaUsdcTVL + v2vaDaiTVL + this.state.v2Deposit.optiADai + this.state.v2Deposit.optiAUsdc + this.state.v2Deposit.optiAUsdt)*100)/100;
+  let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.state.v2Deposit.daiInMigrate + v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2aDaiTVL + v2aUsdcTVL + v2aUsdtTVL + v2vaUsdcTVL + v2vaDaiTVL + this.state.v2Deposit.optiADai + this.state.v2Deposit.optiAUsdc + this.state.v2Deposit.optiAUsdt + arbiAUsdcTVL)*100)/100;
   let ethDepositsUsd = Math.round((wethInMigrateUsd + v2EthUsdTVL + v2aWethUsdTVL + v2StethUsdTVL + v2RethUsdTVL + v2vaEthUsdTVL + v2SfrxEthUsdTVL + optiAWethUsdTVL + optiWstEthUsdTVL + optiYvWethUsdTVL + arbiWstEthUsdTVL)*100)/100;
   ChartJS.register(
     CategoryScale,
