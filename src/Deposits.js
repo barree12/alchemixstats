@@ -241,7 +241,8 @@ export default class Deposits extends React.Component {
                 </div>
                 <OptiSummary v2Caps={this.props.v2Caps} optiTvl={this.props.optiTvl}
                     optiAWethTVL={this.props.optiAWethTVL} optiAWethUsdTVL={this.props.optiAWethUsdTVL}
-                    optiWstEthTVL={this.props.optiWstEthTVL} optiWstEthUsdTVL={this.props.optiWstEthUsdTVL} />
+                    optiWstEthTVL={this.props.optiWstEthTVL} optiWstEthUsdTVL={this.props.optiWstEthUsdTVL} 
+                    optiYvWethTVL={this.props.optiYvWethTVL} optiYvWethUsdTVL={this.props.optiYvWethUsdTVL} />
                 <div className="section-wrapper">
                     <div className="chart-title">
                     <h3>Optimism Stablecoin TVL</h3>

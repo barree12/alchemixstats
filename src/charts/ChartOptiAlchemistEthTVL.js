@@ -32,7 +32,7 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
               fill: true,
             },
             {
-              label: 'ysWETH',
+              label: 'yvWETH',
               data: this.props.optiTvl.ysWETH,
               backgroundColor: 'rgba(102,102,102,0.8)',
               borderColor: 'rgba(240,238,129,1)',

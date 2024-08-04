@@ -11,7 +11,7 @@ export default class EarnConvex extends Component {
       aprFrax: 0,
       aprAlEth: 0,
       aprFrxEth: 0,
-      aprRgUsd: 0,
+      //aprRgUsd: 0,
       aprAlcxFbp: 0
     }
   }
@@ -26,14 +26,14 @@ export default class EarnConvex extends Component {
     let aprAlEth = result.apys["factory-stable-ng-36"].baseApy + result.apys["factory-stable-ng-36"].crvApy;
     let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;
     let aprFrxEth = result.apys["factory-v2-253"].baseApy + result.apys["factory-v2-253"].crvApy;
-    let aprRgUsd = result.apys["factory-stable-ng-122"].baseApy + result.apys["factory-stable-ng-122"].crvApy;
+    //let aprRgUsd = result.apys["factory-stable-ng-122"].baseApy + result.apys["factory-stable-ng-122"].crvApy;
     let aprAlcxFbp = result.apys["factory-crypto-96"].baseApy + result.apys["factory-crypto-96"].crvApy;
     this.setState({ aprLoading: false, 
       apr3Crv: apr3Crv, 
       aprAlEth: aprAlEth, 
       aprFrax: aprFrax,
       aprFrxEth: aprFrxEth,
-      aprRgUsd: aprRgUsd,
+      //aprRgUsd: aprRgUsd,
       aprAlcxFbp: aprAlcxFbp
     });
   }
@@ -105,30 +105,6 @@ export default class EarnConvex extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://curve.fi/#/ethereum/pools/factory-v2-147/deposit" target="_blank" rel="noreferrer">Deposit</a>
-            </div>
-          </div>
-
-          <div className="earn-yield-row">
-            
-            <div className="earn-yield-strat">
-              alUSD-rgUSD
-            </div>
-            <div className="earn-yield-chain">
-              <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
-            </div>
-            
-            <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
-            </div>
-            <div className="earn-yield-reward">
-              <img src={ require('../logos/crv.png').default } alt="Curve logo" className="image" />
-              <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" />
-            </div>
-            <div className="earn-yield-yield">
-              {this.state.aprLoading ? "0" : Math.round(this.state.aprRgUsd*100)/100}%
-            </div>
-            <div className="earn-yield-link">
-              <a href="https://curve.fi/#/ethereum/pools/factory-stable-ng-122/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
           

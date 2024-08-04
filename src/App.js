@@ -261,6 +261,10 @@ export default class App extends React.Component {
         deposit.vaDai = vaDaiParams[8]/Math.pow(10, 24);
         deposit.vaFrax = vaFraxParams[8]/Math.pow(10, 24);
         deposit.vaEth = vaEthParams[8]/Math.pow(10, 18);
+        deposit.optiADai = optiADaiParams[8]/Math.pow(10, 24);
+        deposit.optiAUsdc = optiAUsdcParams[8]/Math.pow(10, 12);
+        deposit.optiAUsdt = optiAUsdtParams[8]/Math.pow(10, 12);
+        deposit.optiAWeth = optiAWethParams[8]/Math.pow(10, 18);
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
@@ -1051,6 +1055,8 @@ export default class App extends React.Component {
   let optiAWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiAWethTVL*this.state.tokenPrices.eth/10000)/100;
   let optiWstEthTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.wstETH[this.state.optiTvl.wstETH.length-1]*100)/100;
   let optiWstEthUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiWstEthTVL*this.state.tokenPrices.eth/10000)/100;
+  let optiYvWethTVL = this.state.optiTvlLoading ? 0 : Math.round(this.state.optiTvl.ysWETH[this.state.optiTvl.ysWETH.length-1]*100)/100;
+  let optiYvWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiYvWethTVL*this.state.tokenPrices.eth/10000)/100;
   let arbiWstEthTVL = this.state.arbiTvlLoading ? 0 : Math.round(this.state.arbiTvl.wstEth[this.state.arbiTvl.wstEth.length-1]*100)/100;
   let arbiWstEthUsdTVL = (this.state.tokenPricesLoading || this.state.arbiTvlLoading) ? 0 : Math.round(arbiWstEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
@@ -1059,10 +1065,12 @@ export default class App extends React.Component {
   let v2SfrxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokenPrices.sfrxEth/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth/10000)/100;
-  //let stakedAlcxValue = (this.state.stakingLoading || this.state.alcxDataLoading) ? 0 : this.state.alchemixStaking.alcx*this.state.alcxData.price;
   let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.debankDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.debankData.alcxInTreasury/10000)/100;
   let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth;
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth/Math.pow(10,6);
+  let ethDeposits = this.props.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wethInMigrate + v2EthTVL + v2aWethTVL + v2StethTVL + v2RethTVL + v2vaEthTVL + v2SfrxEthTVL + optiAWethTVL + optiWstEthTVL + optiYvWethTVL + arbiWstEthTVL);
+  let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.state.v2Deposit.daiInMigrate + v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2aDaiTVL + v2aUsdcTVL + v2aUsdtTVL + v2vaUsdcTVL + v2vaDaiTVL + this.state.v2Deposit.optiADai + this.state.v2Deposit.optiAUsdc + this.state.v2Deposit.optiAUsdt)*100)/100;
+  let ethDepositsUsd = Math.round((wethInMigrateUsd + v2EthUsdTVL + v2aWethUsdTVL + v2StethUsdTVL + v2RethUsdTVL + v2vaEthUsdTVL + v2SfrxEthUsdTVL + optiAWethUsdTVL + optiWstEthUsdTVL + optiYvWethUsdTVL + arbiWstEthUsdTVL)*100)/100;
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -1094,14 +1102,9 @@ export default class App extends React.Component {
       </div>
       <br/>
       <Overview 
-        v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} v2vaUsdcTVL={v2vaUsdcTVL} v2vaDaiTVL={v2vaDaiTVL} v2vaEthTVL={v2vaEthTVL} v2vaEthUsdTVL={v2vaEthUsdTVL}
-        v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
-        v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} alchemixStaking={this.state.alchemixStaking}
-        v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL}
-        v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL}
-        alAssetSupply={this.state.alAssetSupply}
+        alAssetSupply={this.state.alAssetSupply} ethDeposits={ethDeposits} stablecoinDeposits={stablecoinDeposits} ethDepositsUsd={ethDepositsUsd}
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL}
+        alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2Caps={this.state.v2Caps}
         tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData} tokensPerShare={this.state.tokensPerShare}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
         lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
@@ -1267,7 +1270,7 @@ export default class App extends React.Component {
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
-          v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd}
+          v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd} optiYvWethTVL={optiYvWethTVL} optiYvWethUsdTVL={optiYvWethUsdTVL}
           tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
           v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL} optiWstEthTVL={optiWstEthTVL} optiWstEthUsdTVL={optiWstEthUsdTVL}
