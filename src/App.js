@@ -84,6 +84,8 @@ export default class App extends React.Component {
     this.alchemistEthContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistEthV2Address);
     this.alchemistOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistOptiAddress);
     this.alchemistEthOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistEthOptiAddress);
+    this.alchemistArbiContract = new web3arbitrum.eth.Contract(abis.alchemistAbi, addresses.alchemistArbiAddress);
+    this.alchemistEthArbiContract = new web3arbitrum.eth.Contract(abis.alchemistAbi, addresses.alchemistArbiEthAddress);
     this.cvxAlUsd3CrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlUsd3CrvStakingContractAddress);
     this.cvxAlEthCrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlEthCrvStakingContractAddress);
     this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
@@ -199,6 +201,10 @@ export default class App extends React.Component {
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
       this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
       this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
+      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiWstEthAddress).call(),
+      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiYvWethAddress).call(),
+      this.alchemistArbiContract.methods.getYieldTokenParameters(addresses.arbiAUsdcAddress).call(),
+      this.alchemistEthArbiContract.methods.getYieldTokenParameters(addresses.arbiWstEthAddress).call(),
       this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
       this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
       this.alEthContract.methods.totalSupply().call(),
@@ -207,7 +213,7 @@ export default class App extends React.Component {
       this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, nextAlUsdSupplyOptimism]) => {
+      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, nextAlUsdSupplyOptimism]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -224,6 +230,10 @@ export default class App extends React.Component {
         v2Caps.aFrax = aFraxParams[4]/Math.pow(10, aFraxParams[0]);
         v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
         v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
+        v2Caps.optiWstEth = optiWstEthParams[4]/Math.pow(10, optiWstEthParams[0]);
+        v2Caps.optiYvWeth = optiYvWethParams[4]/Math.pow(10, optiYvWethParams[0]);
+        v2Caps.arbiAUsdc = arbiAUsdcParams[4]/Math.pow(10, arbiAUsdcParams[0]);
+        v2Caps.arbiWstEth = arbiWstEthParams[4]/Math.pow(10, arbiWstEthParams[0]);
         v2Caps.vaUsdc = vaUsdcParams[4]/Math.pow(10, 6);
         v2Caps.vaDai = vaDaiParams[4]/Math.pow(10, vaDaiParams[0]);
         v2Caps.vaFrax = vaFraxParams[4]/Math.pow(10, vaFraxParams[0]);
@@ -265,6 +275,8 @@ export default class App extends React.Component {
         deposit.optiAUsdc = optiAUsdcParams[8]/Math.pow(10, 12);
         deposit.optiAUsdt = optiAUsdtParams[8]/Math.pow(10, 12);
         deposit.optiAWeth = optiAWethParams[8]/Math.pow(10, 18);
+        deposit.optiWstEth = optiWstEthParams[8]/Math.pow(10, 18);
+        deposit.optiYvWeth = optiYvWethParams[8]/Math.pow(10, 18);
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
@@ -890,7 +902,7 @@ export default class App extends React.Component {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'AccessKey': '472fd8246ad62e329d470811c36759d49708c2fc'
+        //'AccessKey': '472fd8246ad62e329d470811c36759d49708c2fc'
       }
     }
 
@@ -1019,7 +1031,7 @@ export default class App extends React.Component {
         //this.calculateOptiTvl(optiAlchemistTvl.result.rows)
         this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
-
+        //console.log(arbiAlchemistTvl)
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
         fetch(url).then(res => res.json()).then(
           (optiAlchemistTvl) => { 

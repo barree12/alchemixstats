@@ -106,7 +106,9 @@ export const addresses = {
     nextAlUsdOptimism: '0x49000f5e208349D2fA678263418e21365208E498',
     curveAlEthWethPoolContractAddress: '0x8efd02a0a40545f32dba5d664cbbc1570d3fedf6',
     alUsdMainnetTransmuterBuffer: '0x1eed2dbeb9fc23ab483f447f38f289ca15f79bac',
-    alEthMainnetTransmuterBuffer: '0xbc2FB245594a68c927C930FBE2d00680A8C90B9e'
+    alEthMainnetTransmuterBuffer: '0xbc2FB245594a68c927C930FBE2d00680A8C90B9e',
+    arbiWstEthAddress: '0x5979D7b546E38E414F7E9822514be443A4800529',
+    arbiAUsdcAddress: '0x248a431116c6f6FCD5Fe1097d16d0597E24100f5'
 }
 
 export const abis = {
