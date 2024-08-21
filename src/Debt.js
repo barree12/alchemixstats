@@ -102,8 +102,8 @@ export default class Debt extends React.Component {
 
       getGlobalDebt(){
         const globalDebt = this.getDebtQuery(0);
-        const globalDebtSkip1000 = this.getDebtQuery(1000);
-        const globalDebtSkip2000 = this.getDebtQuery(2000);
+        //const globalDebtSkip1000 = this.getDebtQuery(1000);
+        //const globalDebtSkip2000 = this.getDebtQuery(2000);
     
         Promise.all([fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-arb/1.0.0/gn", this.getSubgraphRequestOptions(globalDebt)).then(res => res.json())])
           .then(([globalDebt]) => {

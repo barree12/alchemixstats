@@ -4,7 +4,6 @@ import './App.css';
 import Web3 from 'web3';
 import ChartAlusdPrice from './charts/ChartAlusdPrice';
 import ChartAlEthPrice from './charts/ChartAlEthPrice';
-import ArbitrumTop from './ArbitrumTop';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual } from './Functions';
 import { addresses, abis } from './Constants';
@@ -1108,9 +1107,7 @@ export default class Arbitrum extends React.Component {
         </div>
       </div>
       <br/>
-      <ArbitrumTop arbiTvl={this.state.arbiTvl} arbiTvlLoading={this.state.arbiTvlLoading} 
-      tokenPrices={this.state.tokenPrices} tokenPricesLoading={this.state.tokenPricesLoading}
-      positionCountLoading={this.state.positionCountLoading} positionCount={this.state.positionCount} />
+
 
     {this.state.positionCountLoading ? "" : <DataTable
 			columns={columns}

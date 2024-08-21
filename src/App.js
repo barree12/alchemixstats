@@ -698,7 +698,7 @@ export default class App extends React.Component {
     let veloAlEthWethPool;
     let veloAlUsdUsdcPool;
 
-    for(let i=0;i<data.pools.length-1;i++){
+    for(let i=0;i<data.pools.length;i++){
       if(data.pools[i].address === ramsesAlEthFrxEthAddress) ramsesAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthWethAddress) veloAlEthWethPool = data.pools[i].total_balance.total_usd_value;
@@ -706,20 +706,16 @@ export default class App extends React.Component {
     }
 
 
-    for(let i=0;i<data.treasury.length-1;i++){
+    for(let i=0;i<data.treasury.length;i++){
       tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
       protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
     }
 
-    for(let i=0;i<data.elixir.length-1;i++){
+    for(let i=0;i<data.elixir.length;i++){
       elixirTokensConcat = elixirTokensConcat.concat(data.elixir[i].tokenList)
       elixirProtocolsConcat = elixirProtocolsConcat.concat(data.elixir[i].complexList)
     }
 
-    console.log(tokensConcat)
-    console.log(protocolsConcat)
-    console.log(elixirTokensConcat)
-    console.log(elixirProtocolsConcat)
 
     //Calculate treasury
     for(let i=0;i<protocolsConcat.length;i++){
@@ -899,8 +895,7 @@ export default class App extends React.Component {
       elixirLargestValue = 0;
     }*/
     
-    //let totalElixir = totalElixirAlUsdFraxBp.total_usd_value + totalElixirAlEthFrxEth.total_usd_value - alUsdInElixir - alEthInElixir + totalElixirArbi.total_usd_value + totalElixirOpti.total_usd_value;
-    let totalElixir = 0;
+    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -949,7 +944,6 @@ export default class App extends React.Component {
             let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
             fetch(url).then(res => res.json()).then(
               (result2) => { 
-                console.log(result2)
                 this.calculateDebankData(result2) },
               (error) => { console.log(error) })
           
