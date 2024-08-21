@@ -643,7 +643,8 @@ export default class App extends React.Component {
     else return false;
   }
 
-  calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool){
+  calculateDebankData(data){
+    //treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool){
     //let totalTreasuryA = totalTreasury1.total_usd_value + totalTreasury2.total_usd_value + totalSdCrvController.total_usd_value + totalOptimismMs.total_usd_value + totalArbitrumMs.total_usd_value;
     let totalTreasury = 0;
     let totalTreasuryStrategic = 0;
@@ -677,14 +678,48 @@ export default class App extends React.Component {
     let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
     let alEthWethVelodromeId = '0xa1055762336f92b4b8d2edc032a0ce45ead6280a';
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
+    let ramsesAlEthFrxEthAddress = '0xfb4fe921f724f3c7b610a826c827f9f6ecef6886';
+    let ramsesAlUsdFraxAddress = '0xfd599db360cd9713657c95df66650a427d213010';
+    let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
+    let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
     
     let tempDebankCalc = {};
-    let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs).concat(tokensBaseMs).concat(tokensMetisMs);
-    let protocolsConcat = treasury1.concat(treasury2).concat(sdCrvController).concat(optimismMs).concat(arbitrumMs).concat(baseMs).concat(metisMs);
-    let elixirTokensConcat = tokensElixirAlUsdFraxBp.concat(tokensElixirAlEthFrxEth).concat(tokensElixirOpti).concat(tokensElixirArbi);
-    let elixirProtocolsConcat = elixirAlUsdFraxBp.concat(elixirAlEthFrxEth).concat(elixirOpti).concat(elixirArbi);
+    //let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs).concat(tokensBaseMs).concat(tokensMetisMs);
+    //let protocolsConcat = treasury1.concat(treasury2).concat(sdCrvController).concat(optimismMs).concat(arbitrumMs).concat(baseMs).concat(metisMs);
+    //let elixirTokensConcat = tokensElixirAlUsdFraxBp.concat(tokensElixirAlEthFrxEth).concat(tokensElixirOpti).concat(tokensElixirArbi);
+    //let elixirProtocolsConcat = elixirAlUsdFraxBp.concat(elixirAlEthFrxEth).concat(elixirOpti).concat(elixirArbi);
+    let tokensConcat = [];
+    let protocolsConcat = [];
+    let elixirTokensConcat = [];
+    let elixirProtocolsConcat = [];
 
-    //console.log(elixirProtocolsConcat)
+    let ramsesAlEthFrxEthPool;
+    let ramsesAlUsdFraxPool;
+    let veloAlEthWethPool;
+    let veloAlUsdUsdcPool;
+
+    for(let i=0;i<data.pools.length-1;i++){
+      if(data.pools[i].address === ramsesAlEthFrxEthAddress) ramsesAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
+      if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
+      if(data.pools[i].address === veloAlEthWethAddress) veloAlEthWethPool = data.pools[i].total_balance.total_usd_value;
+      if(data.pools[i].address === veloAlUsdUsdcAddress) veloAlUsdUsdcPool = data.pools[i].total_balance.total_usd_value;
+    }
+
+
+    for(let i=0;i<data.treasury.length-1;i++){
+      tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
+      protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
+    }
+
+    for(let i=0;i<data.elixir.length-1;i++){
+      elixirTokensConcat = elixirTokensConcat.concat(data.elixir[i].tokenList)
+      elixirProtocolsConcat = elixirProtocolsConcat.concat(data.elixir[i].complexList)
+    }
+
+    console.log(tokensConcat)
+    console.log(protocolsConcat)
+    console.log(elixirTokensConcat)
+    console.log(elixirProtocolsConcat)
 
     //Calculate treasury
     for(let i=0;i<protocolsConcat.length;i++){
@@ -864,7 +899,8 @@ export default class App extends React.Component {
       elixirLargestValue = 0;
     }*/
     
-    let totalElixir = totalElixirAlUsdFraxBp.total_usd_value + totalElixirAlEthFrxEth.total_usd_value - alUsdInElixir - alEthInElixir + totalElixirArbi.total_usd_value + totalElixirOpti.total_usd_value;
+    //let totalElixir = totalElixirAlUsdFraxBp.total_usd_value + totalElixirAlEthFrxEth.total_usd_value - alUsdInElixir - alEthInElixir + totalElixirArbi.total_usd_value + totalElixirOpti.total_usd_value;
+    let totalElixir = 0;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -889,15 +925,39 @@ export default class App extends React.Component {
       alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
       alEthBackingTokensInElixir: alEthBackingTokensInElixir,
       alUsdAmountInElixir: alUsdAmountInElixir,
-      ramsesAlEthFrxEthPool: ramsesAlEthFrxEthPool.total_usd_value,
-      ramsesAlUsdFraxPool: ramsesAlUsdFraxPool.total_usd_value,
-      veloAlEthWethPool: veloAlEthWethPool.total_usd_value,
-      veloAlUsdUsdcPool: veloAlUsdUsdcPool.total_usd_value 
+      ramsesAlEthFrxEthPool: ramsesAlEthFrxEthPool,
+      ramsesAlUsdFraxPool: ramsesAlUsdFraxPool,
+      veloAlEthWethPool: veloAlEthWethPool,
+      veloAlUsdUsdcPool: veloAlUsdUsdcPool 
     }
     this.setState({ debankDataLoading: false, debankData: tempDebankCalc })
   }
 
   getDebankData(){
+      
+      let authorizationHeader = {
+        method: 'GET',
+        headers: { 
+          'pinata_api_key': '7237805a818b4433e8a1',
+          'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
+        }
+      }
+      fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=debank.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
+          (result) => { 
+            //console.log(result);
+
+            let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
+            fetch(url).then(res => res.json()).then(
+              (result2) => { 
+                console.log(result2)
+                this.calculateDebankData(result2) },
+              (error) => { console.log(error) })
+          
+          },
+          (error) => { console.log(error) })
+
+
+    /*
     let requestHeader = {
       method: 'GET',
       headers: { 
@@ -945,7 +1005,7 @@ export default class App extends React.Component {
     ])
     .then(([treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool]) => {
           this.calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool)
-      }).catch(function(err) { console.log(err) });
+      }).catch(function(err) { console.log(err) });*/
     
   }
 
