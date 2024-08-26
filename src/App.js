@@ -639,7 +639,7 @@ export default class App extends React.Component {
 
   isStrategic(object){
     if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "AURA" || object === "FXS" || object === "RAM" || object === "PREMIA" || object === "sdFXS") return true;
+    object === "AURA" || object === "FXS" || object === "RAM" || object === "PREMIA") return true;
     else return false;
   }
 
@@ -752,6 +752,10 @@ export default class App extends React.Component {
         }
       }
     }
+
+    treasuryAssetsStrategic["FXS"] += treasuryAssets["sdFXS"];
+    treasuryAssets["sdFXS"] = 0;
+
     for(let i=0;i<tokensConcat.length;i++){
       if(this.isStrategic(tokensConcat[i].symbol)) {
         treasuryAssetsStrategic[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
@@ -1078,7 +1082,7 @@ export default class App extends React.Component {
       fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json()),
-      fetch("https://api.goldsky.com/api/public/project_clweyetqu7b0o01uldfi32lnh/subgraphs/arbitrum-subgraph/1.0.0/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
+      fetch("https://gateway.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/Dgjyhh69XooHPd4JjvT3ik9FaGAR3w7sUSQyQ1YDakGp", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
       .then(([usdcPeg, alEthPeg, alchemistTvl, ipfsOptiFile, arbiAlchemistTvl]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())

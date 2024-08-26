@@ -127,15 +127,18 @@ export default class AlAssets extends React.Component {
             });
     }*/
 
-    calculateBacking(mainnetDebt, v1Debt, optimismDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer){
+    calculateBacking(mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer){
         let alUsdDebt = 0;
         let alEthDebt = 0;
         let alUsdOptimismDebt = 0;
         let alEthOptimismDebt = 0;
+        let alUsdArbitrumDebt = 0;
+        let alEthArbitrumDebt = 0;
         let alUsdDebtV1 = 0;
         let alEthDebtV1 = 31;
         let alUsdInV1 = 12000;
         let alEthInV1 = 8;
+        let alUsdIdleInOld = 129638676;
         let alEthInOldElixir = 24101;
         let ethInTransmuterBuffer = wethInTransmuterBuffer / Math.pow(10,18);
         let stablesInTransmuterBuffer = daiInTransmuterBuffer / Math.pow(10,18) + usdcInTransmuterBuffer / Math.pow(10,6) + usdtInTransmuterBuffer / Math.pow(10,6) + fraxInTransmuterBuffer / Math.pow(10,18);
@@ -150,8 +153,12 @@ export default class AlAssets extends React.Component {
             alUsdOptimismDebt += optimismDebt[i].alusd_debt;
             alEthOptimismDebt += optimismDebt[i].aleth_debt;
         }
+        for(let i=0;i<arbitrumDebt.length;i++){
+          alUsdArbitrumDebt += arbitrumDebt[i].alusd_debt;
+          alEthArbitrumDebt += arbitrumDebt[i].aleth_debt;
+      }
         let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
-        let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;
+        let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1 - alUsdIdleInOld;
         let alUsdShouldHaveOptimism = this.props.alAssetSupply.alUsdOptimism - alUsdOptimismDebt - this.props.alAssetSupply.nextAlUsdOptimism;
         let alUsdOwnedOptimism = this.props.debankData.alUsdInOptimismElixir
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
@@ -161,9 +168,12 @@ export default class AlAssets extends React.Component {
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
 
-        //console.log(this.props.debankData.alUsdBackingTokensInElixir)
-        //console.log(this.props.debankData.alUsdAmountInElixir)
-        //console.log(this.props.alAssetSupply.nextAlUsdOptimism)
+        //console.log(alUsdDebt)
+        //console.log(alUsdDebtV1)
+        //console.log(alUsdOwned)
+        console.log(arbitrumDebt)
+
+
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
             alUsdOptimism: alUsdOptimismSurplus,
@@ -185,21 +195,24 @@ export default class AlAssets extends React.Component {
         Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=mainnet_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
             fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=v1UserDebt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
             fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=optimism_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+            fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=arbitrum_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
             this.daiContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.usdcContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.usdtContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.fraxContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.wethContract.methods.balanceOf(addresses.alEthMainnetTransmuterBuffer).call()
         ])
-        .then(([mainnetDebt, v1Debt, optimismDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer]) => {
+        .then(([mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer]) => {
             let mainnetDebtUrl = "https://ipfs.imimim.info/ipfs/" + mainnetDebt.rows[0].ipfs_pin_hash;
             let optimismDebtUrl = "https://ipfs.imimim.info/ipfs/" + optimismDebt.rows[0].ipfs_pin_hash;
+            let arbitrumDebtUrl = "https://ipfs.imimim.info/ipfs/" + arbitrumDebt.rows[0].ipfs_pin_hash;
             let v1DebtUrl = "https://ipfs.imimim.info/ipfs/" + v1Debt.rows[0].ipfs_pin_hash;
             Promise.all([fetch(mainnetDebtUrl).then(res => res.json()),
                 fetch(v1DebtUrl).then(res => res.json()),
+                fetch(arbitrumDebtUrl).then(res => res.json()),
                 fetch(optimismDebtUrl).then(res => res.json())])
-                .then(([mainnetDebtFinal, v1DebtFinal, optimismDebtFinal]) => {
-                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer)
+                .then(([mainnetDebtFinal, v1DebtFinal, arbitrumDebtFinal, optimismDebtFinal]) => {
+                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal, arbitrumDebtFinal, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer)
             })
             .catch(function(err) {
                 console.log(err.message);

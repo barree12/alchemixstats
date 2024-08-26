@@ -146,7 +146,7 @@ export default class Treasury extends React.Component {
                             <h3>Strategic Holdings</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 10, false).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 9, false).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )

@@ -19,16 +19,16 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUSD-FRAXBP", "alETH-frxETH", "Velo alETH-WETH", "Velo alUSD-USDC", "Ramses alETH-frxETH", "Ramses alUSD-FRAX"],
+            labels: ["alUSD-FRAXBP", "alETH-frxETH", "Velo alUSD-USDC", "Velo alETH-WETH", "Ramses alUSD-FRAX", "Ramses alETH-frxETH"],
             datasets: [{
               label: 'Owned',
               data: [
                 Math.round(alUsdFraxBpCrvRatio*10000)/100,
                 Math.round(alEthFrxEthRatio*10000)/100,
-                Math.round(veloAlEthRatio*10000)/100,
                 Math.round(veloAlUsdRatio*10000)/100,
-                Math.round(ramsesAlEthRatio*10000)/100,
-                Math.round(ramsesAlUsdRatio*10000)/100                
+                Math.round(veloAlEthRatio*10000)/100,
+                Math.round(ramsesAlUsdRatio*10000)/100,
+                Math.round(ramsesAlEthRatio*10000)/100      
               ],
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(255,204,75,1)',
@@ -42,10 +42,10 @@ export default class ChartCrvPoolRatios extends React.Component {
               data: [
                 Math.round((1-alUsdFraxBpCrvRatio)*10000)/100,
                 Math.round((1-alEthFrxEthRatio)*10000)/100,
-                Math.round((1-veloAlEthRatio)*10000)/100,
                 Math.round((1-veloAlUsdRatio)*10000)/100,
-                Math.round((1-ramsesAlEthRatio)*10000)/100,
-                Math.round((1-ramsesAlUsdRatio)*10000)/100
+                Math.round((1-veloAlEthRatio)*10000)/100,
+                Math.round((1-ramsesAlUsdRatio)*10000)/100,
+                Math.round((1-ramsesAlEthRatio)*10000)/100
               ],
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(255,204,75,1)',
