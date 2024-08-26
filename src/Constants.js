@@ -63,6 +63,8 @@ export const addresses = {
     alUsdOptimismContractAddress: '0xcb8fa9a76b8e203d8c3797bf438d8fb81ea3326a',
     usdcOptimismContractAddress: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
     maiOptimismContractAddress: '0xdfa46478f9e5ea86d57387849598dbfb2e964b02',
+    daiOptimismContractAddress: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+    usdtOptimismContractAddress: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
     alEthOptimismContractAddress: '0x3e29d3a9316dab217754d13b28646b76607c5f04',
     wethOptimismContractAddress: '0x4200000000000000000000000000000000000006',
     beetsVaultContractAddress: '0x20dd72ed959b6147912c2e529f0a0c651c33c9ce',
@@ -107,8 +109,17 @@ export const addresses = {
     curveAlEthWethPoolContractAddress: '0x8efd02a0a40545f32dba5d664cbbc1570d3fedf6',
     alUsdMainnetTransmuterBuffer: '0x1eed2dbeb9fc23ab483f447f38f289ca15f79bac',
     alEthMainnetTransmuterBuffer: '0xbc2FB245594a68c927C930FBE2d00680A8C90B9e',
+    alUsdOptimismTransmuterBuffer: '0xe99a9A717c60F9639B235ede422c27d60FBEB3b9',
+    alEthOptimismTransmuterBuffer: '0x7f50923EE8E2BC3596a63998495baf2948a28f68',
+    alUsdArbitrumTransmuterBuffer: '0x00E33722ba54545667E76a18CE9D544130eEAbcC',
+    alEthArbitrumTransmuterBuffer: '0xECAd08EE07f1AA87f3E080997eBa6d02d28bb9D2',
     arbiWstEthAddress: '0x5979D7b546E38E414F7E9822514be443A4800529',
-    arbiAUsdcAddress: '0x248a431116c6f6FCD5Fe1097d16d0597E24100f5'
+    arbiAUsdcAddress: '0x248a431116c6f6FCD5Fe1097d16d0597E24100f5',
+    usdcArbitrumContractAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    wethArbitrumContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    metisAlUsdContractAddress: '0x303241e2b3b4aed0bb0f8623e7442368fed8faf3',
+    metisAlEthContractAddress: '0x0e17934b9735d479b2388347faef0f4e58b9cc06',
+    arbitrumAlEthContractAddress: '0x17573150d67d820542EFb24210371545a4868B03'
 }
 
 export const abis = {

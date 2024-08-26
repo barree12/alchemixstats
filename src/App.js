@@ -35,6 +35,7 @@ const web3 = new Web3('https://rpc.ankr.com/eth');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
+const web3metis = new Web3('https://metis-mainnet.public.blastapi.io')
 
 export default class App extends React.Component {
 
@@ -113,12 +114,13 @@ export default class App extends React.Component {
     this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
     this.alUsdFraxBpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFBPCurveContractAddress);
     this.alUsdArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiAlUsdContractAddress);
+    this.alEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbitrumAlEthContractAddress);
     this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
     this.usdsArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsdsContractAddress);
     this.usxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsxContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
-    this.nextAlUsdOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.nextAlUsdOptimism);
-
+    this.alUsdMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlUsdContractAddress);
+    this.alEthMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlEthContractAddress);
   }
 
   componentDidMount() {
@@ -210,10 +212,15 @@ export default class App extends React.Component {
       this.alEthContract.methods.totalSupply().call(),
       this.alUsdContract.methods.totalSupply().call(),
       this.alUsdOptimismContract.methods.totalSupply().call(),
-      this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
+      this.alUsdArbitrumContract.methods.totalSupply().call(),
+      this.alUsdMetisContract.methods.totalSupply().call(),
+      this.alEthOptimismContract.methods.totalSupply().call(),
+      this.alEthArbitrumContract.methods.totalSupply().call(),
+      this.alEthMetisContract.methods.totalSupply().call(),
+      //this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, nextAlUsdSupplyOptimism]) => {
+      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -280,11 +287,15 @@ export default class App extends React.Component {
         deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
         deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
+        alAssetSupply.alEthOptimism = alEthSupplyOptimism/Math.pow(10, 18);
+        alAssetSupply.alEthArbitrum = alEthSupplyArbitrum/Math.pow(10, 18);
+        alAssetSupply.alEthMetis = alEthSupplyMetis/Math.pow(10, 18);
         alAssetSupply.alUsd = alUsdSupply/Math.pow(10, 18);
         alAssetSupply.alUsdOptimism = alUsdSupplyOptimism/Math.pow(10, 18);
-        alAssetSupply.nextAlUsdOptimism = nextAlUsdSupplyOptimism/Math.pow(10, 18);
+        alAssetSupply.alUsdArbitrum = alUsdSupplyArbitrum/Math.pow(10, 18);
+        alAssetSupply.alUsdMetis = alUsdSupplyMetis/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
-    })
+      })
     .catch(function(err) {
       console.log(err.message);
     });
@@ -661,8 +672,12 @@ export default class App extends React.Component {
     let alEthWethVeloInElixir = 0;
     let alUsdBackingTokensInElixir = 0;
     let alEthBackingTokensInElixir = 0;
-    let alUsdInOptimismElixir = 0;
-    let alEthInOptimismElixir = 0;
+    let alUsdOptimismBackingTokensInElixir = 0;
+    let alEthOptimismBackingTokensInElixir = 0;
+    let alUsdArbitrumBackingTokensInElixir = 0;
+    let alEthArbitrumBackingTokensInElixir = 0;
+    let alUsdAmountInOptimismElixir = 0;
+    let alEthAmountInOptimismElixir = 0;
     let symbols = [];
     let elixirSymbols = [];
     let treasuryAssets = {};
@@ -845,20 +860,27 @@ export default class App extends React.Component {
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
         for(let k=0;k<elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list.length;k++){
           elixirAssets[elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === "0x172a58d5e8c11ee554b09d924d5e2c3afadd44c0" && (elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC")) alUsdInOptimismElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === "0xb1494dcade9b7678692def8da0129e28a209b026" && (elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "ETH")) alEthInOptimismElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdUsdcVelodromeId) alUsdUsdcVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          //if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === "0x172a58d5e8c11ee554b09d924d5e2c3afadd44c0" && (elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC")) alUsdOptimismBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+          if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === "0xb1494dcade9b7678692def8da0129e28a209b026" && (elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "ETH")) alEthOptimismBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdUsdcVelodromeId) {
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC") alUsdOptimismBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            alUsdUsdcVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          }
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthWethVelodromeId) alEthWethVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxRamsesId) alUsdFraxArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthRamsesId) alEthFrxEthArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxRamsesId) {
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX") alUsdArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            alUsdFraxArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          }
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthRamsesId) {
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            alEthFrxEthArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          } 
           else {
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthConvexId) alEthFrxEthInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX" ||
-            elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC" ||
-            elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "DAI" ||
-            elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDT") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
           }
@@ -871,12 +893,22 @@ export default class App extends React.Component {
     for(let i=0;i<elixirTokensConcat.length;i++){
       //if(elixirTokensConcat[i].symbol !== "alUSD") elixirAssets[elixirTokensConcat[i].symbol] += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
       if(elixirTokensConcat[i].symbol === "alUSD") {
-        alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
-        alUsdAmountInElixir += elixirTokensConcat[i].amount;
+        if(elixirTokensConcat[i].chain === "eth"){
+          alUsdInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+          alUsdAmountInElixir += elixirTokensConcat[i].amount;
+        }
+        if(elixirTokensConcat[i].chain === "op"){
+          alUsdAmountInOptimismElixir += elixirTokensConcat[i].amount;
+        }
       }
       if(elixirTokensConcat[i].symbol === "alETH") {
-        alEthInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
-        alEthAmountInElixir += elixirTokensConcat[i].amount;
+        if(elixirTokensConcat[i].chain === "eth"){
+          alEthInElixir += elixirTokensConcat[i].amount * elixirTokensConcat[i].price;
+          alEthAmountInElixir += elixirTokensConcat[i].amount;
+        }
+        if(elixirTokensConcat[i].chain === "op"){
+          alEthAmountInOptimismElixir += elixirTokensConcat[i].amount;
+        }
       }
     }
 
@@ -915,11 +947,15 @@ export default class App extends React.Component {
       alUsdFraxRamsesInElixir: alUsdFraxArbiInElixir,
       alEthWethVeloInElixir: alEthWethVeloInElixir,
       alUsdUsdcVeloInElixir: alUsdUsdcVeloInElixir,
-      alEthInOptimismElixir: alEthInOptimismElixir,
-      alUsdInOptimismElixir: alUsdInOptimismElixir,
+      alEthOptimismBackingTokensInElixir: alEthOptimismBackingTokensInElixir,
+      alUsdOptimismBackingTokensInElixir: alUsdOptimismBackingTokensInElixir,
+      alEthArbitrumBackingTokensInElixir: alEthArbitrumBackingTokensInElixir,
+      alUsdArbitrumBackingTokensInElixir: alUsdArbitrumBackingTokensInElixir,
       alUsdInElixir: alUsdInElixir,
       alEthInElixir: alEthInElixir,
       alEthAmountInElixir: alEthAmountInElixir,
+      alUsdAmountInOptimismElixir: alUsdAmountInOptimismElixir,
+      alEthAmountInOptimismElixir: alEthAmountInOptimismElixir,
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
       alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
       alEthBackingTokensInElixir: alEthBackingTokensInElixir,

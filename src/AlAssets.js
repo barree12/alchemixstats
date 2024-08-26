@@ -9,6 +9,8 @@ import { abis, addresses } from './Constants';
 import Web3 from 'web3';
 
 const web3 = new Web3('https://rpc.ankr.com/eth');
+const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
+const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
 
 export default class AlAssets extends React.Component {
     
@@ -33,12 +35,16 @@ export default class AlAssets extends React.Component {
         this.daiContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.daiAddress);
         this.usdcContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.usdtAddress);
         this.usdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.usdcAddress);
-
+        this.usdcOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdcOptimismContractAddress);
+        this.daiOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.daiOptimismContractAddress);
+        this.usdtOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdtOptimismContractAddress);
+        this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
+        this.usdcArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.usdcArbitrumContractAddress);
+        this.wethArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.wethArbitrumContractAddress);
     }
 
     componentDidMount() {
         this.getBacking();
-        //this.getAlAssetPrice();
       }
 
     toggleAlUsdPeg(){
@@ -49,85 +55,7 @@ export default class AlAssets extends React.Component {
         this.setState({ alEthPegToggle: !this.state.alEthPegToggle });
     }
 
-    /*getSubgraphRequestOptions(query){
-        return {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: query })
-        }
-    }
-
-    calculateAlEthPeg(result){
-        let alEthPeg = { date: [], peg: [], pegPerc: [] }
-        for(let i=0;i<result.length;i++){
-          try {
-            alEthPeg.date[i] = Number(result[i].timestamp*1000); 
-            alEthPeg.peg[i] = result[i].outputAmount/Math.pow(10, 18)/500;
-            alEthPeg.pegPerc[i] = (1-result[i].outputAmount/Math.pow(10, 18)/500)*(-100);
-          }
-          catch (err) {
-            console.log(err);
-          }
-        }
-        this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
-      }
-    
-    calculateAlUsdPeg(usdcPeg){
-      console.log(usdcPeg)
-        let usdcIndex = 0;
-        let alUsdPeg = {usdc: { date: [], peg: [], pegPerc: [] } };
-        for(let i=0;i<usdcPeg.length;i++){
-          try {
-              alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
-              alUsdPeg.usdc.peg[usdcIndex] = usdcPeg[i].outputAmount/Math.pow(10, 12);
-              alUsdPeg.usdc.pegPerc[usdcIndex] = (1-usdcPeg[i].outputAmount/Math.pow(10, 12))*(-100);
-              usdcIndex++;
-          }
-          catch (err) {
-            console.log(err)
-          }
-        }
-        this.setState({ alUsdPeg: alUsdPeg, alUsdPegLoading: false });
-    }
-
-    getPegQuery(alAsset, collateralToken, tradeSize, skip){
-        return `{
-          poolHistoricalRates(
-            first: 1000
-            skip: ` + skip + `
-            where: {inputToken: "` + alAsset + `", outputToken: "` + collateralToken + `", inputAmount: "` + tradeSize.toLocaleString('fullwide', {useGrouping:false}) + `"}
-            orderBy: timestamp
-            orderDirection: desc
-          ) {
-            inputAmount
-            outputAmount
-            timestamp
-          }
-        }`
-      }
-
-
-
-    getAlAssetPrice(){
-        const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0)
-        const usdcPegQuerySkip1000 = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 1000)
-        const alEthPegQuery = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 0)
-        const alEthPegQuerySkip1000 = this.getPegQuery(addresses.alEthAddress, addresses.ethAddress, Math.pow(10,20)*5, 1000)
-        
-        Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuerySkip1000)).then(res => res.json()),
-            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
-            fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuerySkip1000)).then(res => res.json())])
-            .then(([usdcPeg, usdcPegSkip1000, alEthPeg, alEthPegSkip1000]) => {
-                this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.concat(usdcPegSkip1000.data.poolHistoricalRates).reverse())
-                this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.concat(alEthPegSkip1000.data.poolHistoricalRates).reverse())
-            })
-            .catch(function(err) {
-                console.log(err.message);
-            });
-    }*/
-
-    calculateBacking(mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer){
+    calculateBacking(mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer, daiInOptimismTransmuterBuffer, usdcInOptimismTransmuterBuffer, usdtInOptimismTransmuterBuffer, wethInOptimismTransmuterBuffer, usdcInArbitrumTransmuterBuffer, wethInArbitrumTransmuterBuffer){
         let alUsdDebt = 0;
         let alEthDebt = 0;
         let alUsdOptimismDebt = 0;
@@ -141,7 +69,11 @@ export default class AlAssets extends React.Component {
         let alUsdIdleInOld = 129638676;
         let alEthInOldElixir = 24101;
         let ethInTransmuterBuffer = wethInTransmuterBuffer / Math.pow(10,18);
+        let ethInOptimismTransmuterBuffer = wethInOptimismTransmuterBuffer / Math.pow(10,18);
+        let ethInArbitrumTransmuterBuffer = wethInArbitrumTransmuterBuffer / Math.pow(10,18);
         let stablesInTransmuterBuffer = daiInTransmuterBuffer / Math.pow(10,18) + usdcInTransmuterBuffer / Math.pow(10,6) + usdtInTransmuterBuffer / Math.pow(10,6) + fraxInTransmuterBuffer / Math.pow(10,18);
+        let stablesInOptimismTransmuterBuffer = daiInOptimismTransmuterBuffer / Math.pow(10,18) + usdcInOptimismTransmuterBuffer / Math.pow(10,6) + usdtInOptimismTransmuterBuffer / Math.pow(10,6);
+        let stablesInArbitrumTransmuterBuffer = usdcInOptimismTransmuterBuffer / Math.pow(10,6);
         for(let i=0;i<mainnetDebt.length;i++){
             alUsdDebt += mainnetDebt[i].alusd_debt;
             alEthDebt += mainnetDebt[i].aleth_debt;
@@ -156,22 +88,23 @@ export default class AlAssets extends React.Component {
         for(let i=0;i<arbitrumDebt.length;i++){
           alUsdArbitrumDebt += arbitrumDebt[i].alusd_debt;
           alEthArbitrumDebt += arbitrumDebt[i].aleth_debt;
-      }
+        }
         let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
         let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1 - alUsdIdleInOld;
-        let alUsdShouldHaveOptimism = this.props.alAssetSupply.alUsdOptimism - alUsdOptimismDebt - this.props.alAssetSupply.nextAlUsdOptimism;
-        let alUsdOwnedOptimism = this.props.debankData.alUsdInOptimismElixir
+        let alUsdShouldHaveL2 = this.props.alAssetSupply.alUsdOptimism + this.props.alAssetSupply.alUsdArbitrum + this.props.alAssetSupply.alUsdMetis - alUsdOptimismDebt - alUsdArbitrumDebt - this.props.debankData.alUsdAmountInOptimismElixir;
+        let alUsdOwnedL2 = this.props.debankData.alUsdOptimismBackingTokensInElixir + this.props.debankData.alUsdArbitrumBackingTokensInElixir + stablesInOptimismTransmuterBuffer + stablesInArbitrumTransmuterBuffer;
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
-        let alUsdOptimismSurplus = alUsdOwnedOptimism - alUsdShouldHaveOptimism;
+        let alUsdOptimismSurplus = alUsdOwnedL2 - alUsdShouldHaveL2;
         let alEthOwned = this.props.debankData.alEthBackingTokensInElixir + alEthInV1 + ethInTransmuterBuffer;
         let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1 - alEthInOldElixir;
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
-
+        console.log(this.props.debankData.alUsdOptimismBackingTokensInElixir)
+        //console.log(this.props.alAssetSupply.alUsdMetis)
         //console.log(alUsdDebt)
         //console.log(alUsdDebtV1)
         //console.log(alUsdOwned)
-        console.log(arbitrumDebt)
+        //console.log(arbitrumDebt)
 
 
         let surplus = { 
@@ -200,9 +133,15 @@ export default class AlAssets extends React.Component {
             this.usdcContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.usdtContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
             this.fraxContract.methods.balanceOf(addresses.alUsdMainnetTransmuterBuffer).call(),
-            this.wethContract.methods.balanceOf(addresses.alEthMainnetTransmuterBuffer).call()
+            this.wethContract.methods.balanceOf(addresses.alEthMainnetTransmuterBuffer).call(),
+            this.daiOptimismContract.methods.balanceOf(addresses.alUsdOptimismTransmuterBuffer).call(),
+            this.usdcOptimismContract.methods.balanceOf(addresses.alUsdOptimismTransmuterBuffer).call(),
+            this.usdtOptimismContract.methods.balanceOf(addresses.alUsdOptimismTransmuterBuffer).call(),
+            this.wethOptimismContract.methods.balanceOf(addresses.alEthOptimismTransmuterBuffer).call(),
+            this.usdcArbitrumContract.methods.balanceOf(addresses.alUsdArbitrumTransmuterBuffer).call(),
+            this.wethArbitrumContract.methods.balanceOf(addresses.alEthArbitrumTransmuterBuffer).call(),
         ])
-        .then(([mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer]) => {
+        .then(([mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer, daiInOptimismTransmuterBuffer, usdcInOptimismTransmuterBuffer, usdtInOptimismTransmuterBuffer, wethInOptimismTransmuterBuffer, usdcInArbitrumTransmuterBuffer, wethInArbitrumTransmuterBuffer]) => {
             let mainnetDebtUrl = "https://ipfs.imimim.info/ipfs/" + mainnetDebt.rows[0].ipfs_pin_hash;
             let optimismDebtUrl = "https://ipfs.imimim.info/ipfs/" + optimismDebt.rows[0].ipfs_pin_hash;
             let arbitrumDebtUrl = "https://ipfs.imimim.info/ipfs/" + arbitrumDebt.rows[0].ipfs_pin_hash;
@@ -212,7 +151,7 @@ export default class AlAssets extends React.Component {
                 fetch(arbitrumDebtUrl).then(res => res.json()),
                 fetch(optimismDebtUrl).then(res => res.json())])
                 .then(([mainnetDebtFinal, v1DebtFinal, arbitrumDebtFinal, optimismDebtFinal]) => {
-                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal, arbitrumDebtFinal, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer)
+                    this.calculateBacking(mainnetDebtFinal, v1DebtFinal, optimismDebtFinal, arbitrumDebtFinal, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer, daiInOptimismTransmuterBuffer, usdcInOptimismTransmuterBuffer, usdtInOptimismTransmuterBuffer, wethInOptimismTransmuterBuffer, usdcInArbitrumTransmuterBuffer, wethInArbitrumTransmuterBuffer)
             })
             .catch(function(err) {
                 console.log(err.message);
@@ -223,30 +162,6 @@ export default class AlAssets extends React.Component {
             console.log(err.message);
         });
 
-        /*fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=mainnet_user_debt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
-          (result) => { 
-            let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
-            fetch(url).then(res => res.json()).then(
-              (result2) => { 
-                this.calculateBacking(result2) 
-              },
-              (error) => { console.log(error) })
-          
-          },
-          (error) => { console.log(error) })
-        
-          fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=v1UserDebt.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
-            (result) => { 
-              let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
-              fetch(url).then(res => res.json()).then(
-                (result2) => { 
-                  //this.calculateBacking(result2)
-                  console.log(result2) 
-                },
-                (error) => { console.log(error) })
-            
-            },
-            (error) => { console.log(error) })*/
     }
 
     render(){
