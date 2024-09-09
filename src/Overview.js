@@ -35,7 +35,7 @@ export default class Overview extends React.Component {
                     </span>
                     <br/>
                     <span>
-                        The Alchemix quarterly financial reports are available in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/financial-reports">Alchemix GitBook</a><br/>
+                        The Alchemix quarterly financial reports are available in the <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/resources/audits-and-reports/financial-reports">Alchemix GitBook</a><br/>
                         Dune dashboards also exist that provide further details on Alchemix related contracts, like the <a target="_blank" rel="noreferrer" href="https://dune.com/alchemix/arbitrum-grant-metrics">Arbitrum</a> dashboard.<br/>
                         An <a target="_blank" rel="noreferrer" href="https://app.alphaday.com/b/alchemix/">information dashboard</a> is maintained by Alphaday, where you can keep up to date with all things Alchemix!
                     </span>

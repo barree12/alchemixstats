@@ -183,7 +183,7 @@ export default class Treasury extends React.Component {
                 </div>}
                 <div className="section-wrapper">
                     <div className="chart-title">
-                        <h3>Curve Pool Ownership</h3>
+                        <h3>Liquidity Pool Ownership</h3>
                         {this.props.debankDataLoading ? <LoadingComponent /> :
                             <ChartCrvPoolRatios 
                                 alAssetCrvSupply={this.props.alAssetCrvSupply}
