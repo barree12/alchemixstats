@@ -30,7 +30,7 @@ import {
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 //const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
-const web3 = new Web3('https://rpc.ankr.com/eth');
+const web3 = new Web3('https://eth.public-rpc.com');
 //const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
