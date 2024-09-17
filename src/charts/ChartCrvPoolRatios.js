@@ -19,7 +19,7 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUSD-FRAXBP", "alETH-frxETH", "Velo alUSD-USDC", "Velo alETH-WETH", "Ramses alUSD-FRAX", "Ramses alETH-frxETH"],
+            labels: ["alUSD-FRAXBP", "alETH-frxETH", "Velo alUSD-USDC", "Velo alETH-WETH", "RAMSES alUSD-FRAX", "RAMSES alETH-frxETH"],
             datasets: [{
               label: 'Owned',
               data: [
@@ -84,10 +84,10 @@ export default class ChartCrvPoolRatios extends React.Component {
                             ((context.dataset.label === 'External' && context.label === "Velo alETH-WETH") ? (Math.round((helperPointer.props.debankData.veloAlEthWethPool - helperPointer.props.debankData.alEthWethVeloInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcVeloInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "Velo alUSD-USDC") ? (Math.round((helperPointer.props.debankData.veloAlUsdUsdcPool - helperPointer.props.debankData.alUsdUsdcVeloInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Ramses alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthRamsesInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Ramses alETH-frxETH") ? (Math.round((helperPointer.props.debankData.ramsesAlEthFrxEthPool - helperPointer.props.debankData.alEthFrxEthRamsesInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Ramses alUSD-FRAX") ? (Math.round(helperPointer.props.debankData.alUsdFraxRamsesInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Ramses alUSD-FRAX") ? (Math.round((helperPointer.props.debankData.ramsesAlUsdFraxPool - helperPointer.props.debankData.alUsdFraxRamsesInElixir)/10000)/100 + "M") : "")
+                            ((context.dataset.label === 'Owned' && context.label === "RAMSES alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthRamsesInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "RAMSES alETH-frxETH") ? (Math.round((helperPointer.props.debankData.ramsesAlEthFrxEthPool - helperPointer.props.debankData.alEthFrxEthRamsesInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "RAMSES alUSD-FRAX") ? (Math.round(helperPointer.props.debankData.alUsdFraxRamsesInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "RAMSES alUSD-FRAX") ? (Math.round((helperPointer.props.debankData.ramsesAlUsdFraxPool - helperPointer.props.debankData.alUsdFraxRamsesInElixir)/10000)/100 + "M") : "")
                           }
                         return label;
                     }

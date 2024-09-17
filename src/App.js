@@ -11,7 +11,7 @@ import Revenues from './Revenues';
 import Treasury from './Treasury';
 import Transmuters from './Transmuters';
 import { Link } from "react-router-dom";
-import { formatDate, datesEqual } from './Functions';
+import { formatDate, datesEqual, wait } from './Functions';
 import { addresses, abis } from './Constants';
 import {
   Chart as ChartJS,
@@ -29,8 +29,8 @@ import {
 } from 'chart.js';
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
-//const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
-const web3 = new Web3('https://rpc.coinsdo.net/eth');
+const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
+//const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/demo');
 //const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
@@ -180,47 +180,49 @@ export default class App extends React.Component {
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaDaiAddress).call(),
       this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaFraxAddress).call(),
       this.alchemistEthContract.methods.getYieldTokenParameters(addresses.yvWethAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.yvWethAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.vaEthAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.vaEthAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.wstEthAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.wstEthAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.rEthAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.rEthAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.sfrxEthAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.sfrxEthAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.aFraxAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aFraxAddress).call(),
-      this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
-      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
-      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
-      this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
-      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
-      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiWstEthAddress).call(),
-      this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiYvWethAddress).call(),
-      this.alchemistArbiContract.methods.getYieldTokenParameters(addresses.arbiAUsdcAddress).call(),
-      this.alchemistEthArbiContract.methods.getYieldTokenParameters(addresses.arbiWstEthAddress).call(),
-      this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
-      this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
-      this.alEthContract.methods.totalSupply().call(),
-      this.alUsdContract.methods.totalSupply().call(),
-      this.alUsdOptimismContract.methods.totalSupply().call(),
-      this.alUsdArbitrumContract.methods.totalSupply().call(),
-      this.alUsdMetisContract.methods.totalSupply().call(),
-      this.alEthOptimismContract.methods.totalSupply().call(),
-      this.alEthArbitrumContract.methods.totalSupply().call(),
-      this.alEthMetisContract.methods.totalSupply().call(),
       //this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
       //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams, ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
+      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams]) => {
+        wait(2000);
+        Promise.all([this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.yvWethAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.vaEthAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.vaEthAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.wstEthAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.wstEthAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.rEthAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.rEthAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.sfrxEthAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.sfrxEthAddress).call(),
+          this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
+          this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
+          this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
+          this.alchemistContract.methods.getYieldTokenParameters(addresses.aFraxAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
+          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
+          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
+          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
+          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aFraxAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
+          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
+          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
+          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
+          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
+          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiWstEthAddress).call(),
+          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiYvWethAddress).call(),
+          this.alchemistArbiContract.methods.getYieldTokenParameters(addresses.arbiAUsdcAddress).call(),
+          this.alchemistEthArbiContract.methods.getYieldTokenParameters(addresses.arbiWstEthAddress).call(),
+          this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
+          this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
+          this.alEthContract.methods.totalSupply().call(),
+          this.alUsdContract.methods.totalSupply().call(),
+          this.alUsdOptimismContract.methods.totalSupply().call(),
+          this.alUsdArbitrumContract.methods.totalSupply().call(),
+          this.alUsdMetisContract.methods.totalSupply().call(),
+          this.alEthOptimismContract.methods.totalSupply().call(),
+          this.alEthArbitrumContract.methods.totalSupply().call(),
+          this.alEthMetisContract.methods.totalSupply().call()])
+        .then(([ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -295,10 +297,8 @@ export default class App extends React.Component {
         alAssetSupply.alUsdArbitrum = alUsdSupplyArbitrum/Math.pow(10, 18);
         alAssetSupply.alUsdMetis = alUsdSupplyMetis/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
-      })
-    .catch(function(err) {
-      console.log(err.message);
-    });
+        }).catch(function(err) { console.log(err.message) });
+      }).catch(function(err) { console.log(err.message); });
   }
 
   getCurvePoolBalances(){
