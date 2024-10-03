@@ -448,6 +448,24 @@ export default class App extends React.Component {
     this.setState({ optiTvl: alchemistTvl, optiTvlLoading: false })
   }
 
+  calculateArbiTvl(result){
+    let dayTracker = 0;
+    let arbiStart = false;
+    let alchemistTvl = { date:[], wstEth: [], aUsdc: [] };
+    for(let i=0;i<result.length;i++){
+      if(result[i].blockchain === "arbitrum") arbiStart = true;
+      if(arbiStart){
+        if(i!==0 && result[i].day !== result[i-1].day) dayTracker++;
+        alchemistTvl.date[dayTracker] = result[i].day.split(" ")[0];
+        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "aArbUSDCn") alchemistTvl.aUsdc[dayTracker] = Math.round(result[i].balance/10000)/100;
+        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "wstETH") alchemistTvl.wstEth[dayTracker] = Math.round(result[i].balance*100)/100;
+      }
+    }
+    
+    //console.log(alchemistTvl)
+    this.setState({ arbiTvl: alchemistTvl, arbiTvlLoading: false })
+  }
+
   /*calculateOptiTvl(result){
     console.log(result)
     let startDate = new Date(1664365762*1000); //2022 Sept 28th
@@ -499,7 +517,7 @@ export default class App extends React.Component {
     }
     console.log(optiTvl)
     this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
-  }*/
+  }
 
   calculateArbiTvl(result){
     //console.log(result)
@@ -531,7 +549,7 @@ export default class App extends React.Component {
     }
     //console.log(arbiTvl)
     this.setState({ arbiTvl: arbiTvl, arbiTvlLoading: false });
-  }
+  }*/
 
   calculateAlchemistTvl(result){
     //console.log(result)
@@ -1123,14 +1141,16 @@ export default class App extends React.Component {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
         //this.calculateOptiTvl(optiAlchemistTvl.result.rows)
-        this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
+        //this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
         //console.log(ipfsOptiFile)
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
         fetch(url).then(res => res.json()).then(
-          (optiAlchemistTvl) => { 
-            console.log(optiAlchemistTvl)
-            this.calculateOptiTvl(optiAlchemistTvl) },
+          (l2AlchemistTvl) => { 
+            console.log(l2AlchemistTvl)
+            this.calculateOptiTvl(l2AlchemistTvl)
+            this.calculateArbiTvl(l2AlchemistTvl)
+          },
           (error) => { console.log(error) })
       })
       .catch(function(err) {
