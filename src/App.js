@@ -1125,11 +1125,11 @@ export default class App extends React.Component {
         //this.calculateOptiTvl(optiAlchemistTvl.result.rows)
         this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
-        //console.log(arbiAlchemistTvl)
+        //console.log(ipfsOptiFile)
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
         fetch(url).then(res => res.json()).then(
           (optiAlchemistTvl) => { 
-            //console.log(optiAlchemistTvl)
+            console.log(optiAlchemistTvl)
             this.calculateOptiTvl(optiAlchemistTvl) },
           (error) => { console.log(error) })
       })
