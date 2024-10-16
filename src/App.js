@@ -444,7 +444,7 @@ export default class App extends React.Component {
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptWETH") alchemistTvl.aOptWETH[dayTracker] = Math.round(result[i].balance*100)/100;
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "wstETH") alchemistTvl.wstETH[dayTracker] = Math.round(result[i].balance*100)/100;
     }
-    //console.log(alchemistTvl)
+    console.log(alchemistTvl)
     this.setState({ optiTvl: alchemistTvl, optiTvlLoading: false })
   }
 

@@ -135,7 +135,7 @@ export default class Harvests extends React.Component {
                     }
                     </div>
                     <div className="chart-title">
-                    <h3>Eth Harvests</h3>
+                    <h3>ETH Harvests</h3>
                     { this.state.harvestsLoading ? <LoadingComponent /> :
                         <ChartHarvestsEth harvests={this.state.harvests} />
                     }

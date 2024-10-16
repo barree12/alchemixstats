@@ -32,6 +32,17 @@ export default class AlUsdSummary extends React.Component {
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
                 <h3>Backing surplus</h3>
                 <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdMainnet))} alUSD</b></span>
+                <br/>
+                <span>(+) Elixir held alUSD backing in LPs: <b>{styleNumber(Math.round(this.props.surplus.alUsdBackingTokensInElixir))}</b></span>
+                <span>(+) Stablecoins in Transmuters: <b>{styleNumber(Math.round(this.props.surplus.stablesInTransmuterBuffer))}</b></span>
+                <span>(+) Protocol-owned stablecoins in V1 contracts: <b>{styleNumber(Math.round(this.props.surplus.alUsdInV1))}</b></span>
+                <span>(+) Elixir held idle alUSD: <b>{styleNumber(Math.round(this.props.surplus.alUsdInElixir))}</b></span>
+                <span>Mainnet alUSD supply: <b>{styleNumber(Math.round(this.props.surplus.alUsdSupply))}</b></span>                
+                <span>(-)Mainnet V2 total debt: <b>{styleNumber(Math.round(this.props.surplus.alUsdDebt))}</b></span>
+                <span>(-)Mainnet V1 total debt: <b>{styleNumber(Math.round(this.props.surplus.alUsdDebtV1))}</b></span>
+                <br/>
+                Surplus -&gt; alUSD_supply - total_debt &gt; protocol_held_funds
+                <br/><br/>
                 {<span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>}
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">

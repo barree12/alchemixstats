@@ -234,7 +234,7 @@ export default class Deposits extends React.Component {
                     <ChartV2AlchemistTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
                     <div className="chart-title">
-                    <h3>Alchemist V2 Eth TVL</h3>
+                    <h3>Alchemist V2 ETH TVL</h3>
                     {this.state.alchemistTvlLoading ? <LoadingComponent /> :
                     <ChartV2AlchemistEthTVL alchemistTvl={this.state.alchemistTvl} />}
                     </div>
@@ -249,7 +249,7 @@ export default class Deposits extends React.Component {
                     <ChartOptiAlchemistTVL optiTvl={this.props.optiTvl} />
                     </div>
                     <div className="chart-title">
-                    <h3>Optimism Eth TVL</h3>
+                    <h3>Optimism ETH TVL</h3>
                     <ChartOptiAlchemistEthTVL optiTvl={this.props.optiTvl} />
                     </div>
                 </div>
@@ -262,7 +262,7 @@ export default class Deposits extends React.Component {
                     <ChartArbiAlchemistTVL arbiTvl={this.props.arbiTvl} />
                     </div>
                     <div className="chart-title">
-                    <h3>Arbitrum Eth TVL</h3>
+                    <h3>Arbitrum ETH TVL</h3>
                     <ChartArbiAlchemistEthTVL arbiTvl={this.props.arbiTvl} />
                     </div>
                 </div>

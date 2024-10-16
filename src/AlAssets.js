@@ -109,6 +109,13 @@ export default class AlAssets extends React.Component {
 
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
+            alUsdBackingTokensInElixir: this.props.debankData.alUsdBackingTokensInElixir,
+            alUsdInV1: alUsdInV1,
+            stablesInTransmuterBuffer: stablesInTransmuterBuffer,
+            alUsdSupply: this.props.alAssetSupply.alUsd,
+            alUsdInElixir: this.props.debankData.alUsdAmountInElixir + alUsdIdleInOld,
+            alUsdDebt: alUsdDebt,
+            alUsdDebtV1: alUsdDebtV1,
             alUsdOptimism: alUsdOptimismSurplus,
             alEthMainnet: alEthMainnetSurplus
         }
