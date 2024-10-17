@@ -34,6 +34,17 @@ export default class AlEthSummary extends React.Component {
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
                 <h3>Backing surplus</h3>
                 <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alEthMainnet))} alETH</b></span>
+                <br/>
+                <span>(+) Elixir held alETH backing in LPs: <b>{styleNumber(Math.round(this.props.surplus.alEthBackingTokensInElixir))}</b></span>
+                <span>(+) ETH in Transmuters: <b>{styleNumber(Math.round(this.props.surplus.ethInTransmuterBuffer))}</b></span>
+                <span>(+) Protocol-owned ETH in V1 contracts: <b>{styleNumber(Math.round(this.props.surplus.alEthInV1))}</b></span>
+                <span>(+) Elixir held idle alETH: <b>{styleNumber(Math.round(this.props.surplus.alEthInElixir))}</b></span>
+                <span>Mainnet alETH supply: <b>{styleNumber(Math.round(this.props.surplus.alEthSupply))}</b></span>                
+                <span>(-)Mainnet V2 total debt: <b>{styleNumber(Math.round(this.props.surplus.alEthDebt))}</b></span>
+                <span>(-)Mainnet V1 total debt: <b>{styleNumber(Math.round(this.props.surplus.alEthDebtV1))}</b></span>
+                <br/>
+                Surplus -&gt; alETH_supply - total_debt &gt; protocol_held_funds
+                <br/><br/>
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   <div className="small-table-inner-5">

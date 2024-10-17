@@ -43,7 +43,7 @@ export default class AlUsdSummary extends React.Component {
                 <br/>
                 Surplus -&gt; alUSD_supply - total_debt &gt; protocol_held_funds
                 <br/><br/>
-                {<span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>}
+                {/*<span>Optimism backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdOptimism))} alUSD</b></span>*/}
                 <h3>Liquidity pools</h3>
                 <div className="small-table-3">
                   
