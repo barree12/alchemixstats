@@ -688,6 +688,8 @@ export default class App extends React.Component {
     let alEthFrxEthArbiInElixir = 0;
     let alUsdUsdcVeloInElixir = 0;
     let alEthWethVeloInElixir = 0;
+    let alEthFrxEthVeloInElixir = 0;
+    let alEthPxEthVeloInElixir = 0;
     let alUsdBackingTokensInElixir = 0;
     let alEthBackingTokensInElixir = 0;
     let alUsdOptimismBackingTokensInElixir = 0;
@@ -709,12 +711,16 @@ export default class App extends React.Component {
     let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
     let alEthFrxEthRamsesId = '0xc3f26d2fa16129a8d4a5a0f94d25f2cdd9005cdb';
     let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
-    let alEthWethVelodromeId = '0xa1055762336f92b4b8d2edc032a0ce45ead6280a';
+    let alEthWethVelodromeId = '0xc16adbf2d01d6524b79cbb610ce31d5db80eee3c';
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
+    let alEthPxEthVelodromeId = '0x28cd6d3471e031f8b380a64e9da3b9b12a473186';
+    let alEthFrxEthVelodromeId = '0xfc0b9a9c2b63e6acaca91a77a80bfa83c615e6c5';
     let ramsesAlEthFrxEthAddress = '0xfb4fe921f724f3c7b610a826c827f9f6ecef6886';
     let ramsesAlUsdFraxAddress = '0xfd599db360cd9713657c95df66650a427d213010';
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
+    let veloAlEthFrxEthAddress = '0x1ad06ca54de04dbe9e2817f4c13ecb406dcbeaf0';
+    let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
     
     let tempDebankCalc = {};
     //let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs).concat(tokensBaseMs).concat(tokensMetisMs);
@@ -730,12 +736,16 @@ export default class App extends React.Component {
     let ramsesAlUsdFraxPool;
     let veloAlEthWethPool;
     let veloAlUsdUsdcPool;
+    let veloAlEthFrxEthPool;
+    let veloAlEthPxEthPool;
 
     for(let i=0;i<data.pools.length;i++){
       if(data.pools[i].address === ramsesAlEthFrxEthAddress) ramsesAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthWethAddress) veloAlEthWethPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlUsdUsdcAddress) veloAlUsdUsdcPool = data.pools[i].total_balance.total_usd_value;
+      if(data.pools[i].address === veloAlEthFrxEthAddress) veloAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
+      if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;
     }
 
 
@@ -872,7 +882,7 @@ export default class App extends React.Component {
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
 
-    //console.log(elixirProtocolsConcat)
+    console.log(elixirProtocolsConcat)
 
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
@@ -885,6 +895,8 @@ export default class App extends React.Component {
             alUsdUsdcVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           }
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthWethVelodromeId) alEthWethVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthVelodromeId) alEthFrxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthPxEthVelodromeId) alEthPxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxRamsesId) {
             if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX") alUsdArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
             alUsdFraxArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
@@ -965,6 +977,8 @@ export default class App extends React.Component {
       alUsdFraxRamsesInElixir: alUsdFraxArbiInElixir,
       alEthWethVeloInElixir: alEthWethVeloInElixir,
       alUsdUsdcVeloInElixir: alUsdUsdcVeloInElixir,
+      alEthFrxEthVeloInElixir: alEthFrxEthVeloInElixir,
+      alEthPxEthVeloInElixir: alEthPxEthVeloInElixir,
       alEthOptimismBackingTokensInElixir: alEthOptimismBackingTokensInElixir,
       alUsdOptimismBackingTokensInElixir: alUsdOptimismBackingTokensInElixir,
       alEthArbitrumBackingTokensInElixir: alEthArbitrumBackingTokensInElixir,
@@ -981,7 +995,9 @@ export default class App extends React.Component {
       ramsesAlEthFrxEthPool: ramsesAlEthFrxEthPool,
       ramsesAlUsdFraxPool: ramsesAlUsdFraxPool,
       veloAlEthWethPool: veloAlEthWethPool,
-      veloAlUsdUsdcPool: veloAlUsdUsdcPool 
+      veloAlUsdUsdcPool: veloAlUsdUsdcPool,
+      veloAlEthFrxEthPool: veloAlEthFrxEthPool,
+      veloAlEthPxEthPool: veloAlEthPxEthPool
     }
     this.setState({ debankDataLoading: false, debankData: tempDebankCalc })
   }
