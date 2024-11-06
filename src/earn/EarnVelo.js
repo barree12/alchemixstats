@@ -17,7 +17,8 @@ export default class EarnVelo extends Component {
       aprOpAlEth: 0,
       aprDolaAlUsd: 0,
       aprFraxEth: 0,
-      aprFraxUsd: 0
+      aprFraxUsd: 0,
+      aprPxEth: 0
     }
 
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
@@ -28,12 +29,11 @@ export default class EarnVelo extends Component {
   }
     
   parseResult(result, prices){
-    //console.log(prices);
     let tokenPrices = { eth: 0, velo: 0, op: 0 }
     tokenPrices.eth = Math.round(prices.coins["coingecko:ethereum"].price*100)/100
     tokenPrices.velo = Math.round(prices.coins["coingecko:velodrome-finance"].price*100)/100
     tokenPrices.op = Math.round(prices.coins["coingecko:optimism"].price*100)/100
-    //console.log(veloPrice)
+    //console.log(tokenPrices)
     let secondsInAYear = 31556926;
     let alUsdUsdc = "sAMMV2-USDC/alUSD";
     let ethPool = "sAMMV2-alETH/WETH";
@@ -42,6 +42,7 @@ export default class EarnVelo extends Component {
     let dolaAlUsd = "sAMMV2-DOLA/alUSD";
     let frxEth = "sAMMV2-alETH/frxETH";
     let fraxUsd = "sAMMV2-FRAX/alUSD";
+    let pxEthAlEth = 'sAMMV2-pxETH/alETH';
     let alUsdUsdcEmissions = 0;
     let ethEmissions = 0;
     let opAlUsdEmissions = 0;
@@ -63,34 +64,41 @@ export default class EarnVelo extends Component {
     let dolaApr = 0;
     let frxEthApr = 0;
     let fraxApr = 0;
+    let pxEthEmissions = 0;
+    let pxEthTvl = 0;
+    let pxEthApr = 0;
     for(let i=0;i<result.length;i++){
       if(result[i][1] === alUsdUsdc) {
-        alUsdUsdcEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        alUsdUsdcTvl = parseInt(result[i][6]) / Math.pow(10,6) + parseInt(result[i][9]) / Math.pow(10,18);
+        alUsdUsdcEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        alUsdUsdcTvl = parseInt(result[i][9]) / Math.pow(10,6) + parseInt(result[i][12]) / Math.pow(10,18);
       }
       if(result[i][1] === ethPool) {
-        ethEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        ethTvl = (parseInt(result[i][6]) / Math.pow(10,18) + parseInt(result[i][9]) / Math.pow(10,18)) * tokenPrices.eth;
+        ethEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        ethTvl = (parseInt(result[i][9]) / Math.pow(10,18) + parseInt(result[i][12]) / Math.pow(10,18)) * tokenPrices.eth;
       }
       if(result[i][1] === opAlUsd) {
-        opAlUsdEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        opAlUsdTvl = (parseInt(result[i][6]) / Math.pow(10,18)) * tokenPrices.op + parseInt(result[i][9]) / Math.pow(10,18);
+        opAlUsdEmissions = result[i][19] / Math.pow(10,18) * secondsInAYear * tokenPrices.velo;
+        opAlUsdTvl = (parseInt(result[i][9]) / Math.pow(10,18)) * tokenPrices.op + parseInt(result[i][12]) / Math.pow(10,18);
       }
       if(result[i][1] === opAlEth) {
-        opAlEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        opAlEthTvl = (parseInt(result[i][6]) / Math.pow(10,18)) * tokenPrices.eth + (parseInt(result[i][9]) / Math.pow(10,18)) * tokenPrices.op;
+        opAlEthEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        opAlEthTvl = (parseInt(result[i][9]) / Math.pow(10,18)) * tokenPrices.eth + (parseInt(result[i][12]) / Math.pow(10,18)) * tokenPrices.op;
       }
       if(result[i][1] === dolaAlUsd) {
-        dolaEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        dolaTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+        dolaEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        dolaTvl = (parseInt(result[i][9]) + parseInt(result[i][12])) / Math.pow(10,18);
       }
       if(result[i][1] === frxEth) {
-        frxEthEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        frxEthTvl = (parseInt(result[i][6]) / Math.pow(10,18) + parseInt(result[i][9]) / Math.pow(10,18)) * tokenPrices.eth;
+        frxEthEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        frxEthTvl = (parseInt(result[i][9]) / Math.pow(10,18) + parseInt(result[i][12]) / Math.pow(10,18)) * tokenPrices.eth;
       }
       if(result[i][1] === fraxUsd) {
-        fraxEmissions = result[i][17] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
-        fraxTvl = (parseInt(result[i][6]) + parseInt(result[i][9])) / Math.pow(10,18);
+        fraxEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        fraxTvl = (parseInt(result[i][9]) + parseInt(result[i][12])) / Math.pow(10,18);
+      }
+      if(result[i][1] === pxEthAlEth) {
+        pxEthEmissions = result[i][19] * secondsInAYear / Math.pow(10,18) * tokenPrices.velo;
+        pxEthTvl = (parseInt(result[i][9]) / Math.pow(10,18) + parseInt(result[i][12]) / Math.pow(10,18)) * tokenPrices.eth;
       }
     }
     alUsdUsdcApr = alUsdUsdcEmissions / alUsdUsdcTvl * 100;
@@ -100,15 +108,16 @@ export default class EarnVelo extends Component {
     dolaApr = dolaEmissions / dolaTvl * 100;
     frxEthApr = frxEthEmissions / frxEthTvl * 100;
     fraxApr = fraxEmissions /fraxTvl * 100;
+    pxEthApr = pxEthEmissions / pxEthTvl * 100;
     //console.log(maiTvl)
-    this.setState({ aprLoading: false, aprStable: alUsdUsdcApr, aprEth: ethApr, aprOpAlUsd: opAlUsdApr, aprOpAlEth: opAlEthApr, aprDolaAlUsd: dolaApr, aprFraxEth: frxEthApr, aprFraxUsd: fraxApr })
+    this.setState({ aprLoading: false, aprStable: alUsdUsdcApr, aprEth: ethApr, aprOpAlUsd: opAlUsdApr, aprOpAlEth: opAlEthApr, aprDolaAlUsd: dolaApr, aprFraxEth: frxEthApr, aprFraxUsd: fraxApr, aprPxEth: pxEthApr })
     //console.log(result)
   }
 
   getData() {
 
-    Promise.all([this.veloStatsContract.methods.all(295,0,"0x0000000000000000000000000000000000000000").call(),
-    this.veloStatsContract.methods.all(400,295,"0x0000000000000000000000000000000000000000").call(),
+    Promise.all([this.veloStatsContract.methods.all(500,0).call(),
+    this.veloStatsContract.methods.all(500,500).call(),
     fetch("https://coins.llama.fi/prices/current/coingecko:ethereum,coingecko:velodrome-finance,coingecko:optimism?searchWidth=4h").then(res => res.json())
     ])
     .then(([veloStats, veloStats2, prices]) => {
@@ -261,6 +270,29 @@ export default class EarnVelo extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://velo.drome.eth.limo/deposit?token0=0x3E29D3A9316dAB217754d13b28646B76607c5f04&token1=0x6806411765Af15Bddd26f8f544A34cC40cb9838B&type=0" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
+          </div>
+
+          <div className="earn-yield-row">
+            
+            <div className="earn-yield-strat">
+              alETH-pxETH
+            </div>
+            <div className="earn-yield-chain">
+              <img src={ require('../logos/op.png').default } alt="Optimism logo" className="image" />
+            </div>
+            
+            <div className="earn-yield-alasset">
+              <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
+            </div>
+            <div className="earn-yield-reward">
+              <img src={ require('../logos/velo_round.png').default } alt="Velodrome logo" className="image" />
+            </div>
+            <div className="earn-yield-yield">
+              {this.state.aprLoading ? "0" : Math.round(this.state.aprPxEth*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://velo.drome.eth.limo/deposit?token0=0x300d2c875C6fb8Ce4bf5480B4d34b7c9ea8a33A4&token1=0x3E29D3A9316dAB217754d13b28646B76607c5f04&type=0&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 

@@ -326,7 +326,8 @@ export default class App extends React.Component {
     let maiAlUsd = "sAMMV2-alUSD/MAI";
     let frxEth = "sAMMV2-alETH/frxETH";
     let fraxUsd = "sAMMV2-FRAX/alUSD";
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0 }
+    let pxEthAlEth = 'sAMMV2-pxETH/alETH';
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
@@ -340,8 +341,8 @@ export default class App extends React.Component {
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.veloStatsContract.methods.all(295,0,"0x0000000000000000000000000000000000000000").call(),
-    this.veloStatsContract.methods.all(400,295,"0x0000000000000000000000000000000000000000").call()
+      this.veloStatsContract.methods.all(500,0).call(),
+      this.veloStatsContract.methods.all(500,500).call()
     ])
     .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats1, veloStats2]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
@@ -358,24 +359,28 @@ export default class App extends React.Component {
       let veloStats = veloStats1.concat(veloStats2)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
-          lps.alUsdInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
-          lps.usdcInVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,6);
+          lps.alUsdInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
+          lps.usdcInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,6);
         }
         if(veloStats[i][1] === ethPool) {
-          lps.alEthInVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,18);
-          lps.wethInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alEthInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.wethInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === maiAlUsd) {
-          lps.alUsdInMaiVelodrome = parseInt(veloStats[i][6]) / Math.pow(10,18);
-          lps.maiInMaiVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alUsdInMaiVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.maiInMaiVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === frxEth) {
-          lps.alEthInVeloFxsEthAlEth = parseInt(veloStats[i][6]) / Math.pow(10,18);
-          lps.fxsEthInVeloFxsEthAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alEthInVeloFxsEthAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.fxsEthInVeloFxsEthAlEth = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === fraxUsd) {
-          lps.fraxInVeloFraxAlUsd = parseInt(veloStats[i][6]) / Math.pow(10,18);
-          lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.fraxInVeloFraxAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][12]) / Math.pow(10,18);
+        }
+        if(veloStats[i][1] === pxEthAlEth) {
+          lps.pxEthInVeloAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alEthInVeloAlEth = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
       }
       this.setState({ lps: lps, lpsLoading: false })
@@ -444,7 +449,7 @@ export default class App extends React.Component {
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "aOptWETH") alchemistTvl.aOptWETH[dayTracker] = Math.round(result[i].balance*100)/100;
       if(result[i].blockchain === "optimism" && result[i].token_symbol === "wstETH") alchemistTvl.wstETH[dayTracker] = Math.round(result[i].balance*100)/100;
     }
-    console.log(alchemistTvl)
+    //console.log(alchemistTvl)
     this.setState({ optiTvl: alchemistTvl, optiTvlLoading: false })
   }
 
@@ -882,7 +887,7 @@ export default class App extends React.Component {
       elixirAssets[elixirFilteredSymbols[i]] = 0
     }
 
-    console.log(elixirProtocolsConcat)
+    //console.log(elixirProtocolsConcat)
 
     for(let i=0;i<elixirProtocolsConcat.length;i++){
       for(let j=0;j<elixirProtocolsConcat[i].portfolio_item_list.length;j++){
@@ -961,7 +966,7 @@ export default class App extends React.Component {
       elixirLargestValue = 0;
     }*/
     
-    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir;
+    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -1163,7 +1168,6 @@ export default class App extends React.Component {
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
         fetch(url).then(res => res.json()).then(
           (l2AlchemistTvl) => { 
-            console.log(l2AlchemistTvl)
             this.calculateOptiTvl(l2AlchemistTvl)
             this.calculateArbiTvl(l2AlchemistTvl)
           },
