@@ -341,8 +341,8 @@ export default class App extends React.Component {
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
       //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      this.veloStatsContract.methods.all(500,0).call(),
-      this.veloStatsContract.methods.all(500,500).call()
+      this.veloStatsContract.methods.all(480,0).call(),
+      this.veloStatsContract.methods.all(480,480).call()
     ])
     .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats1, veloStats2]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
@@ -357,6 +357,7 @@ export default class App extends React.Component {
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       let veloStats = veloStats1.concat(veloStats2)
+      console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
@@ -379,6 +380,7 @@ export default class App extends React.Component {
           lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === pxEthAlEth) {
+          //console.log("found")
           lps.pxEthInVeloAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
           lps.alEthInVeloAlEth = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }

@@ -99,14 +99,6 @@ export default class AlAssets extends React.Component {
         let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1 - alEthInOldElixir;
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
-        console.log(this.props.debankData.alUsdOptimismBackingTokensInElixir)
-        //console.log(this.props.alAssetSupply.alUsdMetis)
-        //console.log(alUsdDebt)
-        //console.log(alUsdDebtV1)
-        //console.log(alUsdOwned)
-        //console.log(arbitrumDebt)
-
-
         let surplus = { 
             alUsdMainnet: alUsdMainnetSurplus,
             alUsdBackingTokensInElixir: this.props.debankData.alUsdBackingTokensInElixir,
