@@ -116,8 +116,8 @@ export default class EarnVelo extends Component {
 
   getData() {
 
-    Promise.all([this.veloStatsContract.methods.all(500,0).call(),
-    this.veloStatsContract.methods.all(500,500).call(),
+    Promise.all([this.veloStatsContract.methods.all(480,0).call(),
+    this.veloStatsContract.methods.all(480,480).call(),
     fetch("https://coins.llama.fi/prices/current/coingecko:ethereum,coingecko:velodrome-finance,coingecko:optimism?searchWidth=4h").then(res => res.json())
     ])
     .then(([veloStats, veloStats2, prices]) => {
