@@ -22,7 +22,7 @@ export default class Emissions extends React.Component {
                     <span>Forward-looking inflation 1 year from now: <span className="important">{futureInflation(1).forwardInflation}%</span></span>
                     <span>Forward-looking inflation 2 years from now: <span className="important">{futureInflation(2).forwardInflation}%</span></span>
                     <br/>
-                    <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://alchemix-finance.gitbook.io/user-docs/alchemix-dao/alcx-token-distribution/alcx-emissions-schedule">ALCX Monetary Policy</a></span>
+                    <span>Official emission schedule: <a target="_blank" rel="noreferrer" href="https://docs.alchemix.fi/alchemix-dao/alcx-token">ALCX Monetary Policy</a></span>
                     <br/>
                     {this.props.alcxDataLoading ? "Loading..." : 
                     <span>
