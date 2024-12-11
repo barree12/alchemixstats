@@ -108,7 +108,7 @@ export default class Harvests extends React.Component {
             }
           }`
 
-          fetch("https://subgraph.satsuma-prod.com/de91695d5fb0/alchemix--802384/alchemix-v2/api", this.getSubgraphRequestOptions(harvestsQuery))
+          fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(harvestsQuery))
           .then(res => res.json()).then((result) => {
               this.calculateHarvests(result.data.alchemistHarvestEvents.reverse())
             },
