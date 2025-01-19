@@ -755,7 +755,7 @@ export default class App extends React.Component {
       if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;
     }
 
-
+    console.log(data.treasury)
     for(let i=0;i<data.treasury.length;i++){
       tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
       protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
@@ -797,7 +797,6 @@ export default class App extends React.Component {
             treasuryAssets[protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol] += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "ALCX") alcxInTreasury += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             totalTreasury += protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * protocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-
           }
         }
       }
@@ -815,6 +814,7 @@ export default class App extends React.Component {
         treasuryAssets[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
         if(tokensConcat[i].symbol === "ALCX") alcxInTreasury += tokensConcat[i].amount * tokensConcat[i].price;
         totalTreasury += tokensConcat[i].amount * tokensConcat[i].price;
+        //console.log(tokensConcat[i])
       }
     }
 

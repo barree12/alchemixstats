@@ -59,7 +59,7 @@ export default class Revenues extends React.Component {
       }
       fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=den_revenue.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()).then(
           (result) => { 
-            //console.log(result);
+            console.log(result);
 
             let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
             fetch(url).then(res => res.json()).then(

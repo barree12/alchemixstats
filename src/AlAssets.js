@@ -66,8 +66,6 @@ export default class AlAssets extends React.Component {
         let alEthDebtV1 = 31;
         let alUsdInV1 = 12000;
         let alEthInV1 = 8;
-        let alUsdIdleInOld = 129638676;
-        let alEthInOldElixir = 24101;
         let ethInTransmuterBuffer = wethInTransmuterBuffer / Math.pow(10,18);
         let ethInOptimismTransmuterBuffer = wethInOptimismTransmuterBuffer / Math.pow(10,18);
         let ethInArbitrumTransmuterBuffer = wethInArbitrumTransmuterBuffer / Math.pow(10,18);
@@ -90,13 +88,13 @@ export default class AlAssets extends React.Component {
           alEthArbitrumDebt += arbitrumDebt[i].aleth_debt;
         }
         let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
-        let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1 - alUsdIdleInOld;
+        let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;
         let alUsdShouldHaveL2 = this.props.alAssetSupply.alUsdOptimism + this.props.alAssetSupply.alUsdArbitrum + this.props.alAssetSupply.alUsdMetis - alUsdOptimismDebt - alUsdArbitrumDebt - this.props.debankData.alUsdAmountInOptimismElixir;
         let alUsdOwnedL2 = this.props.debankData.alUsdOptimismBackingTokensInElixir + this.props.debankData.alUsdArbitrumBackingTokensInElixir + stablesInOptimismTransmuterBuffer + stablesInArbitrumTransmuterBuffer;
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
         let alUsdOptimismSurplus = alUsdOwnedL2 - alUsdShouldHaveL2;
         let alEthOwned = this.props.debankData.alEthBackingTokensInElixir + alEthInV1 + ethInTransmuterBuffer;
-        let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1 - alEthInOldElixir;
+        let alEthShouldHave = this.props.alAssetSupply.alEth - this.props.debankData.alEthAmountInElixir - alEthDebt - alEthDebtV1;
         let alEthMainnetSurplus = alEthOwned - alEthShouldHave;
         
         let surplus = { 
@@ -105,7 +103,7 @@ export default class AlAssets extends React.Component {
             alUsdInV1: alUsdInV1,
             stablesInTransmuterBuffer: stablesInTransmuterBuffer,
             alUsdSupply: this.props.alAssetSupply.alUsd,
-            alUsdInElixir: this.props.debankData.alUsdAmountInElixir + alUsdIdleInOld,
+            alUsdInElixir: this.props.debankData.alUsdAmountInElixir,
             alUsdDebt: alUsdDebt,
             alUsdDebtV1: alUsdDebtV1,
             alUsdOptimism: alUsdOptimismSurplus,
@@ -114,7 +112,7 @@ export default class AlAssets extends React.Component {
             alEthInV1: alEthInV1,
             ethInTransmuterBuffer: ethInTransmuterBuffer,
             alEthSupply: this.props.alAssetSupply.alEth,
-            alEthInElixir: this.props.debankData.alEthAmountInElixir + alEthInOldElixir,
+            alEthInElixir: this.props.debankData.alEthAmountInElixir,
             alEthDebt: alEthDebt,
             alEthDebtV1: alEthDebtV1
         }
