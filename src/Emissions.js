@@ -43,10 +43,10 @@ export default class Emissions extends React.Component {
                     </div>
                 </div>
 
-                <div className="section-wrapper">
+                {/*<div className="section-wrapper">
                     <EmissionWeights />
                     <ChartDonut />
-                </div>
+                </div>*/}
             </>
         );
     }
