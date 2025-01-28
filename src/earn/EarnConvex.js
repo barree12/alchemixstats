@@ -7,11 +7,11 @@ export default class EarnConvex extends Component {
 
     this.state = {
       aprLoading: true,
-      apr3Crv: 0,
+      aprDola: 0,
       aprFrax: 0,
       aprAlEth: 0,
       aprFrxEth: 0,
-      //aprRgUsd: 0,
+      aprPxEth: 0,
       aprAlcxFbp: 0
     }
   }
@@ -22,18 +22,18 @@ export default class EarnConvex extends Component {
     
   parseResult(result){
     //console.log(result)
-    let apr3Crv = result.apys["37"].baseApy + result.apys["37"].crvApy;
+    let aprDola = result.apys["factory-stable-ng-320"].baseApy + result.apys["factory-stable-ng-320"].crvApy;
     let aprAlEth = result.apys["factory-stable-ng-36"].baseApy + result.apys["factory-stable-ng-36"].crvApy;
     let aprFrax = result.apys["factory-v2-147"].baseApy + result.apys["factory-v2-147"].crvApy;
     let aprFrxEth = result.apys["factory-v2-253"].baseApy + result.apys["factory-v2-253"].crvApy;
-    //let aprRgUsd = result.apys["factory-stable-ng-122"].baseApy + result.apys["factory-stable-ng-122"].crvApy;
+    let aprPxEth = result.apys["factory-stable-ng-268"].baseApy + result.apys["factory-stable-ng-268"].crvApy;
     let aprAlcxFbp = result.apys["factory-crypto-96"].baseApy + result.apys["factory-crypto-96"].crvApy;
     this.setState({ aprLoading: false, 
-      apr3Crv: apr3Crv, 
+      aprDola: aprDola, 
       aprAlEth: aprAlEth, 
       aprFrax: aprFrax,
       aprFrxEth: aprFrxEth,
-      //aprRgUsd: aprRgUsd,
+      aprPxEth: aprPxEth,
       aprAlcxFbp: aprAlcxFbp
     });
   }
@@ -63,7 +63,7 @@ export default class EarnConvex extends Component {
           <div className="earn-yield-row">
             
             <div className="earn-yield-strat">
-              alUSD-3CRV
+              alUSD-sDOLA
             </div>
             <div className="earn-yield-chain">
               <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
@@ -77,10 +77,10 @@ export default class EarnConvex extends Component {
               <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" />
             </div>
             <div className="earn-yield-yield">
-              {this.state.aprLoading ? "0" : Math.round(this.state.apr3Crv*100)/100}%
+              {this.state.aprLoading ? "0" : Math.round(this.state.aprDola*100)/100}%
             </div>
             <div className="earn-yield-link">
-              <a href="https://curve.fi/#/ethereum/pools/alusd/deposit" target="_blank" rel="noreferrer">Deposit</a>
+              <a href="https://curve.fi/dex/#/ethereum/pools/factory-stable-ng-320/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 
@@ -153,6 +153,30 @@ export default class EarnConvex extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://curve.fi/#/ethereum/pools/factory-v2-253/deposit" target="_blank" rel="noreferrer">Deposit</a>
+            </div>
+          </div>
+
+          <div className="earn-yield-row">
+            
+            <div className="earn-yield-strat">
+              alETH-pxETH
+            </div>
+            <div className="earn-yield-chain">
+              <img src={ require('../logos/eth.png').default } alt="ETH logo" className="image" />
+            </div>
+            
+            <div className="earn-yield-alasset">
+              <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
+            </div>
+            <div className="earn-yield-reward">
+              <img src={ require('../logos/crv.png').default } alt="Curve logo" className="image" />
+              <img src={ require('../logos/cvx.png').default } alt="Convex logo" className="image" />
+            </div>
+            <div className="earn-yield-yield">
+              {this.state.aprLoading ? "0" : Math.round(this.state.aprPxEth*100)/100}%
+            </div>
+            <div className="earn-yield-link">
+              <a href="https://curve.fi/dex/#/ethereum/pools/factory-stable-ng-268/deposit" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 

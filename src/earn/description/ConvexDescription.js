@@ -10,7 +10,7 @@ export default class ConvexDescription extends Component {
         <div className="protocol-inner">
         The main alAsset liquidity pools reside on Curve.
         <br/>Convex is designed to enchance rewards on Curve pools.
-        <br/>Users first need to provide liquidity to one of the alUSD liquidity pools (alUSD3Crv or alUSDFraxBP) or to the alETH liquidity pool (alETHCrv) on the Curve UI and then stake these LP tokens in Convex.
+        <br/>Users first need to provide liquidity to one of the alUSD or alETH liquidity pools on the Curve UI and then stake these LP tokens in Convex.
         <br/>
         <br/>
         <span>

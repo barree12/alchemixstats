@@ -30,11 +30,11 @@ export default class EarnVelo extends Component {
     //console.log(veloPrice)
     //let secondsInAYear = 31556926;
     let alUsdFrax = "0xfd599db360cd9713657c95df66650a427d213010";
-    let alUsdGrai = "0x774b4eefba334d7230de02c02ab390f8d5d17bf1";
+    //let alUsdGrai = "0x774b4eefba334d7230de02c02ab390f8d5d17bf1";
     let alUsdAlEth = "0xb69d60d0690733c0cc4db1c1aedeeaa308f30328";
     let alEthAlcx = "0x9c99764ad164360cf85eda42fa2f4166b6cba2a4";
     let alEthFrxEth ="0xfb4fe921f724f3c7b610a826c827f9f6ecef6886";
-    let alEthGrai = "0xf6052c1d99f32e5710639183201090e21366619c";
+    //let alEthGrai = "0xf6052c1d99f32e5710639183201090e21366619c";
     //let alEthWoEth = "0x5853fbe1622ccf426a601e323df7a4abd531b243";
     //let alUsdAlEthSubgraph = "0xb69d60d0690733c0cc4db1c1aedeeaa308f30328";
     //let alEthWoEthSubgraph = "0x5853fbe1622ccf426a601e323df7a4abd531b243";
@@ -42,23 +42,17 @@ export default class EarnVelo extends Component {
     //let alUsdUsdc = "0xb1736c14d949c49668a280222888d3695e96c69a";
     //let alEthWeth = "0xeb047610c8d099aef19a7362ff3fb8cc56e7d5bb";
     //let alUsdAlcx = "0x4ec7d79277c478975dc76274bb0157e7088612c2";
-    let aprs = { alUsdFrax: 0, alUsdGrai: 0, alUsdAlEth: 0, alEthGrai: 0, alEthAlcx: 0, alEthFrxEth: 0 }
+    let aprs = { alUsdFrax: 0, alUsdAlEth: 0, alEthAlcx: 0, alEthFrxEth: 0 }
     
     for(let i=0;i<pools.pairs.length;i++){
       if(pools.pairs[i].id === alUsdFrax) {
         aprs.alUsdFrax = pools.pairs[i].lpApr;
-      }
-      if(pools.pairs[i].id === alUsdGrai) {
-        aprs.alUsdGrai = pools.pairs[i].lpApr;
       }
       if(pools.pairs[i].id === alUsdAlEth) {
         aprs.alUsdAlEth = pools.pairs[i].lpApr;
       }
       if(pools.pairs[i].id === alEthFrxEth) {
         aprs.alEthFrxEth = pools.pairs[i].lpApr;
-      }
-      if(pools.pairs[i].id === alEthGrai) {
-        aprs.alEthGrai = pools.pairs[i].lpApr;
       }
       if(pools.pairs[i].id === alEthAlcx) {
         aprs.alEthAlcx = pools.pairs[i].lpApr;
@@ -133,29 +127,6 @@ export default class EarnVelo extends Component {
               <a href="https://app.ramses.exchange/manage/v1/0xfd599db360cd9713657c95df66650a427d213010" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
-
-          <div className="earn-yield-row">
-            
-            <div className="earn-yield-strat">
-              alUSD-GRAI Ichi
-            </div>
-            <div className="earn-yield-chain">
-              <img src={ require('../logos/arbi.png').default } alt="Arbitrum logo" className="image" />
-            </div>
-            
-            <div className="earn-yield-alasset">
-              <img src={ require('../logos/alusd.svg').default } alt="alUSD logo" className="image" />
-            </div>
-            <div className="earn-yield-reward">
-              <img src={ require('../logos/ram.png').default } alt="Ramses logo" className="image" />
-            </div>
-            <div className="earn-yield-yield">
-              {this.state.aprsLoading ? "0" : Math.round(this.state.aprs.alUsdGrai*100)/100}%
-            </div>
-            <div className="earn-yield-link">
-              <a href="https://app.ramses.exchange/single-stake?vaultAddress=0x7d41fbe50ed131816e87c4d7340424740882f709" target="_blank" rel="noreferrer">Deposit</a>
-            </div>
-          </div>
           
           <div className="earn-yield-row">
             
@@ -215,6 +186,7 @@ export default class EarnVelo extends Component {
             
             <div className="earn-yield-alasset">
               <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
+              <img src={ require('../logos/alcx_logo.png').default } alt="ALCX logo" className="image" />
             </div>
             <div className="earn-yield-reward">
              <img src={ require('../logos/ram.png').default } alt="Ramses logo" className="image" />
@@ -224,29 +196,6 @@ export default class EarnVelo extends Component {
             </div>
             <div className="earn-yield-link">
               <a href="https://app.ramses.exchange/manage/v1/0x9c99764ad164360cf85eda42fa2f4166b6cba2a4" target="_blank" rel="noreferrer">Deposit</a>
-            </div>
-          </div>
-
-          <div className="earn-yield-row">
-            
-            <div className="earn-yield-strat">
-              alETH-GRAI Ichi
-            </div>
-            <div className="earn-yield-chain">
-              <img src={ require('../logos/arbi.png').default } alt="Arbitrum logo" className="image" />
-            </div>
-            
-            <div className="earn-yield-alasset">
-              <img src={ require('../logos/aleth_blue.svg').default } alt="alETH logo" className="image" />
-            </div>
-            <div className="earn-yield-reward">
-              <img src={ require('../logos/ram.png').default } alt="Ramses logo" className="image" />
-            </div>
-            <div className="earn-yield-yield">
-              {this.state.aprsLoading ? "0" : Math.round(this.state.aprs.alEthGrai*100)/100}%
-            </div>
-            <div className="earn-yield-link">
-              <a href="https://app.ramses.exchange/single-stake?vaultAddress=0xf9e36cf8d3f64692919061011c0d28f6f55a795b" target="_blank" rel="noreferrer">Deposit</a>
             </div>
           </div>
 

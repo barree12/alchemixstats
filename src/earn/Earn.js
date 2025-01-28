@@ -143,10 +143,10 @@ export default class Earn extends Component {
       <div className="description-all">
         <ConvexDescription />
         <VelodromeDescription />
-        <PremiaDescription />
+        {/*<PremiaDescription />*/}
         {/*<BeetsDescription />*/}
         {/*<PancakeSwapDescription />*/}
-        <IdleDescription />
+        {/*<IdleDescription />*/}
 
       </div>
 
