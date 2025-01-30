@@ -20,6 +20,16 @@ export default class ChartArbiAlchemistTVL extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
+            },
+            {
+              label: 'jUSDC',
+              data: this.props.arbiTvl.jUsdc,
+              backgroundColor: 'rgba(255,204,75,0.7)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
             }]
           }}
             options={{

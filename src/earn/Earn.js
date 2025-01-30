@@ -7,8 +7,8 @@ import EarnAura from './EarnAura';
 import '../App.css';
 import ConvexDescription from './description/ConvexDescription';
 import VelodromeDescription from './description/VelodromeDescription';
-import PremiaDescription from './description/PremiaDescription';
-import IdleDescription from './description/IdleDescription';
+//import PremiaDescription from './description/PremiaDescription';
+//import IdleDescription from './description/IdleDescription';
 //import PancakeSwapDescription from './description/PancakeSwapDescription';
 import { Link } from 'react-router-dom';
 

@@ -34,7 +34,7 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
             {
               label: 'yvWETH',
               data: this.props.optiTvl.ysWETH,
-              backgroundColor: 'rgba(102,102,102,0.8)',
+              backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

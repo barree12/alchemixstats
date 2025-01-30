@@ -29,7 +29,7 @@ import {
 } from 'chart.js';
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
-//const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
+//FOR TESTING - const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
 const web3 = new Web3('https://eth-mainnet.public.blastapi.io');
 //const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
@@ -163,8 +163,8 @@ export default class App extends React.Component {
 
   aggregateWeb3Calls(){
     let v2Caps = {}
-    let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0 }
-    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, daiInMigrate: 0, wethInMigrate: 0 }
+    let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0 }
+    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0, daiInMigrate: 0, wethInMigrate: 0 }
     let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
 
     Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
@@ -197,12 +197,12 @@ export default class App extends React.Component {
           this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
           this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
           this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
-          this.alchemistContract.methods.getYieldTokenParameters(addresses.aFraxAddress).call(),
+          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.pxEthAddress).call(),
           this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
           this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
           this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
           this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
-          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aFraxAddress).call(),
+          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.pxEthAddress).call(),
           this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
@@ -222,7 +222,7 @@ export default class App extends React.Component {
           this.alEthOptimismContract.methods.totalSupply().call(),
           this.alEthArbitrumContract.methods.totalSupply().call(),
           this.alEthMetisContract.methods.totalSupply().call()])
-        .then(([ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, aFraxParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, aFraxTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
+        .then(([ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, pxEthParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, pxEthTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
         v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
         v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
@@ -236,7 +236,7 @@ export default class App extends React.Component {
         v2Caps.aDai = aDaiParams[4]/Math.pow(10, aDaiParams[0]);
         v2Caps.aUsdc = aUsdcParams[4]/Math.pow(10, aUsdcParams[0]);
         v2Caps.aUsdt = aUsdtParams[4]/Math.pow(10, aUsdtParams[0]);
-        v2Caps.aFrax = aFraxParams[4]/Math.pow(10, aFraxParams[0]);
+        v2Caps.pxEth = pxEthParams[4]/Math.pow(10, pxEthParams[0]);
         v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
         v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
         v2Caps.optiWstEth = optiWstEthParams[4]/Math.pow(10, optiWstEthParams[0]);
@@ -257,9 +257,8 @@ export default class App extends React.Component {
         tokensPerShare.aDai = aDaiTokens/Math.pow(10, 18);
         tokensPerShare.aUsdc = aUsdcTokens/Math.pow(10, 6);
         tokensPerShare.aUsdt = aUsdtTokens/Math.pow(10, 6);
-        tokensPerShare.aFrax = aFraxTokens/Math.pow(10, 18);
+        tokensPerShare.pxEth = pxEthTokens/Math.pow(10, 18);
         tokensPerShare.aWeth = aWethTokens/Math.pow(10, 18);
-        //tokensPerShare.optiAWeth = optiAWethTokens/Math.pow(10, 18);
         tokensPerShare.vaDai = vaDaiTokens/Math.pow(10, 18);
         tokensPerShare.vaUsdc = vaUsdcTokens/Math.pow(10, 6);
         tokensPerShare.vaFrax = vaFraxTokens/Math.pow(10, 18);
@@ -274,7 +273,7 @@ export default class App extends React.Component {
         deposit.aDai = aDaiParams[8]/Math.pow(10, 24);
         deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
         deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
-        deposit.aFrax = aFraxParams[8]/Math.pow(10, 24);
+        deposit.pxEth = pxEthParams[8]/Math.pow(10, 18);
         deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
         deposit.vaUsdc = vaUsdcParams[8]/Math.pow(10, 24);
         deposit.vaDai = vaDaiParams[8]/Math.pow(10, 24);
@@ -357,7 +356,7 @@ export default class App extends React.Component {
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
       let veloStats = veloStats1.concat(veloStats2)
-      console.log(veloStats)
+      //console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
@@ -458,14 +457,16 @@ export default class App extends React.Component {
   calculateArbiTvl(result){
     let dayTracker = 0;
     let arbiStart = false;
-    let alchemistTvl = { date:[], wstEth: [], aUsdc: [] };
+    let alchemistTvl = { date:[], wstEth: [], aUsdc: [], gearboxEth: [], jUsdc: [] };
     for(let i=0;i<result.length;i++){
       if(result[i].blockchain === "arbitrum") arbiStart = true;
       if(arbiStart){
         if(i!==0 && result[i].day !== result[i-1].day) dayTracker++;
         alchemistTvl.date[dayTracker] = result[i].day.split(" ")[0];
         if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "aArbUSDCn") alchemistTvl.aUsdc[dayTracker] = Math.round(result[i].balance/10000)/100;
+        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "jUSDC") alchemistTvl.jUsdc[dayTracker] = Math.round(result[i].balance/10000)/100;
         if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "wstETH") alchemistTvl.wstEth[dayTracker] = Math.round(result[i].balance*100)/100;
+        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "farmdWETHV3") alchemistTvl.gearboxEth[dayTracker] = Math.round(result[i].balance*100)/100;
       }
     }
     
@@ -473,105 +474,19 @@ export default class App extends React.Component {
     this.setState({ arbiTvl: alchemistTvl, arbiTvlLoading: false })
   }
 
-  /*calculateOptiTvl(result){
-    console.log(result)
-    let startDate = new Date(1664365762*1000); //2022 Sept 28th
-    let today = new Date();
-    let dateTracker = new Date(result[0].timestamp*1000);
-    let resultIndex = 0;
-    let optiTvl = { date:[], aDai: [], aUsdc: [], aUsdt: [], aWeth: [], yvDai: [], yvUsdc: [], wstETH: [], yvWeth: [] };
-    let tempaDai = 0;
-    let tempaUsdc = 0;
-    let tempaUsdt = 0;
-    let tempaWeth = 0;
-    let tempYvDai = 0;
-    let tempYvUsdc = 0;
-    let tempYvWeth = 0;
-    let tempWstEth = 0;
-    for(let j=0;startDate<today;j++){
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].timestamp*1000);
-        if(tempDate>startDate) break;
-
-        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-
-        tempaDai = result[i].token.symbol === "s_aOptDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempaDai;
-        tempaUsdc = result[i].token.symbol === "s_aOptUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdc;
-        tempaUsdt = result[i].token.symbol === "s_aOptUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempaUsdt;
-        tempaWeth = result[i].token.symbol === "s_aOptWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempaWeth;
-        tempYvDai = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempYvDai;
-        tempYvUsdc = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvUsdc;
-        tempYvWeth = result[i].token.symbol === "" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
-        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
-        resultIndex++;
-      }
-      optiTvl.aDai[j] = Math.round(tempaDai/10000)/100;
-      if(j>0 && !tempaDai) optiTvl.aDai[j] = optiTvl.aDai[j-1];
-      optiTvl.aUsdc[j] = Math.round(tempaUsdc/10000)/100;
-      if(j>0 && !tempaUsdc) optiTvl.aUsdc[j] = optiTvl.aUsdc[j-1];
-      optiTvl.aUsdt[j] = Math.round(tempaUsdt/10000)/100;
-      if(j>0 && !tempaUsdt) optiTvl.aUsdt[j] = optiTvl.aUsdt[j-1];
-      optiTvl.aWeth[j] = Math.round(tempaWeth/10000)/100;
-      if(j>0 && !tempaWeth) optiTvl.aWeth[j] = optiTvl.aWeth[j-1];
-      optiTvl.wstETH[j] = Math.round(tempWstEth/10000)/100;
-      if(j>0 && !tempWstEth) optiTvl.wstETH[j] = optiTvl.wstETH[j-1];
-      optiTvl.date[j] = formatDate(startDate, 0);
-      startDate.setDate(startDate.getDate() + 1);
-      /*tempaDai = 0;
-      tempaUsdc = 0;
-      tempaUsdt = 0;
-    }
-    console.log(optiTvl)
-    this.setState({ optiTvl: optiTvl, optiTvlLoading: false });
-  }
-
-  calculateArbiTvl(result){
-    //console.log(result)
-    let startDate = new Date(1711407600*1000); //2024-03-26
-    let today = new Date();
-    let dateTracker = new Date(result[0].timestamp*1000);
-    let resultIndex = 0;
-    let arbiTvl = { date:[], wstEth: [], aUsdc: [] };
-    let tempWstEth = 0;
-    let tempAUsdc = 0;
-    for(let j=0;startDate<today;j++){
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].timestamp*1000);
-        if(tempDate>startDate) break;
-
-        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-
-        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
-        tempAUsdc = result[i].token.symbol === "s_aArbUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
-        resultIndex++;
-      }
-      arbiTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
-      if(j>0 && !tempWstEth) arbiTvl.wstEth[j] = arbiTvl.wstEth[j-1];
-      arbiTvl.aUsdc[j] = Math.round(tempAUsdc/10000)/100;
-      if(j>0 && !tempAUsdc) arbiTvl.aUsdc[j] = arbiTvl.aUsdc[j-1];
-      arbiTvl.date[j] = formatDate(startDate, 0);
-      startDate.setDate(startDate.getDate() + 1);
-    }
-    //console.log(arbiTvl)
-    this.setState({ arbiTvl: arbiTvl, arbiTvlLoading: false });
-  }*/
-
   calculateAlchemistTvl(result){
-    //console.log(result)
     let startDate = new Date(1647385201*1000); //March 16th
     let today = new Date();
     let dateTracker = new Date(result[0].timestamp*1000);
     let resultIndex = 0;
-    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], aFrax: [], vaUsdc: [], vaDai: [], vaFrax: [], vaEth: [], frxEth: [] };
+    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], vaUsdc: [], vaDai: [], vaFrax: [], vaEth: [], frxEth: [], pxEth: [] };
     let tempYvDai = 0;
     let tempYvUsdc = 0;
     let tempYvUsdt = 0;
     let tempADai = 0;
     let tempAUsdc = 0;
     let tempAUsdt = 0;
-    let tempAFrax = 0;
+    let tempPxEth = 0;
     let tempVaUsdc = 0;
     let tempVaDai = 0;
     let tempVaFrax = 0;
@@ -593,7 +508,7 @@ export default class App extends React.Component {
         tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdc;
         tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdt;
         tempADai = result[i].token.symbol === "s_aDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempADai;
-        tempAFrax = result[i].token.symbol === "s_aFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempAFrax;
+        tempPxEth = result[i].token.symbol === "pxETH" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempPxEth;
         tempAUsdc = result[i].token.symbol === "s_aUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
         tempAUsdt = result[i].token.symbol === "s_aUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdt;
         tempVaUsdc = result[i].token.symbol === "vaUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaUsdc;
@@ -619,8 +534,8 @@ export default class App extends React.Component {
       if(j>0 && !tempAUsdc) alchemistTvl.aUsdc[j] = alchemistTvl.aUsdc[j-1];
       alchemistTvl.aUsdt[j] = Math.round(tempAUsdt/10000)/100;
       if(j>0 && !tempAUsdt) alchemistTvl.aUsdt[j] = alchemistTvl.aUsdt[j-1];
-      alchemistTvl.aFrax[j] = Math.round(tempAFrax/10000)/100;
-      if(j>0 && !tempAFrax) alchemistTvl.aFrax[j] = alchemistTvl.aFrax[j-1];
+      alchemistTvl.pxEth[j] = Math.round(tempPxEth/10000)/100;
+      if(j>0 && !tempPxEth) alchemistTvl.pxEth[j] = alchemistTvl.pxEth[j-1];
       alchemistTvl.vaUsdc[j] = Math.round(tempVaUsdc/10000)/100;
       if(j>0 && !tempVaUsdc) alchemistTvl.vaUsdc[j] = alchemistTvl.vaUsdc[j-1];
       alchemistTvl.vaDai[j] = Math.round(tempVaDai/10000)/100;
@@ -641,9 +556,6 @@ export default class App extends React.Component {
       if(j>0 && !tempFrxEth) alchemistTvl.frxEth[j] = alchemistTvl.frxEth[j-1];
       alchemistTvl.date[j] = formatDate(startDate, 0);
       startDate.setDate(startDate.getDate() + 1);
-      /*tempYvDai = 0;
-      tempYvUsdc = 0;
-      tempYvUsdt = 0;*/
     }
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
@@ -675,7 +587,7 @@ export default class App extends React.Component {
 
   isStrategic(object){
     if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "AURA" || object === "FXS" || object === "RAM" || object === "PREMIA") return true;
+    object === "AURA" || object === "FXS" || object === "RAM") return true;
     else return false;
   }
 
@@ -755,7 +667,7 @@ export default class App extends React.Component {
       if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;
     }
 
-    console.log(data.treasury)
+    //console.log(data.treasury)
     for(let i=0;i<data.treasury.length;i++){
       tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
       protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
@@ -805,16 +717,18 @@ export default class App extends React.Component {
     treasuryAssetsStrategic["FXS"] += treasuryAssets["sdFXS"];
     treasuryAssets["sdFXS"] = 0;
 
-    for(let i=0;i<tokensConcat.length;i++){
+    for(let i=0;i<tokensConcat.length-1;i++){
       if(this.isStrategic(tokensConcat[i].symbol)) {
         treasuryAssetsStrategic[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
         totalTreasuryStrategic += tokensConcat[i].amount * tokensConcat[i].price;
+        /*console.log(tokensConcat[i].symbol)
+        console.log(tokensConcat[i].amount)
+        console.log(tokensConcat[i].price)*/
       }
       else {
         treasuryAssets[tokensConcat[i].symbol] += tokensConcat[i].amount * tokensConcat[i].price;
         if(tokensConcat[i].symbol === "ALCX") alcxInTreasury += tokensConcat[i].amount * tokensConcat[i].price;
         totalTreasury += tokensConcat[i].amount * tokensConcat[i].price;
-        //console.log(tokensConcat[i])
       }
     }
 
@@ -1189,7 +1103,6 @@ export default class App extends React.Component {
   let v2aDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aDai*this.state.tokensPerShare.aDai*100)/100;
   let v2aUsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdc*this.state.tokensPerShare.aUsdc*100)/100;
   let v2aUsdtTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aUsdt*this.state.tokensPerShare.aUsdt*100)/100;
-  let v2aFraxTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.aFrax*this.state.tokensPerShare.aFrax*100)/100;
   let v2vaUsdcTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaUsdc*this.state.tokensPerShare.vaUsdc*100)/100;
   let v2vaDaiTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaDai*this.state.tokensPerShare.vaDai*100)/100;
   let v2vaFraxTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.vaFrax*this.state.tokensPerShare.vaFrax*100)/100;
@@ -1208,8 +1121,12 @@ export default class App extends React.Component {
   let optiYvWethUsdTVL = (this.state.tokenPricesLoading || this.state.optiTvlLoading) ? 0 : Math.round(optiYvWethTVL*this.state.tokenPrices.eth/10000)/100;
   let arbiWstEthTVL = this.state.arbiTvlLoading ? 0 : Math.round(this.state.arbiTvl.wstEth[this.state.arbiTvl.wstEth.length-1]*100)/100;
   let arbiWstEthUsdTVL = (this.state.tokenPricesLoading || this.state.arbiTvlLoading) ? 0 : Math.round(arbiWstEthTVL*this.state.tokenPrices.eth/10000)/100;
+  let arbiGearboxEthTVL = this.state.arbiTvlLoading ? 0 : Math.round(this.state.arbiTvl.gearboxEth[this.state.arbiTvl.gearboxEth.length-1]*100)/100;
+  let arbiGearboxEthUsdTVL = (this.state.tokenPricesLoading || this.state.arbiTvlLoading) ? 0 : Math.round(arbiGearboxEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2RethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokensPerShare.rEth);
   let v2RethUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.rEth*this.state.tokenPrices.rEth/10000)/100;
+  let v2PxEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.pxEth*this.state.tokensPerShare.pxEth);
+  let v2PxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(v2PxEthTVL*this.state.tokenPrices.eth/10000)/100;
   let v2SfrxEthTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokensPerShare.sfrxEth);
   let v2SfrxEthUsdTVL = (this.state.tokenPricesLoading || this.state.v2CurrentLoading) ? 0 : Math.round(this.state.v2Deposit.sfrxEth*this.state.tokenPrices.sfrxEth/10000)/100;
   let v2StethTVL = this.state.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokensPerShare.wstEth);
@@ -1420,10 +1337,10 @@ export default class App extends React.Component {
           v2StethTVL={v2StethTVL} v2RethTVL={v2RethTVL} v2aDaiTVL={v2aDaiTVL} v2aUsdcTVL={v2aUsdcTVL} v2aUsdtTVL={v2aUsdtTVL} 
           v2aWethTVL={v2aWethTVL} v2aWethUsdTVL={v2aWethUsdTVL} alchemixStaking={this.state.alchemixStaking}
           v2Deposit={this.state.v2Deposit} wethInMigrateUsd={wethInMigrateUsd} optiYvWethTVL={optiYvWethTVL} optiYvWethUsdTVL={optiYvWethUsdTVL}
-          tokenPrices={this.state.tokenPrices} v2aFraxTVL={v2aFraxTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
+          tokenPrices={this.state.tokenPrices} v2PxEthTVL={v2PxEthTVL} v2PxEthUsdTVL={v2PxEthUsdTVL} v2vaFraxTVL={v2vaFraxTVL} arbiTvl={this.state.arbiTvl}
           alchemistTvl={this.state.alchemistTvl} optiTvl={this.state.optiTvl} optiAWethTVL={optiAWethTVL} optiAWethUsdTVL={optiAWethUsdTVL}
           v2sfrxEthTVL={v2SfrxEthTVL} v2sfrxEthUsdTVL={v2SfrxEthUsdTVL} optiWstEthTVL={optiWstEthTVL} optiWstEthUsdTVL={optiWstEthUsdTVL}
-          arbiWstEthTVL={arbiWstEthTVL} arbiWstEthUsdTVL={arbiWstEthUsdTVL}
+          arbiWstEthTVL={arbiWstEthTVL} arbiWstEthUsdTVL={arbiWstEthUsdTVL} arbiGearboxEthTVL={arbiGearboxEthTVL} arbiGearboxEthUsdTVL={arbiGearboxEthUsdTVL}
         />)}
 
       {this.state.activeTab !== "treasury" ? "" :

@@ -119,7 +119,8 @@ export const addresses = {
     wethArbitrumContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     metisAlUsdContractAddress: '0x303241e2b3b4aed0bb0f8623e7442368fed8faf3',
     metisAlEthContractAddress: '0x0e17934b9735d479b2388347faef0f4e58b9cc06',
-    arbitrumAlEthContractAddress: '0x17573150d67d820542EFb24210371545a4868B03'
+    arbitrumAlEthContractAddress: '0x17573150d67d820542EFb24210371545a4868B03',
+    pxEthAddress: '0x9Ba021B0a9b958B5E75cE9f6dff97C7eE52cb3E6'
 }
 
 export const abis = {

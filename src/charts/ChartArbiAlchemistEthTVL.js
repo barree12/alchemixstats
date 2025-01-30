@@ -20,6 +20,16 @@ export default class ChartArbiAlchemistEthTVL extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
+            },
+            {
+              label: 'gearboxETH',
+              data: this.props.arbiTvl.gearboxEth,
+              backgroundColor: 'rgba(102,102,102,0.8)',
+              borderColor: 'rgba(240,238,129,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: true,
             }]
           }}
             options={{
