@@ -136,74 +136,28 @@ export default class App extends React.Component {
     this.setState({ activeTab: active });
   }
 
-  /*calculateAlUsdArrays(result){
-    if(result && result.prices.length === result.total_volumes.length && result.prices.length === result.market_caps.length) {
-      let dates = [];
-      let prices = [];
-      let volumes = [];
-      let alUsdMarketcaps = [];
-      let alUsdMarketcapDates = [];
-      let tempDate;
-      let counter = 0;
-      for(let i=0;i<result.prices.length;i++){
-        tempDate = new Date(result.prices[i][0]);
-        dates[i] = formatDate(tempDate, 0);
-        prices[i] = result.prices[i][1];
-        volumes[i] = result.total_volumes[i][1]; 
-      }
-      for (let i=0;i<result.market_caps.length;i++) {
-        tempDate = new Date(result.market_caps[i][0]);
-        alUsdMarketcapDates[counter] = formatDate(tempDate, 0);
-        alUsdMarketcaps[counter] = Math.round(result.market_caps[i][1]/10000)/100;
-        if(result.market_caps[i][1] !== 0) counter++;
-      }
-      this.setState({ dates: dates, prices: prices, volumes: volumes, alUsdMarketcaps: alUsdMarketcaps, alUsdMarketcapDates: alUsdMarketcapDates, alUsdLoading: false });
-    }
-  } */
-
   aggregateWeb3Calls(){
+
+    let authorizationHeader = {
+      method: 'GET',
+      headers: { 
+        'pinata_api_key': '7237805a818b4433e8a1',
+        'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
+      }
+    }
+
     let v2Caps = {}
     let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0 }
     let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0, daiInMigrate: 0, wethInMigrate: 0 }
     let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
+    let tokenParams = {}
 
-    Promise.all([this.alchemistContract.methods.getYieldTokenParameters(addresses.yvDaiAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdcAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.yvUsdtAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.vaUsdcAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.vaDaiAddress).call(),
-      this.alchemistContract.methods.getYieldTokenParameters(addresses.vaFraxAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvDaiAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvUsdcAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.yvUsdtAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaUsdcAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaDaiAddress).call(),
-      this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.vaFraxAddress).call(),
-      this.alchemistEthContract.methods.getYieldTokenParameters(addresses.yvWethAddress).call(),
-      //this.nextAlUsdOptimismContract.methods.balanceOf(addresses.alUsdOptimismContractAddress).call()
-      //this.alchemistEthOptiContract.methods.getUnderlyingTokensPerShare(addresses.optiAWethAddress).call()
+    Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json()),
     ])
-      .then(([daiParams, usdcParams, usdtParams, vaUsdcParams, vaDaiParams, vaFraxParams, daiTokens, usdcTokens, usdtTokens, vaUsdcTokens, vaDaiTokens, vaFraxTokens, ethParams]) => {
-        wait(2000);
-        Promise.all([this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.yvWethAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.vaEthAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.vaEthAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.wstEthAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.wstEthAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.rEthAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.rEthAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.sfrxEthAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.sfrxEthAddress).call(),
-          this.alchemistContract.methods.getYieldTokenParameters(addresses.aDaiAddress).call(),
-          this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdcAddress).call(),
-          this.alchemistContract.methods.getYieldTokenParameters(addresses.aUsdtAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.pxEthAddress).call(),
-          this.alchemistEthContract.methods.getYieldTokenParameters(addresses.aWethAddress).call(),
-          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aDaiAddress).call(),
-          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdcAddress).call(),
-          this.alchemistContract.methods.getUnderlyingTokensPerShare(addresses.aUsdtAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.pxEthAddress).call(),
-          this.alchemistEthContract.methods.getUnderlyingTokensPerShare(addresses.aWethAddress).call(),
+      .then(([urlFiller]) => {
+        //let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
+        let url = "https://ipfs.imimim.info/ipfs/bafkreieeyjj5bjppd6ci4yig6xzkxk7h5pzgya6iqgkicusl7hzoxghvue";
+        Promise.all([fetch(url).then(res => res.json()),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
@@ -222,63 +176,101 @@ export default class App extends React.Component {
           this.alEthOptimismContract.methods.totalSupply().call(),
           this.alEthArbitrumContract.methods.totalSupply().call(),
           this.alEthMetisContract.methods.totalSupply().call()])
-        .then(([ethTokens, vaEthParams, vaEthTokens, wstEthParams, wstEthTokens, rEthParams, rEthTokens, sfrxEthParams, sfrxEthTokens, aDaiParams, aUsdcParams, aUsdtParams, pxEthParams, aWethParams, aDaiTokens, aUsdcTokens, aUsdtTokens, pxEthTokens, aWethTokens, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
-        v2Caps.dai = daiParams[4]/Math.pow(10, daiParams[0]);
+        .then(([tokenParamsResult, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
+        for(let i=0;i<tokenParamsResult.length;i++){
+          switch(tokenParamsResult[i].tokenAddress){
+            case addresses.yvDaiAddress: tokenParams.yvDai = tokenParamsResult[i];
+            break;
+            case addresses.yvUsdcAddress: tokenParams.yvUsdc = tokenParamsResult[i];
+            break;
+            case addresses.yvUsdtAddress: tokenParams.yvUsdt = tokenParamsResult[i];
+            break;
+            case addresses.vaUsdcAddress: tokenParams.vaUsdc = tokenParamsResult[i];
+            break;
+            case addresses.vaDaiAddress: tokenParams.vaDai = tokenParamsResult[i];
+            break;
+            case addresses.vaFraxAddress: tokenParams.vaFrax = tokenParamsResult[i];
+            break;
+            case addresses.yvWethAddress: tokenParams.yvWeth = tokenParamsResult[i];
+            break;
+            case addresses.vaEthAddress: tokenParams.vaEth = tokenParamsResult[i];
+            break;
+            case addresses.wstEthAddress: tokenParams.wstEth = tokenParamsResult[i];
+            break;
+            case addresses.rEthAddress: tokenParams.rEth = tokenParamsResult[i];
+            break;
+            case addresses.sfrxEthAddress: tokenParams.sfrxEth = tokenParamsResult[i];
+            break;
+            case addresses.aDaiAddress: tokenParams.aDai = tokenParamsResult[i];
+            break;
+            case addresses.aUsdcAddress: tokenParams.aUsdc = tokenParamsResult[i];
+            break;
+            case addresses.aUsdtAddress: tokenParams.aUsdt = tokenParamsResult[i];
+            break;
+            case addresses.pxEthAddress: tokenParams.pxEth = tokenParamsResult[i];
+            break;
+            case addresses.aWethAddress: tokenParams.aWeth = tokenParamsResult[i];
+            break;
+          }
+          
+        }
+        //console.log(tokenParams)
+        v2Caps.dai = tokenParams.yvDai.yieldTokenParameterFour/Math.pow(10, tokenParams.yvDai.yieldTokenParameterZero);
         v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
-        v2Caps.usdc = usdcParams[4]/Math.pow(10, usdcParams[0]);
+        v2Caps.usdc = tokenParams.yvUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.yvUsdc.yieldTokenParameterZero);
         v2Caps.optiAUsdc = optiAUsdcParams[4]/Math.pow(10, optiAUsdcParams[0]);
-        v2Caps.usdt = usdtParams[4]/Math.pow(10, usdtParams[0]);
+        v2Caps.usdt = tokenParams.yvUsdt.yieldTokenParameterFour/Math.pow(10, tokenParams.yvUsdt.yieldTokenParameterZero);
         v2Caps.optiAUsdt = optiAUsdtParams[4]/Math.pow(10, optiAUsdtParams[0]);
-        v2Caps.eth = ethParams[4]/Math.pow(10, ethParams[0]);
-        v2Caps.wstEth = wstEthParams[4]/Math.pow(10, wstEthParams[0]);
-        v2Caps.rEth = rEthParams[4]/Math.pow(10, rEthParams[0]);
-        v2Caps.sfrxEth = sfrxEthParams[4]/Math.pow(10, sfrxEthParams[0]);
-        v2Caps.aDai = aDaiParams[4]/Math.pow(10, aDaiParams[0]);
-        v2Caps.aUsdc = aUsdcParams[4]/Math.pow(10, aUsdcParams[0]);
-        v2Caps.aUsdt = aUsdtParams[4]/Math.pow(10, aUsdtParams[0]);
-        v2Caps.pxEth = pxEthParams[4]/Math.pow(10, pxEthParams[0]);
-        v2Caps.aWeth = aWethParams[4]/Math.pow(10, aWethParams[0]);
+        v2Caps.eth = tokenParams.yvWeth.yieldTokenParameterFour/Math.pow(10, tokenParams.yvWeth.yieldTokenParameterZero);
+        v2Caps.wstEth = tokenParams.wstEth.yieldTokenParameterFour/Math.pow(10, tokenParams.wstEth.yieldTokenParameterZero);
+        v2Caps.rEth = tokenParams.rEth.yieldTokenParameterFour/Math.pow(10, tokenParams.rEth.yieldTokenParameterZero);
+        v2Caps.sfrxEth = tokenParams.sfrxEth.yieldTokenParameterFour/Math.pow(10, tokenParams.sfrxEth.yieldTokenParameterZero);
+        v2Caps.aDai = tokenParams.aDai.yieldTokenParameterFour/Math.pow(10, tokenParams.aDai.yieldTokenParameterZero);
+        v2Caps.aUsdc = tokenParams.aUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.aUsdc.yieldTokenParameterZero);
+        v2Caps.aUsdt = tokenParams.aUsdt.yieldTokenParameterFour/Math.pow(10, tokenParams.aUsdt.yieldTokenParameterZero);
+        v2Caps.pxEth = tokenParams.pxEth.yieldTokenParameterFour/Math.pow(10, tokenParams.pxEth.yieldTokenParameterZero);
+        v2Caps.aWeth = tokenParams.aWeth.yieldTokenParameterFour/Math.pow(10, tokenParams.aWeth.yieldTokenParameterZero);
         v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
         v2Caps.optiWstEth = optiWstEthParams[4]/Math.pow(10, optiWstEthParams[0]);
         v2Caps.optiYvWeth = optiYvWethParams[4]/Math.pow(10, optiYvWethParams[0]);
         v2Caps.arbiAUsdc = arbiAUsdcParams[4]/Math.pow(10, arbiAUsdcParams[0]);
         v2Caps.arbiWstEth = arbiWstEthParams[4]/Math.pow(10, arbiWstEthParams[0]);
-        v2Caps.vaUsdc = vaUsdcParams[4]/Math.pow(10, 6);
-        v2Caps.vaDai = vaDaiParams[4]/Math.pow(10, vaDaiParams[0]);
-        v2Caps.vaFrax = vaFraxParams[4]/Math.pow(10, vaFraxParams[0]);
-        v2Caps.vaEth = vaEthParams[4]/Math.pow(10, vaEthParams[0]);
-        tokensPerShare.dai = daiTokens/Math.pow(10, 18);
-        tokensPerShare.usdc = usdcTokens/Math.pow(10, 6);
-        tokensPerShare.usdt = usdtTokens/Math.pow(10, 6);
-        tokensPerShare.eth = ethTokens/Math.pow(10, 18);
-        tokensPerShare.wstEth = wstEthTokens/Math.pow(10, 18);
-        tokensPerShare.rEth = rEthTokens/Math.pow(10, 18);
-        tokensPerShare.sfrxEth = sfrxEthTokens/Math.pow(10, 18);
-        tokensPerShare.aDai = aDaiTokens/Math.pow(10, 18);
-        tokensPerShare.aUsdc = aUsdcTokens/Math.pow(10, 6);
-        tokensPerShare.aUsdt = aUsdtTokens/Math.pow(10, 6);
-        tokensPerShare.pxEth = pxEthTokens/Math.pow(10, 18);
-        tokensPerShare.aWeth = aWethTokens/Math.pow(10, 18);
-        tokensPerShare.vaDai = vaDaiTokens/Math.pow(10, 18);
-        tokensPerShare.vaUsdc = vaUsdcTokens/Math.pow(10, 6);
-        tokensPerShare.vaFrax = vaFraxTokens/Math.pow(10, 18);
-        tokensPerShare.vaEth = vaEthTokens/Math.pow(10, 18);
-        deposit.dai = daiParams[8]/Math.pow(10, 24);
-        deposit.usdc = usdcParams[8]/Math.pow(10, 12);
-        deposit.usdt = usdtParams[8]/Math.pow(10, 12);
-        deposit.eth = ethParams[8]/Math.pow(10, 18);
-        deposit.wstEth = wstEthParams[8]/Math.pow(10, 18);
-        deposit.rEth = rEthParams[8]/Math.pow(10, 18);
-        deposit.sfrxEth = sfrxEthParams[8]/Math.pow(10, 18);
-        deposit.aDai = aDaiParams[8]/Math.pow(10, 24);
-        deposit.aUsdc = aUsdcParams[8]/Math.pow(10, 12);
-        deposit.aUsdt = aUsdtParams[8]/Math.pow(10, 12);
-        deposit.pxEth = pxEthParams[8]/Math.pow(10, 18);
-        deposit.aWeth = aWethParams[8]/Math.pow(10, 18);
-        deposit.vaUsdc = vaUsdcParams[8]/Math.pow(10, 24);
-        deposit.vaDai = vaDaiParams[8]/Math.pow(10, 24);
-        deposit.vaFrax = vaFraxParams[8]/Math.pow(10, 24);
-        deposit.vaEth = vaEthParams[8]/Math.pow(10, 18);
+        v2Caps.vaUsdc = tokenParams.vaUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.vaUsdc.yieldTokenParameterZero);
+        v2Caps.vaDai = tokenParams.vaDai.yieldTokenParameterFour/Math.pow(10, tokenParams.vaDai.yieldTokenParameterZero);
+        v2Caps.vaFrax = tokenParams.vaFrax.yieldTokenParameterFour/Math.pow(10, tokenParams.vaFrax.yieldTokenParameterZero);
+        v2Caps.vaEth = tokenParams.vaEth.yieldTokenParameterFour/Math.pow(10, tokenParams.vaEth.yieldTokenParameterZero);
+        tokensPerShare.dai = tokenParams.yvDai.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.usdc = tokenParams.yvUsdc.underlyingTokensPerShare/Math.pow(10, 6);
+        tokensPerShare.usdt = tokenParams.yvUsdt.underlyingTokensPerShare/Math.pow(10, 6);
+        tokensPerShare.eth = tokenParams.yvWeth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.wstEth = tokenParams.wstEth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.rEth = tokenParams.rEth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.sfrxEth = tokenParams.sfrxEth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.aDai = tokenParams.aDai.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.aUsdc = tokenParams.aUsdc.underlyingTokensPerShare/Math.pow(10, 6);
+        tokensPerShare.aUsdt = tokenParams.aUsdt.underlyingTokensPerShare/Math.pow(10, 6);
+        tokensPerShare.pxEth = tokenParams.pxEth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.aWeth = tokenParams.aWeth.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.vaDai = tokenParams.vaDai.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.vaUsdc = tokenParams.vaUsdc.underlyingTokensPerShare/Math.pow(10, 6);
+        tokensPerShare.vaFrax = tokenParams.vaFrax.underlyingTokensPerShare/Math.pow(10, 18);
+        tokensPerShare.vaEth = tokenParams.vaEth.underlyingTokensPerShare/Math.pow(10, 18);
+        deposit.dai = tokenParams.yvDai.yieldTokenParameterEight/Math.pow(10, 24);
+        deposit.usdc = tokenParams.yvUsdc.yieldTokenParameterEight/Math.pow(10, 12);
+        deposit.usdt = tokenParams.yvUsdt.yieldTokenParameterEight/Math.pow(10, 12);
+        deposit.eth = tokenParams.yvWeth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.wstEth = tokenParams.wstEth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.rEth = tokenParams.rEth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.sfrxEth = tokenParams.sfrxEth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.aDai = tokenParams.aDai.yieldTokenParameterEight/Math.pow(10, 24);
+        deposit.aUsdc = tokenParams.aUsdc.yieldTokenParameterEight/Math.pow(10, 12);
+        deposit.aUsdt = tokenParams.aUsdt.yieldTokenParameterEight/Math.pow(10, 12);
+        deposit.pxEth = tokenParams.pxEth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.aWeth = tokenParams.aWeth.yieldTokenParameterEight/Math.pow(10, 18);
+        deposit.vaUsdc = tokenParams.vaUsdc.yieldTokenParameterEight/Math.pow(10, 24);
+        deposit.vaDai = tokenParams.vaDai.yieldTokenParameterEight/Math.pow(10, 24);
+        deposit.vaFrax = tokenParams.vaFrax.yieldTokenParameterEight/Math.pow(10, 24);
+        deposit.vaEth = tokenParams.vaEth.yieldTokenParameterEight/Math.pow(10, 18);
         deposit.optiADai = optiADaiParams[8]/Math.pow(10, 24);
         deposit.optiAUsdc = optiAUsdcParams[8]/Math.pow(10, 12);
         deposit.optiAUsdt = optiAUsdtParams[8]/Math.pow(10, 12);
@@ -944,57 +936,6 @@ export default class App extends React.Component {
           
           },
           (error) => { console.log(error) })
-
-
-    /*
-    let requestHeader = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        //'AccessKey': '472fd8246ad62e329d470811c36759d49708c2fc'
-      }
-    }
-
-    Promise.all([fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_ids=op", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401&chain_ids=base", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x0f5c3a8b62ff7639895bb9737c5befb711c4f7f4&chain_ids=metis", requestHeader).then(res => res.json()),
-    //fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_ids=eth", requestHeader).then(res => res.json()),
-    //fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_ids=eth", requestHeader).then(res => res.json()),
-    //fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_ids=eth", requestHeader).then(res => res.json()),
-    //fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_ids=op", requestHeader).then(res => res.json()),
-    //fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x8392f6669292fa56123f71949b52d883ae57e225&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x3216d2a52f0094aa860ca090bc5c335de36e6273&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0xc224bf25dcc99236f00843c7d8c4194abe8aa94a&chain_id=op&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x7e108711771dfdb10743f016d46d75a9379ca043&chain_id=arb&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401&chain_id=base&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x0f5c3a8b62ff7639895bb9737c5befb711c4f7f4&chain_id=metis&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0xb29617209961db995dd30a4ab94ba0034a4284f9&chain_ids=op", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/all_complex_protocol_list?id=0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_ids=eth", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xb29617209961db995dd30a4ab94ba0034a4284f9&chain_ids=op", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x06378717d86b8cd2dba58c87383da1eda92d3495&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0x9fb54d1f6f506feb4c65b721be931e59bb538c63&chain_id=eth&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0xb29617209961db995dd30a4ab94ba0034a4284f9&chain_id=op&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/token_list?id=0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8&chain_id=arb&is_all=false", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xfb4fe921f724f3c7b610a826c827f9f6ecef6886&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xfd599db360cd9713657c95df66650a427d213010&chain_ids=arb", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a&chain_ids=op", requestHeader).then(res => res.json()),
-    fetch("https://pro-openapi.debank.com/v1/user/total_balance?id=0x124d69daeda338b1b31ffc8e429e39c9a991164e&chain_ids=op", requestHeader).then(res => res.json()),
-
-    ])
-    .then(([treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool]) => {
-          this.calculateDebankData(treasury1, treasury2, sdCrvController, optimismMs, arbitrumMs, baseMs, metisMs, tokensTreasury1, tokensTreasury2, tokensSdCrvController, tokensOptimismMs, tokensArbitrumMs, tokensBaseMs, tokensMetisMs, elixirAlUsdFraxBp, elixirAlEthFrxEth, elixirOpti, elixirArbi, totalElixirAlUsdFraxBp, totalElixirAlEthFrxEth, totalElixirOpti, totalElixirArbi, tokensElixirAlUsdFraxBp, tokensElixirAlEthFrxEth, tokensElixirOpti, tokensElixirArbi, ramsesAlEthFrxEthPool, ramsesAlUsdFraxPool, veloAlEthWethPool, veloAlUsdUsdcPool)
-      }).catch(function(err) { console.log(err) });*/
     
   }
 
