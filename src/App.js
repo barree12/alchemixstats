@@ -152,11 +152,11 @@ export default class App extends React.Component {
     let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
     let tokenParams = {}
 
-    Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json()),
+    Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=alchemixStatsYieldTokenData.json&status=pinned", authorizationHeader).then(res => res.json()),
     ])
-      .then(([urlFiller]) => {
-        //let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
-        let url = "https://ipfs.imimim.info/ipfs/bafkreieeyjj5bjppd6ci4yig6xzkxk7h5pzgya6iqgkicusl7hzoxghvue";
+      .then(([ipfsOptiFile]) => {
+        let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
+        //let url = "https://ipfs.imimim.info/ipfs/bafkreieeyjj5bjppd6ci4yig6xzkxk7h5pzgya6iqgkicusl7hzoxghvue";
         Promise.all([fetch(url).then(res => res.json()),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
           this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
