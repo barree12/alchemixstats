@@ -14,7 +14,7 @@ export default class ChartArbiAlchemistEthTVL extends React.Component {
             datasets: [{
               label: 'wstETH',
               data: this.props.arbiTvl.wstEth,
-              backgroundColor: 'rgba(115,136,255,0.9)',
+              backgroundColor: 'rgba(115,136,255,1)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

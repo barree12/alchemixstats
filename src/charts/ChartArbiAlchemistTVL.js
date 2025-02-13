@@ -14,7 +14,7 @@ export default class ChartArbiAlchemistTVL extends React.Component {
             datasets: [{
               label: 'aUSDC',
               data: this.props.arbiTvl.aUsdc,
-              backgroundColor: 'rgba(115,136,255,0.8)',
+              backgroundColor: 'rgba(115,136,255,1)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
