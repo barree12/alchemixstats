@@ -130,7 +130,8 @@ export default class Treasury extends React.Component {
                     Arbitrum Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401">
                     Base Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x0f5c3a8b62ff7639895bb9737c5befb711c4f7f4">
                     Metis Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x16a63fcd874f7f9e267a1f274c46677d5f3fcc65">
-                    Linea Multisig</a><br/>
+                    Linea Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x41ab74824b4d1b196eeb62569b907ef9a313df18">
+                    Fraxtal Multisig</a><br/>
                 </span><br/>
                 There are 4 addresses for the alUSD and alETH Elixirs.<br/>
                 The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>

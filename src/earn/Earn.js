@@ -88,12 +88,12 @@ export default class Earn extends Component {
               </div>
               <div className="earn-yield-link-2"><a href="https://beefy.com" target="_blank" rel="noreferrer">Go to Beefy</a></div>
             </div>
-            <div className="compounder-row">
+            {/*<div className="compounder-row">
               <div className="earn-yield-protocol-name">
                 <img src={ require('../logos/pickle.png').default } alt="Convex logo" className="image" /> Pickle Finance
               </div>
               <div className="earn-yield-link-2"><a href="https://www.pickle.finance" target="_blank" rel="noreferrer">Go to Pickle</a></div>
-            </div>
+            </div>*/}
             <div className="compounder-row">
               <div className="earn-yield-protocol-name">
                 <img src={ require('../logos/concentrator.png').default } alt="Convex logo" className="image" /> Concentrator
