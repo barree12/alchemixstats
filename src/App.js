@@ -116,11 +116,12 @@ export default class App extends React.Component {
     this.alUsdArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiAlUsdContractAddress);
     this.alEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbitrumAlEthContractAddress);
     this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
-    this.usdsArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsdsContractAddress);
-    this.usxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiUsxContractAddress);
+    this.frxEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.frxEthArbiContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
     this.alUsdMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlUsdContractAddress);
     this.alEthMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlEthContractAddress);
+    this.sDolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sDolaContractAddress);
+    this.pxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.pxEthContractAddress);
   }
 
   componentDidMount() {
@@ -314,11 +315,10 @@ export default class App extends React.Component {
   getLPs(){
     let alUsdUsdc = "sAMMV2-USDC/alUSD";
     let ethPool = "sAMMV2-alETH/WETH";
-    let maiAlUsd = "sAMMV2-alUSD/MAI";
     let frxEth = "sAMMV2-alETH/frxETH";
-    let fraxUsd = "sAMMV2-FRAX/alUSD";
     let pxEthAlEth = 'sAMMV2-pxETH/alETH';
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alUsdInMaiVelodrome: 0, maiInMaiVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, fraxInVeloFraxAlUsd: 0, alUsdInVeloFraxAlUsd: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0 }
+    let dolaAlUsd = 'sAMMV2-DOLA/alUSD';
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0, alUsdInVeloDolaAlUsd: 0, dolaInVeloDolaAlUsd: 0, alEthInCurvePxEth: 0, pxEthInCurvePxEth: 0, alUsdInCurveDola: 0, sdolaInCurveDola: 0, alEthInRamsesFrxEth: 0, frxEthInRamsesFrxEth: 0, alUsdInRamsesFrax: 0, fraxInRamsesFrax: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
@@ -330,12 +330,18 @@ export default class App extends React.Component {
       this.wethContract.methods.balanceOf(addresses.curveAlEthWethPoolContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
       this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
-      //this.alEthContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
-      //this.wethContract.methods.balanceOf(addresses.pcsAlEthAddress).call(),
+      this.alEthContract.methods.balanceOf(addresses.curveAlEthPxEthPoolContractAddress).call(),
+      this.pxEthContract.methods.balanceOf(addresses.curveAlEthPxEthPoolContractAddress).call(),
+      this.alUsdContract.methods.balanceOf(addresses.curveAlUsdDolaPoolContractAddress).call(),
+      this.sDolaContract.methods.balanceOf(addresses.curveAlUsdDolaPoolContractAddress).call(),
+      this.alEthArbitrumContract.methods.balanceOf(addresses.alEthFrxEthRamsesPoolContractAddress).call(),
+      this.frxEthArbitrumContract.methods.balanceOf(addresses.alEthFrxEthRamsesPoolContractAddress).call(),
+      this.alUsdArbitrumContract.methods.balanceOf(addresses.alUsdFraxRamsesPoolContractAddress).call(),
+      this.fraxArbitrumContract.methods.balanceOf(addresses.alUsdFraxRamsesPoolContractAddress).call(),
       this.veloStatsContract.methods.all(480,0).call(),
       this.veloStatsContract.methods.all(480,480).call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, veloStats1, veloStats2]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, alEthInCurvePxEth, pxEthInCurvePxEth, alUsdInCurveDola, sdolaInCurveDola, alEthInRamsesFrxEth, frxEthInRamsesFrxEth, alUsdInRamsesFrax, fraxInRamsesFrax, veloStats1, veloStats2]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
@@ -345,10 +351,18 @@ export default class App extends React.Component {
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
       lps.alEthInAlEthWethCrv = alEthInAlEthWethCrv/Math.pow(10, 18);
       lps.wethInAlEthWethCrv = wethInAlEthWethCrv/Math.pow(10, 18);
+      lps.alEthInCurvePxEth = alEthInCurvePxEth/Math.pow(10, 18);
+      lps.pxEthInCurvePxEth = pxEthInCurvePxEth/Math.pow(10, 18);
+      lps.alUsdInCurveDola = alUsdInCurveDola/Math.pow(10, 18);
+      lps.sdolaInCurveDola = sdolaInCurveDola/Math.pow(10, 18);
       lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
       lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
+      lps.alEthInRamsesFrxEth = alEthInRamsesFrxEth/Math.pow(10, 18);
+      lps.frxEthInRamsesFrxEth = frxEthInRamsesFrxEth/Math.pow(10, 18);
+      lps.alUsdInRamsesFrax = alUsdInRamsesFrax/Math.pow(10, 18);
+      lps.fraxInRamsesFrax = fraxInRamsesFrax/Math.pow(10, 18);
       let veloStats = veloStats1.concat(veloStats2)
-      //console.log(veloStats)
+      console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
@@ -358,17 +372,13 @@ export default class App extends React.Component {
           lps.alEthInVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
           lps.wethInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
-        if(veloStats[i][1] === maiAlUsd) {
-          lps.alUsdInMaiVelodrome = parseInt(veloStats[i][9]) / Math.pow(10,18);
-          lps.maiInMaiVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
+        if(veloStats[i][1] === dolaAlUsd) {
+          lps.dolaInVeloDolaAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
+          lps.alUsdInVeloDolaAlUsd = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === frxEth) {
           lps.alEthInVeloFxsEthAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
           lps.fxsEthInVeloFxsEthAlEth = parseInt(veloStats[i][12]) / Math.pow(10,18);
-        }
-        if(veloStats[i][1] === fraxUsd) {
-          lps.fraxInVeloFraxAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
-          lps.alUsdInVeloFraxAlUsd = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === pxEthAlEth) {
           //console.log("found")

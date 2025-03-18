@@ -16,6 +16,11 @@ export default class AlEthSummary extends React.Component {
         const fxsEthInVeloFxsEthAlEthUsd = Math.round(this.props.lps.fxsEthInVeloFxsEthAlEth*this.props.ethPrice/10000)/100;
         const alEthInFrxEthCrvUsd = Math.round(this.props.lps.alEthInFrxEthCrv*this.props.ethPrice/10000)/100;
         const frxEthInFrxEthCrvUsd = Math.round(this.props.lps.frxEthInFrxEthCrv*this.props.ethPrice/10000)/100;
+        const alEthInPxEthCrvUsd = Math.round(this.props.lps.alEthInCurvePxEth*this.props.ethPrice/10000)/100;
+        const pxEthInPxEthCrvUsd = Math.round(this.props.lps.pxEthInCurvePxEth*this.props.ethPrice/10000)/100;
+        const alEthInRamsesFrxEthUsd = Math.round(this.props.lps.alEthInRamsesFrxEth*this.props.ethPrice/10000)/100;
+        const frxEthInRamsesFrxEthUsd = Math.round(this.props.lps.frxEthInRamsesFrxEth*this.props.ethPrice/10000)/100;
+
         return (
             <div className="summary">
                 alETH supply grows when people deposit collateral assets and borrow alETH against them.<br/>
@@ -124,6 +129,56 @@ export default class AlEthSummary extends React.Component {
                   <div className="small-table-inner-13">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth frxEth logo" className="image" />
+                      <span className="table-text-title">Curve pxETH</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInPxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInCurvePxEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">pxETH</span>
+                      <span className="important-2">${pxEthInPxEthCrvUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.pxEthInCurvePxEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell-disappear">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInPxEthCrvUsd + pxEthInPxEthCrvUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-13">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth frxEth logo" className="image" />
+                      <span className="table-text-title">Ramses frxETH</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alETH</span>
+                      <span className="important-2">${alEthInRamsesFrxEthUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.alEthInRamsesFrxEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">frxETH</span>
+                      <span className="important-2">${frxEthInRamsesFrxEthUsd}M</span>
+                      <span className="important-2"><i>({Math.round(this.props.lps.frxEthInRamsesFrxEth)})</i></span>
+                    </span>
+                    <span className="small-table-cell-disappear">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${Math.round((alEthInRamsesFrxEthUsd + frxEthInRamsesFrxEthUsd)*100)/100}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-13">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/aleth_frxeth.png').default } alt="alEth frxEth logo" className="image" />
                       <span className="table-text-title">Velo frxETH</span>
                     </span>
                     <span className="small-table-cell">
@@ -145,6 +200,7 @@ export default class AlEthSummary extends React.Component {
                       <span className="important-2">${Math.round((alEthInVeloFxsEthAlEthUsd + fxsEthInVeloFxsEthAlEthUsd)*100)/100}M</span>
                     </span>
                   </div>
+                  
                   <div className="small-table-inner-5">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/aleth_saddle.png').default } alt="alEth Saddle logo" className="image" />
