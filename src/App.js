@@ -34,7 +34,7 @@ const web3 = new Web3('https://eth-mainnet.public.blastapi.io');
 //const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
-const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
+const web3arbitrum = new Web3('https://arb1.arbitrum.io/rpc')
 const web3metis = new Web3('https://metis-mainnet.public.blastapi.io')
 
 export default class App extends React.Component {
@@ -1023,13 +1023,10 @@ export default class App extends React.Component {
     Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
       fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
-      fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json()),
-      fetch("https://gateway.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/Dgjyhh69XooHPd4JjvT3ik9FaGAR3w7sUSQyQ1YDakGp", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json())])
-      .then(([usdcPeg, alEthPeg, alchemistTvl, ipfsOptiFile, arbiAlchemistTvl]) => {
+      fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json())])
+      .then(([usdcPeg, alEthPeg, alchemistTvl, ipfsOptiFile]) => {
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
-        //this.calculateOptiTvl(optiAlchemistTvl.result.rows)
-        //this.calculateArbiTvl(arbiAlchemistTvl.data.alchemistTVLHistories.reverse())
         this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
         //console.log(ipfsOptiFile)
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;

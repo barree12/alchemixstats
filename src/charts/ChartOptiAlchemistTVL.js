@@ -44,7 +44,7 @@ export default class ChartOptiAlchemistTVL extends React.Component {
             {
               label: 'yvDAI',
               data: this.props.optiTvl.aOptUSDT,
-              backgroundColor: 'rgba(255,204,75,0.7)',
+              backgroundColor: 'rgba(35,148,54,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
@@ -54,7 +54,7 @@ export default class ChartOptiAlchemistTVL extends React.Component {
             {
               label: 'yvUSDC',
               data: this.props.optiTvl.aOptUSDT,
-              backgroundColor: 'rgba(255,204,75,0.7)',
+              backgroundColor: 'rgba(161,175,255,1)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

@@ -58,7 +58,7 @@ export default class ChartV2AlchemistEthTVL extends React.Component {
             {
               label: 'apxETH',
               data: this.props.alchemistTvl.pxEth,
-              backgroundColor: 'rgba(102,102,102,0.8)',
+              backgroundColor: 'rgba(77, 186, 186, 0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,

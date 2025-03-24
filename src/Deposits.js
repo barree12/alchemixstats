@@ -32,7 +32,6 @@ export default class Deposits extends React.Component {
     }
 
     calculateAlchemistTvl(result){
-        console.log(result)
         let startDate = new Date(1647385201*1000); //March 16th
         let today = new Date();
         let dateTracker = new Date(result[0].timestamp*1000);
@@ -155,6 +154,7 @@ export default class Deposits extends React.Component {
         const alchemistTvlSkip3000 = this.getAlchemistTvlQuery(3000)
         const alchemistTvlSkip4000 = this.getAlchemistTvlQuery(4000)
         const alchemistTvlSkip5000 = this.getAlchemistTvlQuery(5000)
+        //const alchemistTvlSkip6000 = this.getAlchemistTvlQuery(5001)
 
         Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
             fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alchemistTvlSkip1000)).then(res => res.json()),
