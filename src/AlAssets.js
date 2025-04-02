@@ -10,7 +10,8 @@ import Web3 from 'web3';
 
 const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
-const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
+//const web3arbitrum = new Web3('https://rpc.ankr.com/arbitrum')
+const web3arbitrum = new Web3('https://arb1.arbitrum.io/rpc')
 
 export default class AlAssets extends React.Component {
     
