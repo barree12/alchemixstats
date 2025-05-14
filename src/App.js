@@ -589,7 +589,7 @@ export default class App extends React.Component {
 
   isStrategic(object){
     if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "AURA" || object === "FXS" || object === "RAM") return true;
+    object === "AURA" || object === "FRAX" || object === "RAM") return true;
     else return false;
   }
 
@@ -716,7 +716,7 @@ export default class App extends React.Component {
       }
     }
 
-    treasuryAssetsStrategic["FXS"] += treasuryAssets["sdFXS"];
+    treasuryAssetsStrategic["FRAX"] += treasuryAssets["sdFXS"];
     treasuryAssets["sdFXS"] = 0;
 
     for(let i=0;i<tokensConcat.length-1;i++){
