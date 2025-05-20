@@ -141,7 +141,8 @@ export default class Treasury extends React.Component {
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x06378717d86b8cd2dba58c87383da1eda92d3495">
                     alUSD-FRAXBP Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9fb54d1f6f506feb4c65b721be931e59bb538c63">
-                    alETH-frxETH Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
+                    alETH-frxETH Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x1825377ece03098f35951e9600cf3a3cf718bebf">
+                    alUSD-sDOLA Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
                     Optimism Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8">
                     Arbitrum Elixir</a>
                 </span>
