@@ -94,6 +94,7 @@ export default class App extends React.Component {
     this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.wethContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.wethAddress);
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
+    this.alUsdSdolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdSdolaContractAddress);
     this.alUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdAddress);
     this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
     this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
@@ -294,17 +295,19 @@ export default class App extends React.Component {
   }
 
   getCurvePoolBalances(){
-    let alAssetCrvSupply = { alUsd3Crv: 0, alEthFrxEthValue: 0, alUsdFraxBp: 0 };
+    let alAssetCrvSupply = { alUsd3Crv: 0, alEthFrxEthValue: 0, alUsdFraxBp: 0, alUsdSdola: 0 };
     Promise.all([
       this.alUsd3CrvContract.methods.totalSupply().call(),
       this.alEthFrxEthContract.methods.totalSupply().call(),
       this.alEthFrxEthContract.methods.get_virtual_price().call(),
       this.alUsdFraxBpContract.methods.totalSupply().call(),
+      this.alUsdSdolaContract.methods.totalSupply().call()
     ])
-    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply]) => {
+    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply, alUsdSdolaSupply]) => {
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthFrxEthValue = (alEthFrxEthSupply/Math.pow(10, 18))*(alEthFrxEthVirtualPrice/Math.pow(10, 18));
       alAssetCrvSupply.alUsdFraxBp = alUsdFraxBpCrvSupply/Math.pow(10, 18);
+      alAssetCrvSupply.alUsdSdola = alUsdSdolaSupply/Math.pow(10, 18);
       this.setState({ alAssetCrvSupply: alAssetCrvSupply, stakingLoading: false })
     })
     .catch(function(err) {
@@ -605,6 +608,7 @@ export default class App extends React.Component {
     let alEthAmountInElixir = 0;
     let alUsdFraxBpInElixir = 0;
     let alEthFrxEthInElixir = 0;
+    let alUsdSdolaInElixir = 0;
     let alUsdFraxArbiInElixir = 0;
     let alEthFrxEthArbiInElixir = 0;
     let alUsdUsdcVeloInElixir = 0;
@@ -630,6 +634,7 @@ export default class App extends React.Component {
     //let alUsd3CrvConvexId = '0x02e2151d4f351881017abdf2dd2b51150841d5b3';
     let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:19';
     let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
+    let alUsdSdolaConvexId = '0x7ee5f33e36988070a8e265a0f28a91514f45f630';
     let alEthFrxEthRamsesId = '0xc3f26d2fa16129a8d4a5a0f94d25f2cdd9005cdb';
     let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
     let alEthWethVelodromeId = '0xc16adbf2d01d6524b79cbb610ce31d5db80eee3c';
@@ -640,7 +645,7 @@ export default class App extends React.Component {
     let ramsesAlUsdFraxAddress = '0xfd599db360cd9713657c95df66650a427d213010';
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
-    let veloAlEthFrxEthAddress = '0x1ad06ca54de04dbe9e2817f4c13ecb406dcbeaf0';
+    //let veloAlEthFrxEthAddress = '0x1ad06ca54de04dbe9e2817f4c13ecb406dcbeaf0';
     let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
     
     let tempDebankCalc = {};
@@ -657,7 +662,7 @@ export default class App extends React.Component {
     let ramsesAlUsdFraxPool;
     let veloAlEthWethPool;
     let veloAlUsdUsdcPool;
-    let veloAlEthFrxEthPool;
+    //let veloAlEthFrxEthPool;
     let veloAlEthPxEthPool;
 
     for(let i=0;i<data.pools.length;i++){
@@ -665,11 +670,11 @@ export default class App extends React.Component {
       if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthWethAddress) veloAlEthWethPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlUsdUsdcAddress) veloAlUsdUsdcPool = data.pools[i].total_balance.total_usd_value;
-      if(data.pools[i].address === veloAlEthFrxEthAddress) veloAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
+      //if(data.pools[i].address === veloAlEthFrxEthAddress) veloAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;
     }
 
-    //console.log(data.treasury)
+    console.log(data)
     for(let i=0;i<data.treasury.length;i++){
       tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
       protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
@@ -831,6 +836,7 @@ export default class App extends React.Component {
           else {
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthConvexId) alEthFrxEthInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdSdolaConvexId) alUsdSdolaInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
@@ -884,7 +890,7 @@ export default class App extends React.Component {
       elixirLargestValue = 0;
     }*/
     
-    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
+    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alUsdSdolaInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -896,6 +902,7 @@ export default class App extends React.Component {
       nonAlcxTreasury: totalTreasury + totalTreasuryStrategic - alcxInTreasury,
       alcxInTreasury: alcxInTreasury,
       alEthFrxEthInElixir: alEthFrxEthInElixir,
+      alUsdSdolaInElixir: alUsdSdolaInElixir,
       alEthFrxEthRamsesInElixir: alEthFrxEthArbiInElixir,
       alUsdFraxRamsesInElixir: alUsdFraxArbiInElixir,
       alEthWethVeloInElixir: alEthWethVeloInElixir,
@@ -919,7 +926,7 @@ export default class App extends React.Component {
       ramsesAlUsdFraxPool: ramsesAlUsdFraxPool,
       veloAlEthWethPool: veloAlEthWethPool,
       veloAlUsdUsdcPool: veloAlUsdUsdcPool,
-      veloAlEthFrxEthPool: veloAlEthFrxEthPool,
+      //veloAlEthFrxEthPool: veloAlEthFrxEthPool,
       veloAlEthPxEthPool: veloAlEthPxEthPool
     }
     this.setState({ debankDataLoading: false, debankData: tempDebankCalc })

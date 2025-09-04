@@ -6,8 +6,9 @@ export default class ChartCrvPoolRatios extends React.Component {
   render(){  
   let alEthFrxEthRatio = this.props.debankData.alEthFrxEthInElixir / this.props.alEthFrxEthTotalValue;
   let alUsdFraxBpCrvRatio = this.props.debankData.alUsdFraxBpInElixir / this.props.alAssetCrvSupply.alUsdFraxBp;
+  let alUsdSdolaRatio = this.props.debankData.alUsdSdolaInElixir / this.props.alAssetCrvSupply.alUsdSdola;
   let veloAlEthRatio = this.props.debankData.alEthWethVeloInElixir / this.props.debankData.veloAlEthWethPool;
-  let veloAlEthFrxEthRatio = this.props.debankData.alEthFrxEthVeloInElixir / this.props.debankData.veloAlEthFrxEthPool;
+  //let veloAlEthFrxEthRatio = this.props.debankData.alEthFrxEthVeloInElixir / this.props.debankData.veloAlEthFrxEthPool;
   let veloAlEthPxEthRatio = this.props.debankData.alEthPxEthVeloInElixir / this.props.debankData.veloAlEthPxEthPool;
   let veloAlUsdRatio = this.props.debankData.alUsdUsdcVeloInElixir / this.props.debankData.veloAlUsdUsdcPool;
   let ramsesAlEthRatio = this.props.debankData.alEthFrxEthRamsesInElixir / this.props.debankData.ramsesAlEthFrxEthPool;
@@ -21,15 +22,15 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUSD-FRAXBP", "alETH-frxETH", "Velo alUSD-USDC", "Velo alETH-WETH", "Velo alETH-frxETH", "Velo alETH-pxETH", "RAMSES alUSD-FRAX", "RAMSES alETH-frxETH"],
+            labels: ["alUSD-FRAXBP", "alETH-frxETH", "alUSD-sDOLA", "Velo alUSD-USDC", "Velo alETH-WETH",  "Velo alETH-pxETH", "RAMSES alUSD-FRAX", "RAMSES alETH-frxETH"],
             datasets: [{
               label: 'Owned',
               data: [
                 Math.round(alUsdFraxBpCrvRatio*10000)/100,
                 Math.round(alEthFrxEthRatio*10000)/100,
+                Math.round(alUsdSdolaRatio*10000)/100,
                 Math.round(veloAlUsdRatio*10000)/100,
                 Math.round(veloAlEthRatio*10000)/100,
-                Math.round(veloAlEthFrxEthRatio*10000)/100,
                 Math.round(veloAlEthPxEthRatio*10000)/100,
                 Math.round(ramsesAlUsdRatio*10000)/100,
                 Math.round(ramsesAlEthRatio*10000)/100      
@@ -46,9 +47,9 @@ export default class ChartCrvPoolRatios extends React.Component {
               data: [
                 Math.round((1-alUsdFraxBpCrvRatio)*10000)/100,
                 Math.round((1-alEthFrxEthRatio)*10000)/100,
+                Math.round((1-alUsdSdolaRatio)*10000)/100,
                 Math.round((1-veloAlUsdRatio)*10000)/100,
                 Math.round((1-veloAlEthRatio)*10000)/100,
-                Math.round((1-veloAlEthFrxEthRatio)*10000)/100,
                 Math.round((1-veloAlEthPxEthRatio)*10000)/100,
                 Math.round((1-ramsesAlUsdRatio)*10000)/100,
                 Math.round((1-ramsesAlEthRatio)*10000)/100
@@ -88,8 +89,8 @@ export default class ChartCrvPoolRatios extends React.Component {
                             ((context.dataset.label === 'External' && context.label === "alETH-frxETH") ? (Math.round((helperPointer.props.alEthFrxEthTotalValue - helperPointer.props.debankData.alEthFrxEthInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alETH-WETH") ? (Math.round(helperPointer.props.debankData.alEthWethVeloInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "Velo alETH-WETH") ? (Math.round((helperPointer.props.debankData.veloAlEthWethPool - helperPointer.props.debankData.alEthWethVeloInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Velo alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthVeloInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Velo alETH-frxETH") ? (Math.round((helperPointer.props.debankData.veloAlEthFrxEthPool - helperPointer.props.debankData.alEthFrxEthVeloInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "alUSD-sDOLA") ? (Math.round(helperPointer.props.debankData.alUsdSdolaInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "alUSD-sDOLA") ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdSdola - helperPointer.props.debankData.alUsdSdolaInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alETH-pxETH") ? (Math.round(helperPointer.props.debankData.alEthPxEthVeloInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "Velo alETH-pxETH") ? (Math.round((helperPointer.props.debankData.veloAlEthPxEthPool - helperPointer.props.debankData.alEthPxEthVeloInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcVeloInElixir/10000)/100 + "M") : "") +

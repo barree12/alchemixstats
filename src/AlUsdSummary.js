@@ -73,28 +73,28 @@ export default class AlUsdSummary extends React.Component {
 
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_crv.png').default } alt="alUsd logo" className="image" />
-                      <span className="table-text-title">alUSD3Crv</span>
+                      <img src={ require('./logos/dola.png').default } alt="sDOLA logo" className="image" />
+                      <span className="table-text-title">Curve sDOLA</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdIn3Crv/10000)/100}M</span>
-                    </span> 
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInCurveDola/10000)/100}M</span>
+                    </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">3CRV</span>
-                      <span className="important-2">${Math.round(this.props.lps.crv3In3Crv/10000)/100}M</span>
-                    </span>  
-                    <span className="small-table-cell-disappear">
+                      <span className="table-text-bold-2">sDOLA</span>
+                      <span className="important-2">${Math.round(this.props.lps.sdolaInCurveDola/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
                       <span></span>
                       <span></span>
                     </span>
-                    <span className="small-table-cell-disappear">
+                    <span className="small-table-cell">
                       <span></span>
                       <span></span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalAlUsd3Crv}M</span>
+                      <span className="important-2">${totalDolaCurve}M</span>
                     </span>
                   </div>
 
@@ -128,9 +128,36 @@ export default class AlUsdSummary extends React.Component {
                 </div>
                 <div className="small-table-3">
 
+                <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_crv.png').default } alt="alUsd logo" className="image" />
+                      <span className="table-text-title">alUSD3Crv</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdIn3Crv/10000)/100}M</span>
+                    </span> 
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">3CRV</span>
+                      <span className="important-2">${Math.round(this.props.lps.crv3In3Crv/10000)/100}M</span>
+                    </span>  
+                    <span className="small-table-cell-disappear">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell-disappear">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalAlUsd3Crv}M</span>
+                    </span>
+                  </div>
+
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_frax.png').default } alt="alUSD-FRAX logo" className="image" />
+                      <img src={ require('./logos/dola.png').default } alt="sDOLA logo" className="image" />
                       <span className="table-text-title">DOLA Velodrome</span>
                     </span>
                     <span className="small-table-cell">
@@ -157,34 +184,7 @@ export default class AlUsdSummary extends React.Component {
 
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_mai.png').default } alt="alUSD-MAI logo" className="image" />
-                      <span className="table-text-title">Curve sDOLA</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInCurveDola/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">sDOLA</span>
-                      <span className="important-2">${Math.round(this.props.lps.sdolaInCurveDola/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalDolaCurve}M</span>
-                    </span>
-                  </div>
-
-                  <div className="small-table-inner-11">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_mai.png').default } alt="alUSD-MAI logo" className="image" />
+                      <img src={ require('./logos/frax.png').default } alt="FRAX logo" className="image" />
                       <span className="table-text-title">Ramses FRAX</span>
                     </span>
                     <span className="small-table-cell">

@@ -50,6 +50,7 @@ export const addresses = {
     saddleAlEthPoolContractAddress: '0xa6018520eaacc06c30ff2e1b3ee2c7c22e64196a',
     saddleStakingContractAddress: '0x691ef79e40d909c715be5e9e93738b3ff7d58534',
     alUsd3CrvContractAddress: '0x43b4fdfd4ff969587185cdb6f0bd875c5fc83f8c',
+    alUsdSdolaContractAddress: '0x460638e6f7605b866736e38045c0de8294d7d87f',
     frxEthAlEthContractAddress: '0xb657b895b265c38c53fff00166cf7f6a3c70587d',
     veSdtContractAddress: '0x0C30476f66034E11782938DF8e4384970B6c9e8a',
     sdCrvGaugeContractAddress: '0x7f50786A0b15723D741727882ee99a0BF34e3466',
