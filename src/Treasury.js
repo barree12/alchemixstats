@@ -126,7 +126,7 @@ export default class Treasury extends React.Component {
 
             <div className="section-wrapper">
             <div className="summary">
-                There are 7 main treasury addresses of the Alchemix protocol.<br/>
+                There are 9 main treasury addresses for Alchemix.<br/>
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
                     Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x8392f6669292fa56123f71949b52d883ae57e225">
@@ -139,7 +139,7 @@ export default class Treasury extends React.Component {
                     Linea Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x41ab74824b4d1b196eeb62569b907ef9a313df18">
                     Fraxtal Multisig</a><br/>
                 </span><br/>
-                There are 4 addresses for the alUSD and alETH Elixirs.<br/>
+                There are 5 addresses for the alUSD and alETH Elixirs.<br/>
                 The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x06378717d86b8cd2dba58c87383da1eda92d3495">
