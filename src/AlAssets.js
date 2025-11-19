@@ -90,7 +90,7 @@ export default class AlAssets extends React.Component {
         }
         let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
         let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;
-        let alUsdShouldHaveL2 = this.props.alAssetSupply.alUsdOptimism + this.props.alAssetSupply.alUsdArbitrum + this.props.alAssetSupply.alUsdMetis - alUsdOptimismDebt - alUsdArbitrumDebt - this.props.debankData.alUsdAmountInOptimismElixir;
+        let alUsdShouldHaveL2 = this.props.alAssetSupply.alUsdOptimism + this.props.alAssetSupply.alUsdArbitrum - alUsdOptimismDebt - alUsdArbitrumDebt - this.props.debankData.alUsdAmountInOptimismElixir;
         let alUsdOwnedL2 = this.props.debankData.alUsdOptimismBackingTokensInElixir + this.props.debankData.alUsdArbitrumBackingTokensInElixir + stablesInOptimismTransmuterBuffer + stablesInArbitrumTransmuterBuffer;
         let alUsdMainnetSurplus = alUsdOwned - alUsdShouldHave;
         let alUsdOptimismSurplus = alUsdOwnedL2 - alUsdShouldHaveL2;

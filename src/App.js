@@ -35,7 +35,7 @@ const web3 = new Web3('https://eth-mainnet.public.blastapi.io');
 //const web3optimism = new Web3('https://mainnet.optimism.io');
 const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 const web3arbitrum = new Web3('https://arb1.arbitrum.io/rpc')
-const web3metis = new Web3('https://metis-mainnet.public.blastapi.io')
+//const web3metis = new Web3('https://metis-mainnet.public.blastapi.io')
 
 export default class App extends React.Component {
 
@@ -119,8 +119,8 @@ export default class App extends React.Component {
     this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
     this.frxEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.frxEthArbiContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
-    this.alUsdMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlUsdContractAddress);
-    this.alEthMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlEthContractAddress);
+    //this.alUsdMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlUsdContractAddress);
+    //this.alEthMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlEthContractAddress);
     this.sDolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sDolaContractAddress);
     this.pxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.pxEthContractAddress);
   }
@@ -174,11 +174,11 @@ export default class App extends React.Component {
           this.alUsdContract.methods.totalSupply().call(),
           this.alUsdOptimismContract.methods.totalSupply().call(),
           this.alUsdArbitrumContract.methods.totalSupply().call(),
-          this.alUsdMetisContract.methods.totalSupply().call(),
+          //this.alUsdMetisContract.methods.totalSupply().call(),
+          //this.alEthMetisContract.methods.totalSupply().call()
           this.alEthOptimismContract.methods.totalSupply().call(),
-          this.alEthArbitrumContract.methods.totalSupply().call(),
-          this.alEthMetisContract.methods.totalSupply().call()])
-        .then(([tokenParamsResult, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alUsdSupplyMetis, alEthSupplyOptimism, alEthSupplyArbitrum, alEthSupplyMetis]) => {
+          this.alEthArbitrumContract.methods.totalSupply().call()])
+        .then(([tokenParamsResult, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alEthSupplyOptimism, alEthSupplyArbitrum]) => {
         for(let i=0;i<tokenParamsResult.length;i++){
           switch(tokenParamsResult[i].tokenAddress){
             case addresses.yvDaiAddress: tokenParams.yvDai = tokenParamsResult[i];
@@ -284,11 +284,11 @@ export default class App extends React.Component {
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
         alAssetSupply.alEthOptimism = alEthSupplyOptimism/Math.pow(10, 18);
         alAssetSupply.alEthArbitrum = alEthSupplyArbitrum/Math.pow(10, 18);
-        alAssetSupply.alEthMetis = alEthSupplyMetis/Math.pow(10, 18);
+        //alAssetSupply.alEthMetis = alEthSupplyMetis/Math.pow(10, 18);
         alAssetSupply.alUsd = alUsdSupply/Math.pow(10, 18);
         alAssetSupply.alUsdOptimism = alUsdSupplyOptimism/Math.pow(10, 18);
         alAssetSupply.alUsdArbitrum = alUsdSupplyArbitrum/Math.pow(10, 18);
-        alAssetSupply.alUsdMetis = alUsdSupplyMetis/Math.pow(10, 18);
+        //alAssetSupply.alUsdMetis = alUsdSupplyMetis/Math.pow(10, 18);
         this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
         }).catch(function(err) { console.log(err.message) });
       }).catch(function(err) { console.log(err.message); });
