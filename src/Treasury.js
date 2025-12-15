@@ -126,7 +126,7 @@ export default class Treasury extends React.Component {
 
             <div className="section-wrapper">
             <div className="summary">
-                There are 9 main treasury addresses for Alchemix.<br/>
+                There are 8 main treasury addresses for Alchemix.<br/>
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
                     Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x8392f6669292fa56123f71949b52d883ae57e225">
@@ -134,9 +134,8 @@ export default class Treasury extends React.Component {
                     SDT Controller</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xc224bf25dcc99236f00843c7d8c4194abe8aa94a">
                     Optimism Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x7e108711771dfdb10743f016d46d75a9379ca043">
                     Arbitrum Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401">
-                    Base Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x0f5c3a8b62ff7639895bb9737c5befb711c4f7f4">
-                    Metis Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x16a63fcd874f7f9e267a1f274c46677d5f3fcc65">
-                    Linea Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x41ab74824b4d1b196eeb62569b907ef9a313df18">
+                    Base Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xa03e089163af6c05210d4ce99b63ddd21c5753c9">
+                    HyperEVM Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x41ab74824b4d1b196eeb62569b907ef9a313df18">
                     Fraxtal Multisig</a><br/>
                 </span><br/>
                 There are 5 addresses for the alUSD and alETH Elixirs.<br/>
@@ -148,6 +147,12 @@ export default class Treasury extends React.Component {
                     alUSD-sDOLA Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
                     Optimism Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8">
                     Arbitrum Elixir</a>
+                </span><br/>
+                The following addresses belong to the Alchemix Association.<br/>
+                <span>
+                    <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xDc70b6C0aEB5C6627EAa707fC6c804a2EC43f937">
+                    Operations</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x2F675e4aD89E4ABf87c5ad25271A70867bb72b57">
+                    Aera Holdings</a>
                 </span>
                 {this.props.debankDataLoading ? <LoadingComponent /> :
                 <div className="tvl-tables-2">
