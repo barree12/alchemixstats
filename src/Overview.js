@@ -40,7 +40,7 @@ export default class Overview extends React.Component {
                         Dune dashboards also exist that provide further details on Alchemix related contracts, like the <a target="_blank" rel="noreferrer" href="https://dune.com/alchemix/arbitrum-grant-metrics">Arbitrum</a> dashboard.<br/>
                         An <a target="_blank" rel="noreferrer" href="https://app.alphaday.com/b/alchemix/">information dashboard</a> is maintained by Alphaday, where you can keep up to date with all things Alchemix!
                     </span>
-                    {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.alchemistTvlLoading || this.props.v2CurrentLoading || this.props.debankDataLoading) ? <LoadingComponent /> :
+                    {(this.props.tokenPricesLoading || this.props.alUsdPegLoading || this.props.alEthPegLoading || this.props.v2CurrentLoading || this.props.debankDataLoading) ? <LoadingComponent /> :
                     <div className="tvl-tables-3">
                         <div className="small-table-4">
                             <h3>alAssets</h3>
