@@ -71,7 +71,7 @@ export default class App extends React.Component {
       alUsdPegLoading: true,
       alEthPegLoading: true,
       alcxDataLoading: true,
-      alchemistTvlLoading: true,
+      //alchemistTvlLoading: true,
       optiTvlLoading: true,
       arbiTvlLoading: true,
       harvestsLoading: true,
@@ -365,7 +365,6 @@ export default class App extends React.Component {
       lps.alUsdInRamsesFrax = alUsdInRamsesFrax/Math.pow(10, 18);
       lps.fraxInRamsesFrax = fraxInRamsesFrax/Math.pow(10, 18);
       let veloStats = veloStats1.concat(veloStats2)
-      console.log(veloStats)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
           lps.alUsdInVelodrome = parseInt(veloStats[i][12]) / Math.pow(10,18);
@@ -479,6 +478,7 @@ export default class App extends React.Component {
     this.setState({ arbiTvl: alchemistTvl, arbiTvlLoading: false })
   }
 
+  /*
   calculateAlchemistTvl(result){
     let startDate = new Date(1647385201*1000); //March 16th
     let today = new Date();
@@ -564,6 +564,7 @@ export default class App extends React.Component {
     }
     this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
   }
+    */
 
   calculateAlcxData(prices, alcxSupply){
     let burnAmount = 478612;
@@ -611,6 +612,8 @@ export default class App extends React.Component {
     let alUsdSdolaInElixir = 0;
     let alUsdFraxArbiInElixir = 0;
     let alEthFrxEthArbiInElixir = 0;
+    let alUsdUsdcArbiInElixir = 0;
+    let alEthWethArbiInElixir = 0;
     let alUsdUsdcVeloInElixir = 0;
     let alEthWethVeloInElixir = 0;
     let alEthFrxEthVeloInElixir = 0;
@@ -631,12 +634,11 @@ export default class App extends React.Component {
     let sortedTreasuryStrategicAssets = [];
     let elixirAssets = {};
     let sortedElixirAssets = [];
-    //let alUsd3CrvConvexId = '0x02e2151d4f351881017abdf2dd2b51150841d5b3';
     let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:19';
     let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
     let alUsdSdolaConvexId = '0x7ee5f33e36988070a8e265a0f28a91514f45f630';
-    let alEthFrxEthRamsesId = '0xc3f26d2fa16129a8d4a5a0f94d25f2cdd9005cdb';
-    let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
+    //let alEthFrxEthRamsesId = '0xc3f26d2fa16129a8d4a5a0f94d25f2cdd9005cdb';
+    //let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
     let alEthWethVelodromeId = '0xc16adbf2d01d6524b79cbb610ce31d5db80eee3c';
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
     let alEthPxEthVelodromeId = '0x28cd6d3471e031f8b380a64e9da3b9b12a473186';
@@ -645,8 +647,9 @@ export default class App extends React.Component {
     let ramsesAlUsdFraxAddress = '0xfd599db360cd9713657c95df66650a427d213010';
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
-    //let veloAlEthFrxEthAddress = '0x1ad06ca54de04dbe9e2817f4c13ecb406dcbeaf0';
     let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
+    let arbiCurveAlUsdUsdcAddress = '0x78483d06a82ae76e0ff9c72afd80e5b2cea3b2a0';
+    let arbiCurveAlEthWethAddress = '0xbeb177d05ac67330224291b259c401366c0974b4';
     
     let tempDebankCalc = {};
     //let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs).concat(tokensBaseMs).concat(tokensMetisMs);
@@ -664,7 +667,7 @@ export default class App extends React.Component {
     let veloAlUsdUsdcPool;
     //let veloAlEthFrxEthPool;
     let veloAlEthPxEthPool;
-
+    console.log(data)
     for(let i=0;i<data.pools.length;i++){
       if(data.pools[i].address === ramsesAlEthFrxEthAddress) ramsesAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
@@ -674,7 +677,6 @@ export default class App extends React.Component {
       if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;
     }
 
-    console.log(data)
     for(let i=0;i<data.treasury.length;i++){
       tokensConcat = tokensConcat.concat(data.treasury[i].tokenList)
       protocolsConcat = protocolsConcat.concat(data.treasury[i].complexList)
@@ -825,13 +827,13 @@ export default class App extends React.Component {
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthWethVelodromeId) alEthWethVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthVelodromeId) alEthFrxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthPxEthVelodromeId) alEthPxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxRamsesId) {
-            if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX") alUsdArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
-            alUsdFraxArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === arbiCurveAlUsdUsdcAddress) {
+            //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX") alUsdArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            alUsdUsdcArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           }
-          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthRamsesId) {
-            if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
-            alEthFrxEthArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+          else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === arbiCurveAlEthWethAddress) {
+            //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
+            alEthWethArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           } 
           else {
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
@@ -890,7 +892,7 @@ export default class App extends React.Component {
       elixirLargestValue = 0;
     }*/
     
-    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alUsdSdolaInElixir + alEthFrxEthArbiInElixir + alUsdFraxArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
+    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alUsdSdolaInElixir + alEthWethArbiInElixir + alUsdUsdcArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -904,6 +906,8 @@ export default class App extends React.Component {
       alEthFrxEthInElixir: alEthFrxEthInElixir,
       alUsdSdolaInElixir: alUsdSdolaInElixir,
       alEthFrxEthRamsesInElixir: alEthFrxEthArbiInElixir,
+      alEthWethArbiInElixir: alEthWethArbiInElixir,
+      alUsdUsdcArbiInElixir: alUsdUsdcArbiInElixir,
       alUsdFraxRamsesInElixir: alUsdFraxArbiInElixir,
       alEthWethVeloInElixir: alEthWethVeloInElixir,
       alUsdUsdcVeloInElixir: alUsdUsdcVeloInElixir,
@@ -1017,8 +1021,7 @@ export default class App extends React.Component {
   getAlUsdPeg(){
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
     const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
-    const alchemistTvl = this.getAlchemistTvlQuery(0);
-    console.log("getalusdpeg called")
+    //const alchemistTvl = this.getAlchemistTvlQuery(0);
 
     let authorizationHeader = {
       method: 'GET',
@@ -1033,7 +1036,6 @@ export default class App extends React.Component {
       //fetch("https://api.goldsky.com/api/public/project_cltwyhnfyl4z001x17t5odo5x/subgraphs/alchemix-mainnet/1.0.1/gn", this.getSubgraphRequestOptions(alchemistTvl)).then(res => res.json()),
       fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=tvlHistory.json&status=pinned", authorizationHeader).then(res => res.json())])
       .then(([usdcPeg, alEthPeg, ipfsOptiFile]) => {
-        console.log(usdcPeg)
         this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
         //this.calculateAlchemistTvl(alchemistTvl.data.alchemistTVLHistories.reverse())
@@ -1129,7 +1131,7 @@ export default class App extends React.Component {
         alchemistTvl={this.state.alchemistTvl} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2Caps={this.state.v2Caps}
         tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData} tokensPerShare={this.state.tokensPerShare}
-        alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading} alchemistTvlLoading={this.state.alchemistTvlLoading}
+        alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading}
         lpsLoading={this.state.lpsLoading} wethInMigrateUsd={wethInMigrateUsd} v2Deposit={this.state.v2Deposit}
         v2CurrentLoading={this.state.v2CurrentLoading} debankDataLoading={this.state.debankDataLoading}
       />
@@ -1287,7 +1289,7 @@ export default class App extends React.Component {
       {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistTvlLoading || this.state.optiTvlLoading) || this.state.arbiTvlLoading ? "Loading..." :
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.optiTvlLoading) || this.state.arbiTvlLoading ? "Loading..." :
         <Deposits
           v2DaiTVL={v2DaiTVL} v2UsdcTVL={v2UsdcTVL} v2UsdtTVL={v2UsdtTVL} v2vaUsdcTVL={v2vaUsdcTVL} v2vaDaiTVL={v2vaDaiTVL} v2vaEthTVL={v2vaEthTVL} v2vaEthUsdTVL={v2vaEthUsdTVL} 
           v2Caps={this.state.v2Caps} v2EthUsdTVL={v2EthUsdTVL} v2StethUsdTVL={v2StethUsdTVL} v2RethUsdTVL={v2RethUsdTVL} v2EthTVL={v2EthTVL}

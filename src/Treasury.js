@@ -160,7 +160,7 @@ export default class Treasury extends React.Component {
                             <h3>Strategic Holdings</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 9, false).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 8, false).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )
@@ -190,8 +190,8 @@ export default class Treasury extends React.Component {
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />WETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthWethVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />pxETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthPxEthVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdusdcvelo")} alt="logo" className="image" />alUSD Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdUsdcVeloInElixir)}</span></div>
-                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethramses")} alt="logo" className="image" />alETH Ramses</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthFrxEthRamsesInElixir)}</span></div>
-                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxramses")} alt="logo" className="image" />alUSD Ramses</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFraxRamsesInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethramses")} alt="logo" className="image" />alETH Arbi</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthWethArbiInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxramses")} alt="logo" className="image" />alUSD Arbi</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdUsdcArbiInElixir)}</span></div>
                               
                             <div className="map-row"><span className="small-table-row-2">TOTAL</span><span className="important-3">${styleNumber(this.props.debankData.totalElixir)}</span></div>
                             </div>
