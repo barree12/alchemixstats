@@ -4,12 +4,10 @@ import './App.css';
 import Web3 from 'web3';
 import Deposits from './Deposits';
 import AlAssets from './AlAssets';
-import Harvests from './Harvests';
 import Emissions from './Emissions';
 import Overview from './Overview';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
-import Transmuters from './Transmuters';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual, wait } from './Functions';
 import { addresses, abis } from './Constants';
@@ -119,10 +117,11 @@ export default class App extends React.Component {
     this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
     this.frxEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.frxEthArbiContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
-    //this.alUsdMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlUsdContractAddress);
-    //this.alEthMetisContract = new web3metis.eth.Contract(abis.erc20LikeAbi, addresses.metisAlEthContractAddress);
     this.sDolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sDolaContractAddress);
     this.pxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.pxEthContractAddress);
+    this.alUsdUsdcArbi = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.curveArbiAlUsdUsdcContractAddress);
+    this.alEthWethArbi = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.curveArbiAlEthWethContractAddress);
+    this.alUsdFrxUsdCurve = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFrxUsdCurveContractAddress);
   }
 
   componentDidMount() {
@@ -301,13 +300,20 @@ export default class App extends React.Component {
       this.alEthFrxEthContract.methods.totalSupply().call(),
       this.alEthFrxEthContract.methods.get_virtual_price().call(),
       this.alUsdFraxBpContract.methods.totalSupply().call(),
-      this.alUsdSdolaContract.methods.totalSupply().call()
+      this.alUsdSdolaContract.methods.totalSupply().call(),
+      this.alUsdUsdcArbi.methods.totalSupply().call(),
+      this.alEthWethArbi.methods.totalSupply().call(),
+      this.alUsdFrxUsdCurve.methods.totalSupply().call()
     ])
-    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply, alUsdSdolaSupply]) => {
+    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply, alUsdSdolaSupply, alUsdUsdcArbiSupply, alEthWethArbiSupply, alUsdFrxUsdCurveSupply]) => {
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthFrxEthValue = (alEthFrxEthSupply/Math.pow(10, 18))*(alEthFrxEthVirtualPrice/Math.pow(10, 18));
       alAssetCrvSupply.alUsdFraxBp = alUsdFraxBpCrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alUsdSdola = alUsdSdolaSupply/Math.pow(10, 18);
+      alAssetCrvSupply.arbiAlUsdUsdc = alUsdUsdcArbiSupply/Math.pow(10, 18);
+      alAssetCrvSupply.arbiAlEthWeth = alEthWethArbiSupply/Math.pow(10, 18);
+      alAssetCrvSupply.alUsdFrxUsd = alUsdFrxUsdCurveSupply/Math.pow(10, 18);
+      console.log(alAssetCrvSupply)
       this.setState({ alAssetCrvSupply: alAssetCrvSupply, stakingLoading: false })
     })
     .catch(function(err) {
@@ -478,94 +484,6 @@ export default class App extends React.Component {
     this.setState({ arbiTvl: alchemistTvl, arbiTvlLoading: false })
   }
 
-  /*
-  calculateAlchemistTvl(result){
-    let startDate = new Date(1647385201*1000); //March 16th
-    let today = new Date();
-    let dateTracker = new Date(result[0].timestamp*1000);
-    let resultIndex = 0;
-    let alchemistTvl = { date:[], yvDai: [], yvUsdc: [], yvUsdt: [], yvWeth: [], wstEth: [], rEth: [], aWeth: [], aUsdc: [], aDai: [], aUsdt: [], vaUsdc: [], vaDai: [], vaFrax: [], vaEth: [], frxEth: [], pxEth: [] };
-    let tempYvDai = 0;
-    let tempYvUsdc = 0;
-    let tempYvUsdt = 0;
-    let tempADai = 0;
-    let tempAUsdc = 0;
-    let tempAUsdt = 0;
-    let tempPxEth = 0;
-    let tempVaUsdc = 0;
-    let tempVaDai = 0;
-    let tempVaFrax = 0;
-    let tempYvWeth = 0;
-    let tempAWeth = 0;
-    let tempWstEth = 0;
-    let tempReth = 0;
-    let tempVaEth = 0;
-    let tempFrxEth = 0;
-    for(let j=0;startDate<today;j++){
-
-      for(let i=resultIndex;i<result.length;i++){
-        let tempDate = new Date(result[i].timestamp*1000);
-        if(tempDate>startDate) break;
-
-        if(!datesEqual(tempDate, dateTracker)) dateTracker = tempDate;
-
-        tempYvDai = result[i].token.symbol === "yvDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempYvDai;
-        tempYvUsdc = result[i].token.symbol === "yvUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdc;
-        tempYvUsdt = result[i].token.symbol === "yvUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempYvUsdt;
-        tempADai = result[i].token.symbol === "s_aDAI" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempADai;
-        tempPxEth = result[i].token.symbol === "pxETH" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempPxEth;
-        tempAUsdc = result[i].token.symbol === "s_aUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdc;
-        tempAUsdt = result[i].token.symbol === "s_aUSDT" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempAUsdt;
-        tempVaUsdc = result[i].token.symbol === "vaUSDC" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaUsdc;
-        tempVaDai = result[i].token.symbol === "vaDAI" && result[i].amount ? result[i].amount/Math.pow(10, 6) : tempVaDai;
-        tempVaFrax = result[i].token.symbol === "vaFRAX" && result[i].amount ? result[i].amount/Math.pow(10, 18) : tempVaFrax;
-        tempYvWeth = result[i].token.symbol === "yvWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempYvWeth;
-        tempAWeth = result[i].token.symbol === "s_aWETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempAWeth;
-        tempWstEth = result[i].token.symbol === "wstETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempWstEth;
-        tempReth = result[i].token.symbol === "rETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempReth;
-        tempVaEth = result[i].token.symbol === "vaETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempVaEth;
-        tempFrxEth = result[i].token.symbol === "sfrxETH" && result[i].amount ? result[i].amount/Math.pow(10, 12) : tempFrxEth;
-        resultIndex++;
-      }
-      alchemistTvl.yvDai[j] = Math.round(tempYvDai/10000)/100;
-      if(j>0 && !tempYvDai) alchemistTvl.yvDai[j] = alchemistTvl.yvDai[j-1];
-      alchemistTvl.yvUsdc[j] = Math.round(tempYvUsdc/10000)/100;
-      if(j>0 && !tempYvUsdc) alchemistTvl.yvUsdc[j] = alchemistTvl.yvUsdc[j-1];
-      alchemistTvl.yvUsdt[j] = Math.round(tempYvUsdt/10000)/100;
-      if(j>0 && !tempYvUsdt) alchemistTvl.yvUsdt[j] = alchemistTvl.yvUsdt[j-1];
-      alchemistTvl.aDai[j] = Math.round(tempADai/10000)/100;
-      if(j>0 && !tempADai) alchemistTvl.aDai[j] = alchemistTvl.aDai[j-1];
-      alchemistTvl.aUsdc[j] = Math.round(tempAUsdc/10000)/100;
-      if(j>0 && !tempAUsdc) alchemistTvl.aUsdc[j] = alchemistTvl.aUsdc[j-1];
-      alchemistTvl.aUsdt[j] = Math.round(tempAUsdt/10000)/100;
-      if(j>0 && !tempAUsdt) alchemistTvl.aUsdt[j] = alchemistTvl.aUsdt[j-1];
-      alchemistTvl.pxEth[j] = Math.round(tempPxEth/10000)/100;
-      if(j>0 && !tempPxEth) alchemistTvl.pxEth[j] = alchemistTvl.pxEth[j-1];
-      alchemistTvl.vaUsdc[j] = Math.round(tempVaUsdc/10000)/100;
-      if(j>0 && !tempVaUsdc) alchemistTvl.vaUsdc[j] = alchemistTvl.vaUsdc[j-1];
-      alchemistTvl.vaDai[j] = Math.round(tempVaDai/10000)/100;
-      if(j>0 && !tempVaDai) alchemistTvl.vaDai[j] = alchemistTvl.vaDai[j-1];
-      alchemistTvl.vaFrax[j] = Math.round(tempVaFrax/10000)/100;
-      if(j>0 && !tempVaFrax) alchemistTvl.vaFrax[j] = alchemistTvl.vaFrax[j-1];
-      alchemistTvl.yvWeth[j] = Math.round(tempYvWeth/10000)/100;
-      if(j>0 && !tempYvWeth) alchemistTvl.yvWeth[j] = alchemistTvl.yvWeth[j-1];
-      alchemistTvl.aWeth[j] = Math.round(tempAWeth/10000)/100;
-      if(j>0 && !tempAWeth) alchemistTvl.aWeth[j] = alchemistTvl.aWeth[j-1];
-      alchemistTvl.wstEth[j] = Math.round(tempWstEth/10000)/100;
-      if(j>0 && !tempWstEth) alchemistTvl.wstEth[j] = alchemistTvl.wstEth[j-1];
-      alchemistTvl.rEth[j] = Math.round(tempReth/10000)/100;
-      if(j>0 && !tempReth) alchemistTvl.rEth[j] = alchemistTvl.rEth[j-1];
-      alchemistTvl.vaEth[j] = Math.round(tempVaEth/10000)/100;
-      if(j>0 && !tempVaEth) alchemistTvl.vaEth[j] = alchemistTvl.vaEth[j-1];
-      alchemistTvl.frxEth[j] = Math.round(tempFrxEth/10000)/100;
-      if(j>0 && !tempFrxEth) alchemistTvl.frxEth[j] = alchemistTvl.frxEth[j-1];
-      alchemistTvl.date[j] = formatDate(startDate, 0);
-      startDate.setDate(startDate.getDate() + 1);
-    }
-    this.setState({ alchemistTvl: alchemistTvl, alchemistTvlLoading: false });
-  }
-    */
-
   calculateAlcxData(prices, alcxSupply){
     let burnAmount = 478612;
     let alcxData = { 
@@ -618,6 +536,8 @@ export default class App extends React.Component {
     let alEthWethVeloInElixir = 0;
     let alEthFrxEthVeloInElixir = 0;
     let alEthPxEthVeloInElixir = 0;
+    let alUsdFrxUsdInElixir = 0;
+    let msUsdFraxBpInElixir = 0;
     let alUsdBackingTokensInElixir = 0;
     let alEthBackingTokensInElixir = 0;
     let alUsdOptimismBackingTokensInElixir = 0;
@@ -648,8 +568,10 @@ export default class App extends React.Component {
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
     let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
-    let arbiCurveAlUsdUsdcAddress = '0x78483d06a82ae76e0ff9c72afd80e5b2cea3b2a0';
-    let arbiCurveAlEthWethAddress = '0xbeb177d05ac67330224291b259c401366c0974b4';
+    let arbiCurveAlUsdUsdcAddress = '0x52c43c76d268cf9a343b9aaa38974a50c455f372';
+    let arbiCurveAlEthWethAddress = '0xd1af6aa20925875bfd3b3159f4cf92eb3cb13f3d';
+    let msUsdFraxBpId = '0x9bf0216c1be33dd00aca3c558b500f1e294685e6';
+    let alUsdFrxUsdId = '0xf368868d253d7f956529ee55515fea250c67e890';
     
     let tempDebankCalc = {};
     //let tokensConcat = tokensTreasury1.concat(tokensTreasury2).concat(tokensSdCrvController).concat(tokensOptimismMs).concat(tokensArbitrumMs).concat(tokensBaseMs).concat(tokensMetisMs);
@@ -828,17 +750,17 @@ export default class App extends React.Component {
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthVelodromeId) alEthFrxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthPxEthVelodromeId) alEthPxEthVeloInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === arbiCurveAlUsdUsdcAddress) {
-            //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX") alUsdArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
             alUsdUsdcArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           }
           else if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === arbiCurveAlEthWethAddress) {
-            //if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alETH" || elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "frxETH") alEthArbitrumBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
             alEthWethArbiInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
           } 
           else {
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFraxbpConvexId) alUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alEthFrxEthConvexId) alEthFrxEthInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdSdolaConvexId) alUsdSdolaInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === alUsdFrxUsdId) alUsdFrxUsdInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
+            if(elixirProtocolsConcat[i].portfolio_item_list[j].pool.id === msUsdFraxBpId) msUsdFraxBpInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount * elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].price;
             if(elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "alUSD" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "FRAX" ||
             elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].symbol === "USDC") alUsdBackingTokensInElixir += elixirProtocolsConcat[i].portfolio_item_list[j].asset_token_list[k].amount;
@@ -891,8 +813,8 @@ export default class App extends React.Component {
       elixirLargestIndex = 0;
       elixirLargestValue = 0;
     }*/
-    
-    let totalElixir = alEthFrxEthInElixir + alUsdFraxBpInElixir + alUsdSdolaInElixir + alEthWethArbiInElixir + alUsdUsdcArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
+
+    let totalElixir = alEthFrxEthInElixir + alUsdSdolaInElixir + alUsdFrxUsdInElixir + msUsdFraxBpInElixir + alEthWethArbiInElixir + alUsdUsdcArbiInElixir + alEthWethVeloInElixir + alUsdUsdcVeloInElixir + alEthFrxEthVeloInElixir + alEthPxEthVeloInElixir;
 
     tempDebankCalc = {
       totalTreasury: totalTreasury,
@@ -905,10 +827,8 @@ export default class App extends React.Component {
       alcxInTreasury: alcxInTreasury,
       alEthFrxEthInElixir: alEthFrxEthInElixir,
       alUsdSdolaInElixir: alUsdSdolaInElixir,
-      alEthFrxEthRamsesInElixir: alEthFrxEthArbiInElixir,
       alEthWethArbiInElixir: alEthWethArbiInElixir,
       alUsdUsdcArbiInElixir: alUsdUsdcArbiInElixir,
-      alUsdFraxRamsesInElixir: alUsdFraxArbiInElixir,
       alEthWethVeloInElixir: alEthWethVeloInElixir,
       alUsdUsdcVeloInElixir: alUsdUsdcVeloInElixir,
       alEthFrxEthVeloInElixir: alEthFrxEthVeloInElixir,
@@ -923,6 +843,8 @@ export default class App extends React.Component {
       alUsdAmountInOptimismElixir: alUsdAmountInOptimismElixir,
       alEthAmountInOptimismElixir: alEthAmountInOptimismElixir,
       alUsdFraxBpInElixir: alUsdFraxBpInElixir,
+      alUsdFrxUsdInElixir: alUsdFrxUsdInElixir,
+      msUsdFraxBpInElixir: msUsdFraxBpInElixir,
       alUsdBackingTokensInElixir: alUsdBackingTokensInElixir,
       alEthBackingTokensInElixir: alEthBackingTokensInElixir,
       alUsdAmountInElixir: alUsdAmountInElixir,
@@ -1092,6 +1014,7 @@ export default class App extends React.Component {
   let v2StethUsdTVL = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : Math.round(this.state.v2Deposit.wstEth*this.state.tokenPrices.wstEth/10000)/100;
   let alcxTotalMarketcap = (this.state.alcxDataLoading || this.state.debankDataLoading) ? 0 : Math.round(this.state.alcxData.marketcap*100 + this.state.debankData.alcxInTreasury/10000)/100;
   let alEthFrxEthTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.alEthFrxEthValue * this.state.tokenPrices.eth;
+  let alEthWethArbiTotalValue = (this.state.tokenPricesLoading || this.state.stakingLoading) ? 0 : this.state.alAssetCrvSupply.arbiAlEthWeth * this.state.tokenPrices.eth;
   let wethInMigrateUsd = (this.state.v2CurrentLoading || this.state.tokenPricesLoading) ? 0 : this.state.v2Deposit.wethInMigrate*this.state.tokenPrices.eth/Math.pow(10,6);
   let ethDeposits = this.props.v2CurrentLoading ? 0 : Math.round(this.state.v2Deposit.wethInMigrate + v2EthTVL + v2aWethTVL + v2StethTVL + v2RethTVL + v2vaEthTVL + v2SfrxEthTVL + optiAWethTVL + optiWstEthTVL + optiYvWethTVL + arbiWstEthTVL);
   let stablecoinDeposits = this.props.v2CurrentLoading ? 0 : Math.round((this.state.v2Deposit.daiInMigrate + v2DaiTVL + v2UsdcTVL + v2UsdtTVL + v2aDaiTVL + v2aUsdcTVL + v2aUsdtTVL + v2vaUsdcTVL + v2vaDaiTVL + this.state.v2Deposit.optiADai + this.state.v2Deposit.optiAUsdc + this.state.v2Deposit.optiAUsdt + arbiAUsdcTVL)*100)/100;
@@ -1184,24 +1107,6 @@ export default class App extends React.Component {
                     <img src={ require('./logos/alusd.svg').default } alt="alethcurve logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">alAssets</div>
                 </div>}
-                {this.state.activeTab === "harvests" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div>}
-                {this.state.activeTab === "transmuters" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="alethcurve logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div>}
             </div>
           </div>
       </div>
@@ -1259,28 +1164,6 @@ export default class App extends React.Component {
                     <img src={ require('./logos/alusd.svg').default } alt="alassets logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">alAssets</div>
                 </div>}
-                {this.state.activeTab === "harvests" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("harvests")}}>
-                    <img src={ require('./logos/harvests_thin.svg').default } alt="harvests logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Harvests</div>
-                </div>}
-            </div>
-          </div>
-          <div className="general-switcher-container">
-              <div className="menu-switcher">
-                {this.state.activeTab === "transmuters" ? 
-                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div> :
-                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
-                    <img src={ require('./logos/other_logo.png').default } alt="revenues logo" className="image-menu" />
-                    <div className="general-switcher-buttons-inside">Other</div>
-                </div>}
             </div>
           </div>
       </div>
@@ -1308,6 +1191,7 @@ export default class App extends React.Component {
         debankDataLoading={this.state.debankDataLoading}
         alAssetCrvSupply={this.state.alAssetCrvSupply}
         alEthFrxEthTotalValue={alEthFrxEthTotalValue}
+        alEthWethArbiTotalValue={alEthWethArbiTotalValue}
         />}
       
       {this.state.activeTab !== "revenues" ? "" : 
@@ -1321,14 +1205,6 @@ export default class App extends React.Component {
           alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
           alAssetSupply={this.state.alAssetSupply} debankData={this.state.debankData}
       />)
-      }
-
-      {this.state.activeTab !== "harvests" ? "" :
-      <Harvests harvests={this.state.harvests} />
-      }
-
-      {this.state.activeTab !== "transmuters" ? "" :
-      <Transmuters transmuters={this.state.transmuters} />
       }
 
     </div>

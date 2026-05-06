@@ -32,6 +32,7 @@ import alUsdFraxRamsesLogo from './logos/alusd_arbi.png';
 import balancerLogo from './logos/balancer.png';
 import fxsLogo from './logos/fxs.png';
 import aeroLogo from './logos/aero.png';
+import vaultLogo from './logos/vaults.svg';
 import LoadingComponent from './LoadingComponent';
 
 export default class Treasury extends React.Component {
@@ -110,6 +111,8 @@ export default class Treasury extends React.Component {
         break;
         case "dola": returnLogo = dolaLogo;
         break;
+        case "vault": returnLogo = vaultLogo;
+        break;
         default: returnLogo = otherLogo;
         }
         return returnLogo;
@@ -138,13 +141,12 @@ export default class Treasury extends React.Component {
                     HyperEVM Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x41ab74824b4d1b196eeb62569b907ef9a313df18">
                     Fraxtal Multisig</a><br/>
                 </span><br/>
-                There are 5 addresses for the alUSD and alETH Elixirs.<br/>
+                There are 4 addresses for the alUSD and alETH Elixirs.<br/>
                 The Elixirs are the AMOs (Algorithmic Market Operator) of Alchemix.<br/>
                 <span>
-                    <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x06378717d86b8cd2dba58c87383da1eda92d3495">
-                    alUSD-FRAXBP Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9fb54d1f6f506feb4c65b721be931e59bb538c63">
+                    <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9fb54d1f6f506feb4c65b721be931e59bb538c63">
                     alETH-frxETH Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x1825377ece03098f35951e9600cf3a3cf718bebf">
-                    alUSD-sDOLA Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
+                    alUSD Mainnet Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb29617209961db995dd30a4ab94ba0034a4284f9">
                     Optimism Elixir</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xb10356c80658fc71da0ff4d28052b62f9ed7d7e8">
                     Arbitrum Elixir</a>
                 </span><br/>
@@ -172,7 +174,7 @@ export default class Treasury extends React.Component {
                             <h3>Liquid Treasury</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryAssets, 10, true).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryAssets, 8, true).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )
@@ -184,9 +186,10 @@ export default class Treasury extends React.Component {
                             <h3>Elixir</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxbp")} alt="logo" className="image" />alUSD-FRAXBP</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFraxBpInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxbp")} alt="logo" className="image" />alUSD-frxUSD</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFrxUsdInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethcurve")} alt="logo" className="image" />alETH-frxETH</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthFrxEthInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("dola")} alt="logo" className="image" />alUSD-sDOLA</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdSdolaInElixir)}</span></div>
+                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("vault")} alt="logo" className="image" />msUSD-FRAXBP</span><span className="table-text-bold">${styleNumber(this.props.debankData.msUsdFraxBpInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />WETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthWethVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />pxETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthPxEthVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdusdcvelo")} alt="logo" className="image" />alUSD Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdUsdcVeloInElixir)}</span></div>
@@ -205,6 +208,7 @@ export default class Treasury extends React.Component {
                                 alAssetCrvSupply={this.props.alAssetCrvSupply}
                                 debankData={this.props.debankData}
                                 alEthFrxEthTotalValue={this.props.alEthFrxEthTotalValue}
+                                alEthWethArbiTotalValue={this.props.alEthWethArbiTotalValue}
                         />}
                     </div>
                 </div>

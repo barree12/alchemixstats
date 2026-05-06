@@ -5,15 +5,13 @@ export default class ChartCrvPoolRatios extends React.Component {
 
   render(){  
   let alEthFrxEthRatio = this.props.debankData.alEthFrxEthInElixir / this.props.alEthFrxEthTotalValue;
-  let alUsdFraxBpCrvRatio = this.props.debankData.alUsdFraxBpInElixir / this.props.alAssetCrvSupply.alUsdFraxBp;
+  let alUsdFrxUsdCrvRatio = this.props.debankData.alUsdFrxUsdInElixir / this.props.alAssetCrvSupply.alUsdFrxUsd;
   let alUsdSdolaRatio = this.props.debankData.alUsdSdolaInElixir / this.props.alAssetCrvSupply.alUsdSdola;
   let veloAlEthRatio = this.props.debankData.alEthWethVeloInElixir / this.props.debankData.veloAlEthWethPool;
-  //let veloAlEthFrxEthRatio = this.props.debankData.alEthFrxEthVeloInElixir / this.props.debankData.veloAlEthFrxEthPool;
   let veloAlEthPxEthRatio = this.props.debankData.alEthPxEthVeloInElixir / this.props.debankData.veloAlEthPxEthPool;
   let veloAlUsdRatio = this.props.debankData.alUsdUsdcVeloInElixir / this.props.debankData.veloAlUsdUsdcPool;
-  let ramsesAlEthRatio = this.props.debankData.alEthFrxEthRamsesInElixir / this.props.debankData.ramsesAlEthFrxEthPool;
-  let ramsesAlUsdRatio = this.props.debankData.alUsdFraxRamsesInElixir / this.props.debankData.ramsesAlUsdFraxPool;
-  //console.log(this.props.debankData.alEthWethVeloInElixir)
+  let arbiAlEthRatio = this.props.debankData.alEthWethArbiInElixir / this.props.alEthWethArbiTotalValue;
+  let arbiAlUsdRatio = this.props.debankData.alUsdUsdcArbiInElixir / this.props.alAssetCrvSupply.arbiAlUsdUsdc;
 
   const helperPointer = this;
 
@@ -22,18 +20,18 @@ export default class ChartCrvPoolRatios extends React.Component {
         <Chart
           type='bar' 
           data={{
-            labels: ["alUSD-FRAXBP", "alETH-frxETH", "alUSD-sDOLA", "Velo alUSD-USDC", "Velo alETH-WETH",  "Velo alETH-pxETH", "RAMSES alUSD-FRAX", "RAMSES alETH-frxETH"],
+            labels: ["alUSD-frxUSD", "alETH-frxETH", "alUSD-sDOLA", "Velo alUSD-USDC", "Velo alETH-WETH",  "Velo alETH-pxETH", "Arbi alUSD-USDC", "Arbi alETH-WETH"],
             datasets: [{
               label: 'Owned',
               data: [
-                Math.round(alUsdFraxBpCrvRatio*10000)/100,
+                Math.round(alUsdFrxUsdCrvRatio*10000)/100,
                 Math.round(alEthFrxEthRatio*10000)/100,
                 Math.round(alUsdSdolaRatio*10000)/100,
                 Math.round(veloAlUsdRatio*10000)/100,
                 Math.round(veloAlEthRatio*10000)/100,
                 Math.round(veloAlEthPxEthRatio*10000)/100,
-                Math.round(ramsesAlUsdRatio*10000)/100,
-                Math.round(ramsesAlEthRatio*10000)/100      
+                Math.round(arbiAlUsdRatio*10000)/100,
+                Math.round(arbiAlEthRatio*10000)/100      
               ],
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(255,204,75,1)',
@@ -45,14 +43,14 @@ export default class ChartCrvPoolRatios extends React.Component {
             {
               label: 'External',
               data: [
-                Math.round((1-alUsdFraxBpCrvRatio)*10000)/100,
+                Math.round((1-alUsdFrxUsdCrvRatio)*10000)/100,
                 Math.round((1-alEthFrxEthRatio)*10000)/100,
                 Math.round((1-alUsdSdolaRatio)*10000)/100,
                 Math.round((1-veloAlUsdRatio)*10000)/100,
                 Math.round((1-veloAlEthRatio)*10000)/100,
                 Math.round((1-veloAlEthPxEthRatio)*10000)/100,
-                Math.round((1-ramsesAlUsdRatio)*10000)/100,
-                Math.round((1-ramsesAlEthRatio)*10000)/100
+                Math.round((1-arbiAlUsdRatio)*10000)/100,
+                Math.round((1-arbiAlEthRatio)*10000)/100
               ],
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(255,204,75,1)',
@@ -83,8 +81,8 @@ export default class ChartCrvPoolRatios extends React.Component {
                         if (context.parsed.y !== null) {
                             label += ': ' + context.parsed.y + '% - $';
                             label +=
-                            ((context.dataset.label === 'Owned' && context.label === 'alUSD-FRAXBP') ? (Math.round(helperPointer.props.debankData.alUsdFraxBpInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === 'alUSD-FRAXBP') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdFraxBp - helperPointer.props.debankData.alUsdFraxBpInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === 'alUSD-frxUSD') ? (Math.round(helperPointer.props.debankData.alUsdFrxUsdInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === 'alUSD-frxUSD') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdFrxUsd - helperPointer.props.debankData.alUsdFrxUsdInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "alETH-frxETH") ? (Math.round((helperPointer.props.alEthFrxEthTotalValue - helperPointer.props.debankData.alEthFrxEthInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alETH-WETH") ? (Math.round(helperPointer.props.debankData.alEthWethVeloInElixir/10000)/100 + "M") : "") +
@@ -95,10 +93,10 @@ export default class ChartCrvPoolRatios extends React.Component {
                             ((context.dataset.label === 'External' && context.label === "Velo alETH-pxETH") ? (Math.round((helperPointer.props.debankData.veloAlEthPxEthPool - helperPointer.props.debankData.alEthPxEthVeloInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "Velo alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcVeloInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "Velo alUSD-USDC") ? (Math.round((helperPointer.props.debankData.veloAlUsdUsdcPool - helperPointer.props.debankData.alUsdUsdcVeloInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "RAMSES alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthRamsesInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "RAMSES alETH-frxETH") ? (Math.round((helperPointer.props.debankData.ramsesAlEthFrxEthPool - helperPointer.props.debankData.alEthFrxEthRamsesInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "RAMSES alUSD-FRAX") ? (Math.round(helperPointer.props.debankData.alUsdFraxRamsesInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "RAMSES alUSD-FRAX") ? (Math.round((helperPointer.props.debankData.ramsesAlUsdFraxPool - helperPointer.props.debankData.alUsdFraxRamsesInElixir)/10000)/100 + "M") : "")
+                            ((context.dataset.label === 'Owned' && context.label === "Arbi alETH-WETH") ? (Math.round(helperPointer.props.debankData.alEthWethArbiInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "Arbi alETH-WETH") ? (Math.round((helperPointer.props.alEthWethArbiTotalValue - helperPointer.props.debankData.alEthWethArbiInElixir)/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'Owned' && context.label === "Arbi alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcArbiInElixir/10000)/100 + "M") : "") +
+                            ((context.dataset.label === 'External' && context.label === "Arbi alUSD-USDC") ? (Math.round((helperPointer.props.alAssetCrvSupply.arbiAlUsdUsdc - helperPointer.props.debankData.alUsdUsdcArbiInElixir)/10000)/100 + "M") : "")
                           }
                         return label;
                     }

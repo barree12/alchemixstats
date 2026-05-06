@@ -2,15 +2,15 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Web3 from 'web3';
-import ChartAlusdPrice from './charts/ChartAlusdPrice';
-import ChartAlEthPrice from './charts/ChartAlEthPrice';
+import ChartAlusdPrice from '../charts/ChartAlusdPrice';
+import ChartAlEthPrice from '../charts/ChartAlEthPrice';
 import { Link } from "react-router-dom";
-import { formatDate, datesEqual } from './Functions';
-import { addresses, abis } from './Constants';
-import ChartArbiAlchemistTVL from './charts/ChartArbiAlchemistTVL';
-import ChartArbiAlchemistEthTVL from './charts/ChartArbiAlchemistEthTVL';
-import ChartDebtUsd from './charts/ChartDebtUsd';
-import ChartDebtEth from './charts/ChartDebtEth';
+import { formatDate, datesEqual } from '../Functions';
+import { addresses, abis } from '../Constants';
+import ChartArbiAlchemistTVL from '../charts/ChartArbiAlchemistTVL';
+import ChartArbiAlchemistEthTVL from '../charts/ChartArbiAlchemistEthTVL';
+import ChartDebtUsd from '../charts/ChartDebtUsd';
+import ChartDebtEth from '../charts/ChartDebtEth';
 import DataTable from 'react-data-table-component';
 import {
   Chart as ChartJS,
@@ -26,7 +26,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
-import LoadingComponent from './LoadingComponent';
+import LoadingComponent from '../LoadingComponent';
 
 //const web3 = new Web3('https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79');
 //const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');

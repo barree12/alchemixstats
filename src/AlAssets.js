@@ -60,16 +60,16 @@ export default class AlAssets extends React.Component {
         let alUsdDebt = 0;
         let alEthDebt = 0;
         let alUsdOptimismDebt = 0;
-        let alEthOptimismDebt = 0;
+        //let alEthOptimismDebt = 0;
         let alUsdArbitrumDebt = 0;
-        let alEthArbitrumDebt = 0;
+        //let alEthArbitrumDebt = 0;
         let alUsdDebtV1 = 0;
         let alEthDebtV1 = 31;
         let alUsdInV1 = 12000;
         let alEthInV1 = 8;
         let ethInTransmuterBuffer = wethInTransmuterBuffer / Math.pow(10,18);
-        let ethInOptimismTransmuterBuffer = wethInOptimismTransmuterBuffer / Math.pow(10,18);
-        let ethInArbitrumTransmuterBuffer = wethInArbitrumTransmuterBuffer / Math.pow(10,18);
+        //let ethInOptimismTransmuterBuffer = wethInOptimismTransmuterBuffer / Math.pow(10,18);
+        //let ethInArbitrumTransmuterBuffer = wethInArbitrumTransmuterBuffer / Math.pow(10,18);
         let stablesInTransmuterBuffer = daiInTransmuterBuffer / Math.pow(10,18) + usdcInTransmuterBuffer / Math.pow(10,6) + usdtInTransmuterBuffer / Math.pow(10,6) + fraxInTransmuterBuffer / Math.pow(10,18);
         let stablesInOptimismTransmuterBuffer = daiInOptimismTransmuterBuffer / Math.pow(10,18) + usdcInOptimismTransmuterBuffer / Math.pow(10,6) + usdtInOptimismTransmuterBuffer / Math.pow(10,6);
         let stablesInArbitrumTransmuterBuffer = usdcInOptimismTransmuterBuffer / Math.pow(10,6);
@@ -82,11 +82,11 @@ export default class AlAssets extends React.Component {
         }
         for(let i=0;i<optimismDebt.length;i++){
             alUsdOptimismDebt += optimismDebt[i].alusd_debt;
-            alEthOptimismDebt += optimismDebt[i].aleth_debt;
+            //alEthOptimismDebt += optimismDebt[i].aleth_debt;
         }
         for(let i=0;i<arbitrumDebt.length;i++){
           alUsdArbitrumDebt += arbitrumDebt[i].alusd_debt;
-          alEthArbitrumDebt += arbitrumDebt[i].aleth_debt;
+          //alEthArbitrumDebt += arbitrumDebt[i].aleth_debt;
         }
         let alUsdOwned = this.props.debankData.alUsdBackingTokensInElixir + alUsdInV1 + stablesInTransmuterBuffer;
         let alUsdShouldHave = this.props.alAssetSupply.alUsd - this.props.debankData.alUsdAmountInElixir - alUsdDebt - alUsdDebtV1;

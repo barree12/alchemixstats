@@ -1,5 +1,5 @@
 import React from 'react';
-import ChartCrvPoolRatios from './charts/ChartCrvPoolRatios';
+import ChartCrvPoolRatios from '../charts/ChartCrvPoolRatios';
 //import { Button, ButtonGroup } from '@mui/material';
 
 export default class Elixir extends React.Component {

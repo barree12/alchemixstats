@@ -1,9 +1,9 @@
 import React from 'react';
-import ChartHarvestsUsd from './charts/ChartHarvestsUsd';
-import ChartHarvestsEth from './charts/ChartHarvestsEth';
-import { addresses } from './Constants';
-import { formatDate, datesEqual } from './Functions';
-import LoadingComponent from './LoadingComponent';
+import ChartHarvestsUsd from '../charts/ChartHarvestsUsd';
+import ChartHarvestsEth from '../charts/ChartHarvestsEth';
+import { addresses } from '../Constants';
+import { formatDate, datesEqual } from '../Functions';
+import LoadingComponent from '../LoadingComponent';
 
 export default class Harvests extends React.Component {
 

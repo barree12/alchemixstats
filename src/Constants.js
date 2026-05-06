@@ -110,7 +110,10 @@ export const addresses = {
     sDolaContractAddress: '0xb45ad160634c528Cc3D2926d9807104FA3157305',
     alUsdFraxRamsesPoolContractAddress: '0xfd599DB360Cd9713657C95dF66650A427d213010',
     alEthFrxEthRamsesPoolContractAddress: '0xfB4fE921F724f3C7B610a826c827F9F6eCEf6886',
-    frxEthArbiContractAddress: '0x178412e79c25968a32e89b11f63B33F733770c2A'
+    frxEthArbiContractAddress: '0x178412e79c25968a32e89b11f63B33F733770c2A',
+    curveArbiAlUsdUsdcContractAddress: '0x78483d06a82ae76e0ff9c72afd80e5b2cea3b2a0',
+    curveArbiAlEthWethContractAddress: '0xbeb177d05ac67330224291b259c401366c0974b4',
+    alUsdFrxUsdCurveContractAddress: '0x17f9682c9cd1a448b31c0428f1d0783ed13a9fa3',
 
 }
 

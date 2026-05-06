@@ -753,7 +753,7 @@ div.earn-yield-link-- a {
   border-style: solid;
   background-color: rgba(16,21,27,1);
   justify-content: center;
-  width: 900px;
+  width: 650px;
 }
 
 .general-switcher-container {
@@ -832,9 +832,6 @@ div.earn-yield-link-- a {
   .button-group-small-screen {
     display: flex;
     flex-direction: column;
-  }
-  .menu-switcher {
-    width: 495px;
   }
   .button-group-large-screen {
     display: none;

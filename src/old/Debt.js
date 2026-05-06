@@ -1,9 +1,9 @@
 import React from 'react';
-import ChartDebtUsd from './charts/ChartDebtUsd';
-import ChartDebtEth from './charts/ChartDebtEth';
-import LoadingComponent from './LoadingComponent';
-import { addresses } from './Constants';
-import { formatDate, datesEqual} from './Functions';
+import ChartDebtUsd from '../charts/ChartDebtUsd';
+import ChartDebtEth from '../charts/ChartDebtEth';
+import LoadingComponent from '../LoadingComponent';
+import { addresses } from '../Constants';
+import { formatDate, datesEqual} from '../Functions';
 import {
   Chart as ChartJS,
   CategoryScale,
