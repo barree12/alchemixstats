@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
-//import EarnPremia from './EarnPremia';
 import EarnConvex from './EarnConvex';
 import EarnVelo from './EarnVelo';
-import EarnRamses from './EarnRamses';
-import EarnAura from './EarnAura';
 import '../App.css';
 import ConvexDescription from './description/ConvexDescription';
 import VelodromeDescription from './description/VelodromeDescription';
-//import PremiaDescription from './description/PremiaDescription';
-//import IdleDescription from './description/IdleDescription';
-//import PancakeSwapDescription from './description/PancakeSwapDescription';
 import { Link } from 'react-router-dom';
 
 export default class Earn extends Component {
