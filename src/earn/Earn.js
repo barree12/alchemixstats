@@ -68,10 +68,7 @@ export default class Earn extends Component {
           </div>
           
           <EarnConvex />
-          <EarnAura />
           <EarnVelo />
-          <EarnRamses />
-          {/*<EarnPancakeSwap />*/}
           </div>
           <br/>
           <h2>
