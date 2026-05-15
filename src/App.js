@@ -511,7 +511,7 @@ export default class App extends React.Component {
 
   isStrategic(object){
     if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "AURA" || object === "FRAX" || object === "RAM" || object === "sdBal") return true;
+    object === "FRAX") return true;
     else return false;
   }
 
@@ -557,8 +557,6 @@ export default class App extends React.Component {
     let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:19';
     let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
     let alUsdSdolaConvexId = '0x7ee5f33e36988070a8e265a0f28a91514f45f630';
-    //let alEthFrxEthRamsesId = '0xc3f26d2fa16129a8d4a5a0f94d25f2cdd9005cdb';
-    //let alUsdFraxRamsesId = '0x43fbf34df6da5fc66e15e023d3b690fd0de33cd7';
     let alEthWethVelodromeId = '0xc16adbf2d01d6524b79cbb610ce31d5db80eee3c';
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
     let alEthPxEthVelodromeId = '0x28cd6d3471e031f8b380a64e9da3b9b12a473186';
