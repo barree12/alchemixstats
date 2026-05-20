@@ -114,6 +114,12 @@ export const addresses = {
     curveArbiAlUsdUsdcContractAddress: '0x78483d06a82ae76e0ff9c72afd80e5b2cea3b2a0',
     curveArbiAlEthWethContractAddress: '0xbeb177d05ac67330224291b259c401366c0974b4',
     alUsdFrxUsdCurveContractAddress: '0x17f9682c9cd1a448b31c0428f1d0783ed13a9fa3',
+    optimismUsdcAlchemist: '0x930750a3510e703535e943e826aba3c364ffc1de',
+    optimismEthAlchemist: '0xded3a04612ff12b57317abe38e68026fc9d28114',
+    arbitrumUsdcAlchemist: '0x930750a3510e703535e943e826aba3c364ffc1de',
+    arbitrumEthAlchemist: '0xded3a04612ff12b57317abe38e68026fc9d28114',
+    mainnetUsdcAlchemist: '0xeb83112d925268bede86654c13d423a987587e3e',
+    mainnetEthAlchemist: '0xfa995b6abc387376c3e7de5f6d394ab5b6bee26b',
 
 }
 

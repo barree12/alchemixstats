@@ -8,8 +8,6 @@ export default class ChartAlEthPrice extends React.Component {
   let dates = [...this.props.alEthPeg.date];
   let values = [...this.props.alEthPeg.peg];
   let valuesPerc = [...this.props.alEthPeg.pegPerc];
-  //let values5k = [...this.props.alEthPeg.peg5k];
-  //let values5kPerc = [...this.props.alEthPeg.peg5kPerc];
   const helperPointer = this;
   return (
       <div className="chart-container-3">
@@ -26,18 +24,7 @@ export default class ChartAlEthPrice extends React.Component {
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: false,
-            }
-            /*{
-              label: '5000 ETH trade',
-              data: this.props.toggle ? values5kPerc : values5k,
-              backgroundColor: 'rgba(255,255,255,0.8)',
-              borderColor: 'rgba(255,255,255,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: false,
-              hidden: true
-            }*/]
+            }]
           }}
             options={{
               hover: {

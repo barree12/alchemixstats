@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
 
-export default class ChartV2AlchemistFtmTVL extends React.Component {
+export default class ChartMainnetAlchemistEthTVL extends React.Component {
 
   render(){  
     
@@ -10,31 +10,11 @@ export default class ChartV2AlchemistFtmTVL extends React.Component {
         <Chart
           type='line' 
           data={{
-            labels: this.props.ftmTvl.date,
+            labels: this.props.alchemistStats.date,
             datasets: [{
-              label: 'DAI',
-              data: this.props.ftmTvl.yvDai,
-              backgroundColor: 'rgba(102,102,102,0.8)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
-              label: 'USDC',
-              data: this.props.ftmTvl.yvUsdc,
+              label: 'MYT Deposits',
+              data: this.props.alchemistStats.ethMainnetMyt,
               backgroundColor: 'rgba(35,148,54,0.8)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
-              label: 'USDT',
-              data: this.props.ftmTvl.yvUsdt,
-              backgroundColor: 'rgba(255,204,75,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
@@ -61,7 +41,7 @@ export default class ChartV2AlchemistFtmTVL extends React.Component {
                     label: function(context) {
                         let label = context.dataset.label || '';
                         if (context.parsed.y !== null) {
-                          label += ': $' + context.parsed.y + 'M';
+                          label += ': ' + context.parsed.y + ' ETH';
                         }
                         return label;
                     }

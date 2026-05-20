@@ -10,38 +10,17 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
         <Chart
           type='line' 
           data={{
-            labels: this.props.optiTvl.date,
+            labels: this.props.alchemistStats.date,
             datasets: [{
-              label: 'aWETH',
-              data: this.props.optiTvl.aOptWETH,
-              backgroundColor: 'rgba(115,136,255,0.9)',
-              borderColor: 'rgba(240,238,129,1)',
+              label: 'MYT Deposits',
+              data: this.props.alchemistStats.ethOptimismMyt,
+              backgroundColor: 'rgba(255, 92, 51,0.9)',
+              borderColor: 'rgba(255, 92, 51,1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',
               fill: true,
-            },
-            {
-              label: 'wstETH',
-              data: this.props.optiTvl.wstETH,
-              backgroundColor: 'rgba(102,102,102,0.8)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            },
-            {
-              label: 'yvWETH',
-              data: this.props.optiTvl.ysWETH,
-              backgroundColor: 'rgba(255,204,75,0.7)',
-              borderColor: 'rgba(240,238,129,1)',
-              borderWidth: 1,
-              pointRadius: 0,
-              pointBorderColor: '#ffffff',
-              fill: true,
-            }
-          ]
+            }]
           }}
             options={{
               hover: {
@@ -58,6 +37,15 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
                   caretSize: 10,
                   position: 'nearest',
                   displayColors: false,
+                  callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (context.parsed.y !== null) {
+                          label += ': ' + context.parsed.y + ' ETH';
+                        }
+                        return label;
+                    }
+                  },
                 },
                 legend: {
                   display: true,
