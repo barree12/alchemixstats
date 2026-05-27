@@ -164,6 +164,12 @@ export default class Treasury extends React.Component {
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xDc70b6C0aEB5C6627EAa707fC6c804a2EC43f937">
                     Operations</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x2F675e4aD89E4ABf87c5ad25271A70867bb72b57">
                     Aera Holdings</a>
+                </span><br/>
+                Octav dashboards are also operational for a detailed breakdown of holdings.<br/>
+                <span>
+                    <a target="_blank" rel="noreferrer" href="https://alchemix.octav.fi/app/alchemixtreasury">
+                    DAO</a>, <a target="_blank" rel="noreferrer" href="https://alchemix-association.octav.fi/app/Treasury">
+                    Association</a>
                 </span>
                 {this.props.debankDataLoading ? <LoadingComponent /> :
                 <div className="tvl-tables-2">
