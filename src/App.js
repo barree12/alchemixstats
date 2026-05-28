@@ -411,8 +411,9 @@ export default class App extends React.Component {
     this.setState({ tokenPrices: tokenPrices, tokenPricesLoading: false });
   }
 
-  calculateAlEthPeg(result){
-    let alEthPeg = { date: [], peg: [], pegPerc: [] }
+  calculateAlEthPeg(){
+    let result = []
+    let alEthPeg = { date: [0], peg: [0], pegPerc: [0] }
     let inputAmount = 2 * Math.pow(10,18);
     for(let i=0;i<result.length;i++){
       try {
@@ -429,9 +430,10 @@ export default class App extends React.Component {
     this.setState({ alEthPeg: alEthPeg, alEthPegLoading: false });
   }
 
-  calculateAlUsdPeg(usdcPeg){
+  calculateAlUsdPeg(){
+    let usdcPeg = []
     let usdcIndex = 0;
-    let alUsdPeg = { usdc: { date: [], peg: [], pegPerc: [] }};
+    let alUsdPeg = { usdc: { date: [0], peg: [0], pegPerc: [0] }};
     for(let i=0;i<usdcPeg.length;i++){
       try {
           alUsdPeg.usdc.date[usdcIndex] = Number(usdcPeg[i].timestamp*1000);
@@ -951,8 +953,10 @@ export default class App extends React.Component {
       fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json())])
       .then(([usdcPeg, alEthPeg, alchemistStats]) => {
-        this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
-        this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
+        //this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
+        //this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
+        this.calculateAlEthPeg()
+        this.calculateAlUsdPeg()
         this.calculateAlchemistStats(alchemistStats.data.alchemistStats.items.reverse())
         //console.log(alchemistStats)
         /*let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
