@@ -8,6 +8,7 @@ import Emissions from './Emissions';
 import Overview from './Overview';
 import Revenues from './Revenues';
 import Treasury from './Treasury';
+import Transmuters from './Transmuters';
 import { Link } from "react-router-dom";
 import { formatDate, datesEqual, wait } from './Functions';
 import { addresses, abis } from './Constants';
@@ -63,6 +64,7 @@ export default class App extends React.Component {
       debankData: {},
       alAssetSupply: {},
       alchemistStats: {},
+      transmuterStats: {},
       tokenPricesLoading: true,
       v2CurrentLoading: true,
       stakingLoading: true,
@@ -71,7 +73,7 @@ export default class App extends React.Component {
       alEthPegLoading: true,
       alcxDataLoading: true,
       alchemistStatsLoading: true,
-      //alchemistTvlLoading: true,
+      transmuterStatsLoading: true,
       optiTvlLoading: true,
       arbiTvlLoading: true,
       harvestsLoading: true,
@@ -498,24 +500,56 @@ export default class App extends React.Component {
     this.setState({ alchemistStats: formattedStats, alchemistStatsLoading: false });
   }
 
-  calculateArbiTvl(result){
-    let dayTracker = 0;
-    let arbiStart = false;
-    let alchemistTvl = { date:[], wstEth: [], aUsdc: [], gearboxEth: [], jUsdc: [] };
+  calculateTransmuterStats(result){
+    console.log(result)
+    const startingDate = new Date(Number(result[0].timestamp) * 1000);
+    let currentDate = startingDate.toISOString().split('T')[0];
+    let transmuterStats = [];
+    let formattedStats = { date: [], usdMainnet: [], ethMainnet: [], usdOptimism: [], ethOptimism: [], usdArbitrum: [], ethArbitrum: [] }
+    let statObject = { date: currentDate, usdMainnet: 0, ethMainnet: 0, usdOptimism: 0, ethOptimism: 0, usdArbitrum: 0, ethArbitrum: 0 };
     for(let i=0;i<result.length;i++){
-      if(result[i].blockchain === "arbitrum") arbiStart = true;
-      if(arbiStart){
-        if(i!==0 && result[i].day !== result[i-1].day) dayTracker++;
-        alchemistTvl.date[dayTracker] = result[i].day.split(" ")[0];
-        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "aArbUSDCn") alchemistTvl.aUsdc[dayTracker] = Math.round(result[i].balance/10000)/100;
-        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "jUSDC") alchemistTvl.jUsdc[dayTracker] = Math.round(result[i].balance/10000)/100;
-        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "wstETH") alchemistTvl.wstEth[dayTracker] = Math.round(result[i].balance*100)/100;
-        if(result[i].blockchain === "arbitrum" && result[i].token_symbol === "farmdWETHV3") alchemistTvl.gearboxEth[dayTracker] = Math.round(result[i].balance*100)/100;
+      try {
+          const date = new Date(Number(result[i].timestamp) * 1000);
+          const dayString = date.toISOString().split('T')[0];
+          if(dayString !== currentDate){
+            transmuterStats.push(statObject);
+            currentDate = dayString;
+            statObject.date = currentDate;
+            statObject = JSON.parse(JSON.stringify(statObject));
+          }
+          if(result[i].chain === "mainnet" && result[i].transmuter === addresses.mainnetAlUsdTransmuter){ statObject.usdMainnet = Math.round(result[i].totalLocked/Math.pow(10, 22))/100; }
+          if(result[i].chain === "mainnet" && result[i].transmuter === addresses.mainnetAlEthTransmuter){ statObject.ethMainnet = Math.round(result[i].totalLocked/Math.pow(10, 18)); }
+          if(result[i].chain === "optimism" && result[i].transmuter === addresses.optimismAlUsdTransmuter){ statObject.usdOptimism = Math.round(result[i].totalLocked/Math.pow(10, 22))/100; }
+          if(result[i].chain === "optimism" && result[i].transmuter === addresses.optimismAlEthTransmuter){ statObject.ethOptimism = Math.round(result[i].totalLocked/Math.pow(10, 18)); }
+          if(result[i].chain === "arbitrumOne" && result[i].transmuter === addresses.arbitrumAlUsdTransmuter){ statObject.usdArbitrum = Math.round(result[i].totalLocked/Math.pow(10, 22))/100; }
+          if(result[i].chain === "arbitrumOne" && result[i].transmuter === addresses.arbitrumAlEthTransmuter){ statObject.ethArbitrum = Math.round(result[i].totalLocked/Math.pow(10, 18)); }
+      }
+      catch (err) {
+        console.log(err)
       }
     }
-    
-    //console.log(alchemistTvl)
-    this.setState({ arbiTvl: alchemistTvl, arbiTvlLoading: false })
+    for(let i=1;i<transmuterStats.length;i++){
+      try {
+        formattedStats.date[i] = transmuterStats[i].date;
+        formattedStats.usdMainnet[i] = transmuterStats[i].usdMainnet;
+        formattedStats.usdMainnet[i] = transmuterStats[i].usdMainnet;
+        formattedStats.ethMainnet[i] = transmuterStats[i].ethMainnet;
+        formattedStats.ethMainnet[i] = transmuterStats[i].ethMainnet;
+        formattedStats.usdOptimism[i] = transmuterStats[i].usdOptimism;
+        formattedStats.usdOptimism[i] = transmuterStats[i].usdOptimism;
+        formattedStats.ethOptimism[i] = transmuterStats[i].ethOptimism;
+        formattedStats.ethOptimism[i] = transmuterStats[i].ethOptimism;
+        formattedStats.usdArbitrum[i] = transmuterStats[i].usdArbitrum;
+        formattedStats.usdArbitrum[i] = transmuterStats[i].usdArbitrum;
+        formattedStats.ethArbitrum[i] = transmuterStats[i].ethArbitrum;
+        formattedStats.ethArbitrum[i] = transmuterStats[i].ethArbitrum;
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+    console.log(formattedStats)
+    this.setState({ transmuterStats: formattedStats, transmuterStatsLoading: false });
   }
 
   calculateAlcxData(prices, alcxSupply){
@@ -891,24 +925,22 @@ export default class App extends React.Component {
     }`
   }
 
-  /*getAlchemistTvlQuery(skip){
+  getTransmuterStatsQuery(){
     return `{
-      alchemistTVLHistories(
-        first: 1000
-        skip: ` + skip + `
-        orderBy: timestamp
-        orderDirection: desc
-      )
-      {
-        token
-          {
-            symbol
-          }
-        amount
-        timestamp
+      transmuterStats (
+            limit: 1000, 
+            orderBy: "timestamp", 
+            orderDirection: "desc"
+      ) {
+        items {
+          totalLocked
+          timestamp
+          chain
+          transmuter
+        }
       }
     }`
-  }*/
+  }
 
   getAlchemistStatsQuery(){
     return `{
@@ -940,6 +972,7 @@ export default class App extends React.Component {
     const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
     const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
     const alchemistStatsQuery = this.getAlchemistStatsQuery();
+    const transmuterStatsQuery = this.getTransmuterStatsQuery();
 
     let authorizationHeader = {
       method: 'GET',
@@ -949,15 +982,19 @@ export default class App extends React.Component {
       }
     }
 
-    Promise.all([fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-      fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json())])
-      .then(([usdcPeg, alEthPeg, alchemistStats]) => {
+    Promise.all([
+      //fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
+      //fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
+      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json()),
+      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsQuery)).then(res => res.json())
+    ])
+      .then(([alchemistStats, transmuterStats]) => {
         //this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
         //this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
         this.calculateAlEthPeg()
         this.calculateAlUsdPeg()
         this.calculateAlchemistStats(alchemistStats.data.alchemistStats.items.reverse())
+        this.calculateTransmuterStats(transmuterStats.data.transmuterStats.items.reverse())
         //console.log(alchemistStats)
         /*let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
         fetch(url).then(res => res.json()).then(
@@ -1053,6 +1090,15 @@ export default class App extends React.Component {
                     <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
                     <div className="general-switcher-buttons-inside">Deposits</div>
                 </div>}
+                {this.state.activeTab === "transmuters" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Transmuters</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="vaults logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Transmuters</div>
+                </div>}
                 {this.state.activeTab === "revenues" ? 
                 <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
@@ -1110,6 +1156,15 @@ export default class App extends React.Component {
             </div>
           <div className="general-switcher-container">
               <div className="menu-switcher">
+                {this.state.activeTab === "transmuters" ? 
+                <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
+                    <img src={ require('./logos/vaults.svg').default } alt="transmuters logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Transmuters</div>
+                </div> :
+                <div className="general-switcher-buttons-inactive" onClick={() => {this.selectTab("transmuters")}}>
+                    <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
+                    <div className="general-switcher-buttons-inside">Transmuters</div>
+                </div>}
                 {this.state.activeTab === "revenues" ? 
                 <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("revenues")}}>
                     <img src={ require('./logos/debt_thin.svg').default } alt="revenues logo" className="image-menu" />
@@ -1136,12 +1191,17 @@ export default class App extends React.Component {
       {this.state.activeTab !== "emissions" ? "" :
       <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
       }
-      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistStatsLoading) ? "Loading..." :
+      {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistStatsLoading || this.state.transmuterStatsLoading) ? "Loading..." :
         <Deposits
           v3MainnetAlchemistEthTvlUsd={v3MainnetAlchemistEthTvlUsd} v3OptimismAlchemistEthTvlUsd={v3OptimismAlchemistEthTvlUsd}
           v3ArbitrumAlchemistEthTvlUsd={v3ArbitrumAlchemistEthTvlUsd} tokenPrices={this.state.tokenPrices}
           alchemistStats={this.state.alchemistStats} alchemistStatsLoading={this.state.alchemistStatsLoading}
         />)}
+
+      {this.state.activeTab !== "transmuters" ? "" :
+      <Transmuters
+        transmuterStats={this.state.transmuterStats} transmuterStatsLoading={this.state.transmuterStatsLoading}
+        />}
 
       {this.state.activeTab !== "treasury" ? "" :
       <Treasury

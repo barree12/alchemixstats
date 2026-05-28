@@ -120,6 +120,12 @@ export const addresses = {
     arbitrumEthAlchemist: '0xded3a04612ff12b57317abe38e68026fc9d28114',
     mainnetUsdcAlchemist: '0xeb83112d925268bede86654c13d423a987587e3e',
     mainnetEthAlchemist: '0xfa995b6abc387376c3e7de5f6d394ab5b6bee26b',
+    mainnetAlEthTransmuter: '0x073598132f37756a7e665fb52f1757463120bd3c',
+    mainnetAlUsdTransmuter: '0x2584e8b0616b3e750492c9629a3b27679c410cb9',
+    arbitrumAlEthTransmuter: '0x2584e8b0616b3e750492c9629a3b27679c410cb9',
+    arbitrumAlUsdTransmuter: '0x693b7594ae0633d9c5574d0da46a040f92f5b281',
+    optimismAlEthTransmuter: '0x2584e8b0616b3e750492c9629a3b27679c410cb9',
+    optimismAlUsdTransmuter: '0x693b7594ae0633d9c5574d0da46a040f92f5b281',
 
 }
 
