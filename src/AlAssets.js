@@ -45,7 +45,7 @@ export default class AlAssets extends React.Component {
     }
 
     componentDidMount() {
-        this.getBacking();
+        //this.getBacking();
       }
 
     toggleAlUsdPeg(){
@@ -176,9 +176,7 @@ export default class AlAssets extends React.Component {
                     <img src={ require('./logos/alusd.svg').default } alt="alUSD logo" className="image3" />
                     <h2>alUSD</h2>
                 </div>
-                {this.state.surplusLoading ? <LoadingComponent /> :
-                    <AlUsdSummary lps={this.props.lps} surplus={this.state.surplus} />
-                }
+                <AlUsdSummary lps={this.props.lps} surplus={this.state.surplus} />
                 <div className="section-wrapper">
                     {/*<div className="chart-title">
                         <h3>alUSD Total Supply</h3>

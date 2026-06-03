@@ -51,14 +51,7 @@ export default class App extends React.Component {
       alcxData: {},
       alUsdPeg: {},
       alEthPeg: {},
-      v2Caps: {},
-      v2Deposit: {},
-      tokensPerShare: {},
       lps: {},
-      alchemistTvl: {},
-      optiTvl: {},
-      arbiTvl: {},
-      harvests: {},
       transmuters: {},
       alAssetCrvSupply: {},
       debankData: {},
@@ -74,26 +67,17 @@ export default class App extends React.Component {
       alcxDataLoading: true,
       alchemistStatsLoading: true,
       transmuterStatsLoading: true,
-      optiTvlLoading: true,
-      arbiTvlLoading: true,
-      harvestsLoading: true,
       alUsdLoading: true,
       debankDataLoading: true,
       activeTab: 'treasury'
     };
     this.selectTab = this.selectTab.bind(this);
 
-    this.alchemistContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistV2Address);
-    this.alchemistEthContract = new web3.eth.Contract(abis.alchemistAbi, addresses.alchemistEthV2Address);
-    this.alchemistOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistOptiAddress);
-    this.alchemistEthOptiContract = new web3optimism.eth.Contract(abis.alchemistAbi, addresses.alchemistEthOptiAddress);
-    this.alchemistArbiContract = new web3arbitrum.eth.Contract(abis.alchemistAbi, addresses.alchemistArbiAddress);
-    this.alchemistEthArbiContract = new web3arbitrum.eth.Contract(abis.alchemistAbi, addresses.alchemistArbiEthAddress);
     this.cvxAlUsd3CrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlUsd3CrvStakingContractAddress);
     this.cvxAlEthCrvStakingContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.cvxAlEthCrvStakingContractAddress);
-    this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
+    //this.vlCvxTrackerContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.vlCvxTrackerAddress);
     this.alcxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alcxAddress);
-    this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
+    //this.masterChefContract = new web3.eth.Contract(abis.masterChefAbi, addresses.masterChefAddress);
     this.wethContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.wethAddress);
     this.alUsd3CrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsd3CrvContractAddress);
     this.alUsdSdolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdSdolaContractAddress);
@@ -101,8 +85,8 @@ export default class App extends React.Component {
     this.fraxContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.fraxAddress);
     this.crv3Contract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.crv3Address);
     this.alEthFrxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.frxEthAlEthContractAddress);
-    this.veSdtContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.veSdtContractAddress);
-    this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
+    this.frxUsdContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.frxUsdContractAddress);
+    //this.sdCrvContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sdCrvGaugeContractAddress);
     this.sEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sEthAddress);
     this.alEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alEthAddress);
     this.frxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.frxEthAddress);
@@ -111,20 +95,15 @@ export default class App extends React.Component {
     this.alEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.alEthOptimismContractAddress);
     this.usdcOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.usdcOptimismContractAddress);
     this.wethOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.wethOptimismContractAddress);
-    this.maiOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.maiOptimismContractAddress);
-    this.fraxOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFraxAddress);
-    this.fxsEthOptimismContract = new web3optimism.eth.Contract(abis.erc20LikeAbi, addresses.optiFxsEthAddress);
-    this.curveFBPContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.curveFBPContractAddress);
-    this.alUsdFraxBpContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFBPCurveContractAddress);
     this.alUsdArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiAlUsdContractAddress);
     this.alEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbitrumAlEthContractAddress);
-    this.fraxArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.arbiFraxContractAddress);
-    this.frxEthArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.frxEthArbiContractAddress);
     this.veloStatsContract = new web3optimism.eth.Contract(abis.veloStatsAbi, addresses.veloStats);
     this.sDolaContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.sDolaContractAddress);
     this.pxEthContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.pxEthContractAddress);
     this.alUsdUsdcArbi = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.curveArbiAlUsdUsdcContractAddress);
     this.alEthWethArbi = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.curveArbiAlEthWethContractAddress);
+    this.wethArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.wethArbitrumContractAddress);
+    this.usdcArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.usdcArbitrumContractAddress);
     this.alUsdFrxUsdCurve = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFrxUsdCurveContractAddress);
   }
 
@@ -151,9 +130,6 @@ export default class App extends React.Component {
       }
     }
 
-    let v2Caps = {}
-    let tokensPerShare = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0 }
-    let deposit = { dai: 0, usdc: 0, usdt: 0, eth: 0, wstEth: 0, rEth: 0, aDai: 0, aUsdc: 0, aUsdt: 0, aWeth: 0, vaUsdc: 0, vaDai: 0, vaEth: 0, pxEth: 0, daiInMigrate: 0, wethInMigrate: 0 }
     let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
     let tokenParams = {}
 
@@ -161,138 +137,25 @@ export default class App extends React.Component {
     ])
       .then(([ipfsOptiFile]) => {
         let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
-        //let url = "https://ipfs.imimim.info/ipfs/bafkreieeyjj5bjppd6ci4yig6xzkxk7h5pzgya6iqgkicusl7hzoxghvue";
         Promise.all([fetch(url).then(res => res.json()),
-          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiADaiAddress).call(),
-          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdcAddress).call(),
-          this.alchemistOptiContract.methods.getYieldTokenParameters(addresses.optiAUsdtAddress).call(),
-          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiAWethAddress).call(),
-          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiWstEthAddress).call(),
-          this.alchemistEthOptiContract.methods.getYieldTokenParameters(addresses.optiYvWethAddress).call(),
-          this.alchemistArbiContract.methods.getYieldTokenParameters(addresses.arbiAUsdcAddress).call(),
-          this.alchemistEthArbiContract.methods.getYieldTokenParameters(addresses.arbiWstEthAddress).call(),
           this.wethContract.methods.balanceOf(addresses.tempMigrateEthAddress).call(),
           this.daiContract.methods.balanceOf(addresses.tempMigrateDaiAddress).call(),
           this.alEthContract.methods.totalSupply().call(),
           this.alUsdContract.methods.totalSupply().call(),
           this.alUsdOptimismContract.methods.totalSupply().call(),
           this.alUsdArbitrumContract.methods.totalSupply().call(),
-          //this.alUsdMetisContract.methods.totalSupply().call(),
-          //this.alEthMetisContract.methods.totalSupply().call()
           this.alEthOptimismContract.methods.totalSupply().call(),
           this.alEthArbitrumContract.methods.totalSupply().call()])
-        .then(([tokenParamsResult, optiADaiParams, optiAUsdcParams, optiAUsdtParams, optiAWethParams, optiWstEthParams, optiYvWethParams, arbiAUsdcParams, arbiWstEthParams, wethInMigrate, daiInMigrate, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alEthSupplyOptimism, alEthSupplyArbitrum]) => {
-        for(let i=0;i<tokenParamsResult.length;i++){
-          switch(tokenParamsResult[i].tokenAddress){
-            case addresses.yvDaiAddress: tokenParams.yvDai = tokenParamsResult[i];
-            break;
-            case addresses.yvUsdcAddress: tokenParams.yvUsdc = tokenParamsResult[i];
-            break;
-            case addresses.yvUsdtAddress: tokenParams.yvUsdt = tokenParamsResult[i];
-            break;
-            case addresses.vaUsdcAddress: tokenParams.vaUsdc = tokenParamsResult[i];
-            break;
-            case addresses.vaDaiAddress: tokenParams.vaDai = tokenParamsResult[i];
-            break;
-            case addresses.vaFraxAddress: tokenParams.vaFrax = tokenParamsResult[i];
-            break;
-            case addresses.yvWethAddress: tokenParams.yvWeth = tokenParamsResult[i];
-            break;
-            case addresses.vaEthAddress: tokenParams.vaEth = tokenParamsResult[i];
-            break;
-            case addresses.wstEthAddress: tokenParams.wstEth = tokenParamsResult[i];
-            break;
-            case addresses.rEthAddress: tokenParams.rEth = tokenParamsResult[i];
-            break;
-            case addresses.sfrxEthAddress: tokenParams.sfrxEth = tokenParamsResult[i];
-            break;
-            case addresses.aDaiAddress: tokenParams.aDai = tokenParamsResult[i];
-            break;
-            case addresses.aUsdcAddress: tokenParams.aUsdc = tokenParamsResult[i];
-            break;
-            case addresses.aUsdtAddress: tokenParams.aUsdt = tokenParamsResult[i];
-            break;
-            case addresses.pxEthAddress: tokenParams.pxEth = tokenParamsResult[i];
-            break;
-            case addresses.aWethAddress: tokenParams.aWeth = tokenParamsResult[i];
-            break;
-          }
-          
-        }
+        .then(([tokenParamsResult, alEthSupply, alUsdSupply, alUsdSupplyOptimism, alUsdSupplyArbitrum, alEthSupplyOptimism, alEthSupplyArbitrum]) => {
         //console.log(tokenParams)
-        v2Caps.dai = tokenParams.yvDai.yieldTokenParameterFour/Math.pow(10, tokenParams.yvDai.yieldTokenParameterZero);
-        v2Caps.optiADai = optiADaiParams[4]/Math.pow(10, optiADaiParams[0]);
-        v2Caps.usdc = tokenParams.yvUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.yvUsdc.yieldTokenParameterZero);
-        v2Caps.optiAUsdc = optiAUsdcParams[4]/Math.pow(10, optiAUsdcParams[0]);
-        v2Caps.usdt = tokenParams.yvUsdt.yieldTokenParameterFour/Math.pow(10, tokenParams.yvUsdt.yieldTokenParameterZero);
-        v2Caps.optiAUsdt = optiAUsdtParams[4]/Math.pow(10, optiAUsdtParams[0]);
-        v2Caps.eth = tokenParams.yvWeth.yieldTokenParameterFour/Math.pow(10, tokenParams.yvWeth.yieldTokenParameterZero);
-        v2Caps.wstEth = tokenParams.wstEth.yieldTokenParameterFour/Math.pow(10, tokenParams.wstEth.yieldTokenParameterZero);
-        v2Caps.rEth = tokenParams.rEth.yieldTokenParameterFour/Math.pow(10, tokenParams.rEth.yieldTokenParameterZero);
-        v2Caps.sfrxEth = tokenParams.sfrxEth.yieldTokenParameterFour/Math.pow(10, tokenParams.sfrxEth.yieldTokenParameterZero);
-        v2Caps.aDai = tokenParams.aDai.yieldTokenParameterFour/Math.pow(10, tokenParams.aDai.yieldTokenParameterZero);
-        v2Caps.aUsdc = tokenParams.aUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.aUsdc.yieldTokenParameterZero);
-        v2Caps.aUsdt = tokenParams.aUsdt.yieldTokenParameterFour/Math.pow(10, tokenParams.aUsdt.yieldTokenParameterZero);
-        v2Caps.pxEth = tokenParams.pxEth.yieldTokenParameterFour/Math.pow(10, tokenParams.pxEth.yieldTokenParameterZero);
-        v2Caps.aWeth = tokenParams.aWeth.yieldTokenParameterFour/Math.pow(10, tokenParams.aWeth.yieldTokenParameterZero);
-        v2Caps.optiAWeth = optiAWethParams[4]/Math.pow(10, optiAWethParams[0]);
-        v2Caps.optiWstEth = optiWstEthParams[4]/Math.pow(10, optiWstEthParams[0]);
-        v2Caps.optiYvWeth = optiYvWethParams[4]/Math.pow(10, optiYvWethParams[0]);
-        v2Caps.arbiAUsdc = arbiAUsdcParams[4]/Math.pow(10, arbiAUsdcParams[0]);
-        v2Caps.arbiWstEth = arbiWstEthParams[4]/Math.pow(10, arbiWstEthParams[0]);
-        v2Caps.vaUsdc = tokenParams.vaUsdc.yieldTokenParameterFour/Math.pow(10, tokenParams.vaUsdc.yieldTokenParameterZero);
-        v2Caps.vaDai = tokenParams.vaDai.yieldTokenParameterFour/Math.pow(10, tokenParams.vaDai.yieldTokenParameterZero);
-        v2Caps.vaFrax = tokenParams.vaFrax.yieldTokenParameterFour/Math.pow(10, tokenParams.vaFrax.yieldTokenParameterZero);
-        v2Caps.vaEth = tokenParams.vaEth.yieldTokenParameterFour/Math.pow(10, tokenParams.vaEth.yieldTokenParameterZero);
-        tokensPerShare.dai = tokenParams.yvDai.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.usdc = tokenParams.yvUsdc.underlyingTokensPerShare/Math.pow(10, 6);
-        tokensPerShare.usdt = tokenParams.yvUsdt.underlyingTokensPerShare/Math.pow(10, 6);
-        tokensPerShare.eth = tokenParams.yvWeth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.wstEth = tokenParams.wstEth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.rEth = tokenParams.rEth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.sfrxEth = tokenParams.sfrxEth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.aDai = tokenParams.aDai.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.aUsdc = tokenParams.aUsdc.underlyingTokensPerShare/Math.pow(10, 6);
-        tokensPerShare.aUsdt = tokenParams.aUsdt.underlyingTokensPerShare/Math.pow(10, 6);
-        tokensPerShare.pxEth = tokenParams.pxEth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.aWeth = tokenParams.aWeth.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.vaDai = tokenParams.vaDai.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.vaUsdc = tokenParams.vaUsdc.underlyingTokensPerShare/Math.pow(10, 6);
-        tokensPerShare.vaFrax = tokenParams.vaFrax.underlyingTokensPerShare/Math.pow(10, 18);
-        tokensPerShare.vaEth = tokenParams.vaEth.underlyingTokensPerShare/Math.pow(10, 18);
-        deposit.dai = tokenParams.yvDai.yieldTokenParameterEight/Math.pow(10, 24);
-        deposit.usdc = tokenParams.yvUsdc.yieldTokenParameterEight/Math.pow(10, 12);
-        deposit.usdt = tokenParams.yvUsdt.yieldTokenParameterEight/Math.pow(10, 12);
-        deposit.eth = tokenParams.yvWeth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.wstEth = tokenParams.wstEth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.rEth = tokenParams.rEth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.sfrxEth = tokenParams.sfrxEth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.aDai = tokenParams.aDai.yieldTokenParameterEight/Math.pow(10, 24);
-        deposit.aUsdc = tokenParams.aUsdc.yieldTokenParameterEight/Math.pow(10, 12);
-        deposit.aUsdt = tokenParams.aUsdt.yieldTokenParameterEight/Math.pow(10, 12);
-        deposit.pxEth = tokenParams.pxEth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.aWeth = tokenParams.aWeth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.vaUsdc = tokenParams.vaUsdc.yieldTokenParameterEight/Math.pow(10, 24);
-        deposit.vaDai = tokenParams.vaDai.yieldTokenParameterEight/Math.pow(10, 24);
-        deposit.vaFrax = tokenParams.vaFrax.yieldTokenParameterEight/Math.pow(10, 24);
-        deposit.vaEth = tokenParams.vaEth.yieldTokenParameterEight/Math.pow(10, 18);
-        deposit.optiADai = optiADaiParams[8]/Math.pow(10, 24);
-        deposit.optiAUsdc = optiAUsdcParams[8]/Math.pow(10, 12);
-        deposit.optiAUsdt = optiAUsdtParams[8]/Math.pow(10, 12);
-        deposit.optiAWeth = optiAWethParams[8]/Math.pow(10, 18);
-        deposit.optiWstEth = optiWstEthParams[8]/Math.pow(10, 18);
-        deposit.optiYvWeth = optiYvWethParams[8]/Math.pow(10, 18);
-        deposit.daiInMigrate = daiInMigrate/Math.pow(10, 24);
-        deposit.wethInMigrate = wethInMigrate/Math.pow(10, 18);
+
         alAssetSupply.alEth = alEthSupply/Math.pow(10, 18);
         alAssetSupply.alEthOptimism = alEthSupplyOptimism/Math.pow(10, 18);
         alAssetSupply.alEthArbitrum = alEthSupplyArbitrum/Math.pow(10, 18);
-        //alAssetSupply.alEthMetis = alEthSupplyMetis/Math.pow(10, 18);
         alAssetSupply.alUsd = alUsdSupply/Math.pow(10, 18);
         alAssetSupply.alUsdOptimism = alUsdSupplyOptimism/Math.pow(10, 18);
         alAssetSupply.alUsdArbitrum = alUsdSupplyArbitrum/Math.pow(10, 18);
-        //alAssetSupply.alUsdMetis = alUsdSupplyMetis/Math.pow(10, 18);
-        this.setState({ v2Caps: v2Caps, tokensPerShare: tokensPerShare, v2Deposit: deposit, alAssetSupply: alAssetSupply, v2CurrentLoading: false });
+        this.setState({ alAssetSupply: alAssetSupply, v2CurrentLoading: false });
         }).catch(function(err) { console.log(err.message) });
       }).catch(function(err) { console.log(err.message); });
   }
@@ -303,16 +166,14 @@ export default class App extends React.Component {
       this.alUsd3CrvContract.methods.totalSupply().call(),
       this.alEthFrxEthContract.methods.totalSupply().call(),
       this.alEthFrxEthContract.methods.get_virtual_price().call(),
-      this.alUsdFraxBpContract.methods.totalSupply().call(),
       this.alUsdSdolaContract.methods.totalSupply().call(),
       this.alUsdUsdcArbi.methods.totalSupply().call(),
       this.alEthWethArbi.methods.totalSupply().call(),
       this.alUsdFrxUsdCurve.methods.totalSupply().call()
     ])
-    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdFraxBpCrvSupply, alUsdSdolaSupply, alUsdUsdcArbiSupply, alEthWethArbiSupply, alUsdFrxUsdCurveSupply]) => {
+    .then(([alUsd3CrvSupply, alEthFrxEthSupply, alEthFrxEthVirtualPrice, alUsdSdolaSupply, alUsdUsdcArbiSupply, alEthWethArbiSupply, alUsdFrxUsdCurveSupply]) => {
       alAssetCrvSupply.alUsd3Crv = alUsd3CrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alEthFrxEthValue = (alEthFrxEthSupply/Math.pow(10, 18))*(alEthFrxEthVirtualPrice/Math.pow(10, 18));
-      alAssetCrvSupply.alUsdFraxBp = alUsdFraxBpCrvSupply/Math.pow(10, 18);
       alAssetCrvSupply.alUsdSdola = alUsdSdolaSupply/Math.pow(10, 18);
       alAssetCrvSupply.arbiAlUsdUsdc = alUsdUsdcArbiSupply/Math.pow(10, 18);
       alAssetCrvSupply.arbiAlEthWeth = alEthWethArbiSupply/Math.pow(10, 18);
@@ -330,7 +191,7 @@ export default class App extends React.Component {
     let frxEth = "sAMMV2-alETH/frxETH";
     let pxEthAlEth = 'sAMMV2-pxETH/alETH';
     let dolaAlUsd = 'sAMMV2-DOLA/alUSD';
-    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alUsdInCurveFBP: 0, fbpInCurveFBP: 0, alEthInVeloFxsEthAlEth: 0, fxsEthInVeloFxsEthAlEth: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0, alUsdInVeloDolaAlUsd: 0, dolaInVeloDolaAlUsd: 0, alEthInCurvePxEth: 0, pxEthInCurvePxEth: 0, alUsdInCurveDola: 0, sdolaInCurveDola: 0, alEthInRamsesFrxEth: 0, frxEthInRamsesFrxEth: 0, alUsdInRamsesFrax: 0, fraxInRamsesFrax: 0 }
+    let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0, alUsdInVeloDolaAlUsd: 0, dolaInVeloDolaAlUsd: 0, alUsdInCurveDola: 0, sdolaInCurveDola: 0, alUsdInArbiUsdc: 0, usdcInArbiUsdc: 0, alEthInArbiWeth: 0, wethInArbiWeth: 0 }
     Promise.all([this.alUsdContract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.crv3Contract.methods.balanceOf(addresses.alUsd3CrvContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.saddleAlEthPoolContractAddress).call(),
@@ -340,20 +201,18 @@ export default class App extends React.Component {
       this.frxEthContract.methods.balanceOf(addresses.frxEthAlEthContractAddress).call(),
       this.alEthContract.methods.balanceOf(addresses.curveAlEthWethPoolContractAddress).call(),
       this.wethContract.methods.balanceOf(addresses.curveAlEthWethPoolContractAddress).call(),
-      this.alUsdContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
-      this.curveFBPContract.methods.balanceOf(addresses.alUsdFBPCurveContractAddress).call(),
-      this.alEthContract.methods.balanceOf(addresses.curveAlEthPxEthPoolContractAddress).call(),
-      this.pxEthContract.methods.balanceOf(addresses.curveAlEthPxEthPoolContractAddress).call(),
       this.alUsdContract.methods.balanceOf(addresses.curveAlUsdDolaPoolContractAddress).call(),
       this.sDolaContract.methods.balanceOf(addresses.curveAlUsdDolaPoolContractAddress).call(),
-      this.alEthArbitrumContract.methods.balanceOf(addresses.alEthFrxEthRamsesPoolContractAddress).call(),
-      this.frxEthArbitrumContract.methods.balanceOf(addresses.alEthFrxEthRamsesPoolContractAddress).call(),
-      this.alUsdArbitrumContract.methods.balanceOf(addresses.alUsdFraxRamsesPoolContractAddress).call(),
-      this.fraxArbitrumContract.methods.balanceOf(addresses.alUsdFraxRamsesPoolContractAddress).call(),
       this.veloStatsContract.methods.all(480,0).call(),
-      this.veloStatsContract.methods.all(480,480).call()
+      this.veloStatsContract.methods.all(480,480).call(),
+      this.alUsdContract.methods.balanceOf(addresses.alUsdFrxUsdCurveContractAddress).call(),
+      this.frxUsdContract.methods.balanceOf(addresses.alUsdFrxUsdCurveContractAddress).call(),
+      this.alUsdArbitrumContract.methods.balanceOf(addresses.curveArbiAlUsdUsdcContractAddress).call(),
+      this.usdcArbitrumContract.methods.balanceOf(addresses.curveArbiAlUsdUsdcContractAddress).call(),
+      this.alEthArbitrumContract.methods.balanceOf(addresses.curveArbiAlEthWethContractAddress).call(),
+      this.wethArbitrumContract.methods.balanceOf(addresses.curveArbiAlEthWethContractAddress).call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveFBP, fbpInCurveFBP, alEthInCurvePxEth, pxEthInCurvePxEth, alUsdInCurveDola, sdolaInCurveDola, alEthInRamsesFrxEth, frxEthInRamsesFrxEth, alUsdInRamsesFrax, fraxInRamsesFrax, veloStats1, veloStats2]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveDola, sdolaInCurveDola, veloStats1, veloStats2, alUsdInCurveFrxUsd, frxUsdInCurveFrxUsd, alUsdInArbiUsdc, usdcInArbiUsdc, alEthInArbiWeth, wethInArbiWeth]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
@@ -363,16 +222,14 @@ export default class App extends React.Component {
       lps.frxEthInFrxEthCrv = frxEthInFrxEthCrv/Math.pow(10, 18);
       lps.alEthInAlEthWethCrv = alEthInAlEthWethCrv/Math.pow(10, 18);
       lps.wethInAlEthWethCrv = wethInAlEthWethCrv/Math.pow(10, 18);
-      lps.alEthInCurvePxEth = alEthInCurvePxEth/Math.pow(10, 18);
-      lps.pxEthInCurvePxEth = pxEthInCurvePxEth/Math.pow(10, 18);
       lps.alUsdInCurveDola = alUsdInCurveDola/Math.pow(10, 18);
       lps.sdolaInCurveDola = sdolaInCurveDola/Math.pow(10, 18);
-      lps.alUsdInCurveFBP = alUsdInCurveFBP/Math.pow(10, 18);
-      lps.fbpInCurveFBP = fbpInCurveFBP/Math.pow(10, 18);
-      lps.alEthInRamsesFrxEth = alEthInRamsesFrxEth/Math.pow(10, 18);
-      lps.frxEthInRamsesFrxEth = frxEthInRamsesFrxEth/Math.pow(10, 18);
-      lps.alUsdInRamsesFrax = alUsdInRamsesFrax/Math.pow(10, 18);
-      lps.fraxInRamsesFrax = fraxInRamsesFrax/Math.pow(10, 18);
+      lps.frxUsdInCurveFrxUsd = frxUsdInCurveFrxUsd/Math.pow(10, 18);
+      lps.alUsdInCurveFrxUsd = alUsdInCurveFrxUsd/Math.pow(10, 18);
+      lps.alUsdInArbiUsdc = alUsdInArbiUsdc/Math.pow(10, 18);
+      lps.usdcInArbiUsdc = usdcInArbiUsdc/Math.pow(10, 6);
+      lps.alEthInArbiWeth = alEthInArbiWeth/Math.pow(10, 18);
+      lps.wethInArbiWeth = wethInArbiWeth/Math.pow(10, 18);
       let veloStats = veloStats1.concat(veloStats2)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {
@@ -386,10 +243,6 @@ export default class App extends React.Component {
         if(veloStats[i][1] === dolaAlUsd) {
           lps.dolaInVeloDolaAlUsd = parseInt(veloStats[i][9]) / Math.pow(10,18);
           lps.alUsdInVeloDolaAlUsd = parseInt(veloStats[i][12]) / Math.pow(10,18);
-        }
-        if(veloStats[i][1] === frxEth) {
-          lps.alEthInVeloFxsEthAlEth = parseInt(veloStats[i][9]) / Math.pow(10,18);
-          lps.fxsEthInVeloFxsEthAlEth = parseInt(veloStats[i][12]) / Math.pow(10,18);
         }
         if(veloStats[i][1] === pxEthAlEth) {
           //console.log("found")
@@ -623,8 +476,6 @@ export default class App extends React.Component {
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
     let alEthPxEthVelodromeId = '0x28cd6d3471e031f8b380a64e9da3b9b12a473186';
     let alEthFrxEthVelodromeId = '0xfc0b9a9c2b63e6acaca91a77a80bfa83c615e6c5';
-    let ramsesAlEthFrxEthAddress = '0xfb4fe921f724f3c7b610a826c827f9f6ecef6886';
-    let ramsesAlUsdFraxAddress = '0xfd599db360cd9713657c95df66650a427d213010';
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
     let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
@@ -639,14 +490,10 @@ export default class App extends React.Component {
     let elixirTokensConcat = [];
     let elixirProtocolsConcat = [];
 
-    let ramsesAlEthFrxEthPool;
-    let ramsesAlUsdFraxPool;
     let veloAlEthWethPool;
     let veloAlUsdUsdcPool;
     let veloAlEthPxEthPool;
     for(let i=0;i<data.pools.length;i++){
-      if(data.pools[i].address === ramsesAlEthFrxEthAddress) ramsesAlEthFrxEthPool = data.pools[i].total_balance.total_usd_value;
-      if(data.pools[i].address === ramsesAlUsdFraxAddress) ramsesAlUsdFraxPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthWethAddress) veloAlEthWethPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlUsdUsdcAddress) veloAlUsdUsdcPool = data.pools[i].total_balance.total_usd_value;
       if(data.pools[i].address === veloAlEthPxEthAddress) veloAlEthPxEthPool = data.pools[i].total_balance.total_usd_value;

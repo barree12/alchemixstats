@@ -7,27 +7,14 @@ export default class AlUsdSummary extends React.Component {
     render(){
       const totalAlUsd3Crv = Math.round(this.props.lps.alUsdIn3Crv/10000+this.props.lps.crv3In3Crv/10000)/100;
       const totalAlUsdVelodrome = Math.round(this.props.lps.alUsdInVelodrome/10000+this.props.lps.usdcInVelodrome/10000)/100;
-      const totalCurveFBP = Math.round(this.props.lps.alUsdInCurveFBP/10000+this.props.lps.fbpInCurveFBP/10000)/100;
+      const totalCurveFrxUsd = Math.round(this.props.lps.alUsdInCurveFrxUsd/10000+this.props.lps.frxUsdInCurveFrxUsd/10000)/100;
       const totalDolaVelodrome = Math.round(this.props.lps.alUsdInVeloDolaAlUsd/10000+this.props.lps.dolaInVeloDolaAlUsd/10000)/100;
       const totalDolaCurve = Math.round(this.props.lps.alUsdInCurveDola/10000+this.props.lps.sdolaInCurveDola/10000)/100;
-      const totalRamsesFrax = Math.round(this.props.lps.alUsdInRamsesFrax/10000+this.props.lps.fraxInRamsesFrax/10000)/100;
+      const totalArbiUsdc = Math.round(this.props.lps.alUsdInArbiUsdc/10000+this.props.lps.usdcInArbiUsdc/10000)/100;
         return (
             <div className="summary">
-                alUSD supply grows when people deposit collateral assets and borrow alUSD against them.<br/>
-                The supply contracts when people repay their outstanding debt using alUSD or when they use the transmuter to exchange alUSD for collateral assets.<br/>
-                In these cases the protocol burns the alUSD tokens and the total supply decreases.<br/><br/>
-                Since the launch of Alchemix V2, the following collateral types are supported:<br/>
-                <div className="small-table-2">
-                    <div className="tokens"><img src={ require('./logos/dai.png').default } alt="dai token" className="image" />DAI</div>
-                    <div className="tokens"><img src={ require('./logos/usdt.png').default } alt="usdt token" className="image" />USDT</div>
-                    <div className="tokens"><img src={ require('./logos/usdc.png').default } alt="usdc token" className="image" />USDC</div>
-                    <div className="tokens"><img src={ require('./logos/frax.png').default } alt="frax token" className="image" />FRAX</div>
-                </div>
-                The protocol assumes every alUSD is worth $1 and the transmuter exchanges alUSD for $1 worth of any collateral asset.<br/>
-                Thus it is an important goal of the protocol to maintain a price that is reasonably close to $1 for alUSD.<br/>
-                <br/>
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
-                <h3>Backing surplus</h3>
+                {/*<h3>Backing surplus</h3>
                 <span>Mainnet backing surplus: <b>{styleNumber(Math.round(this.props.surplus.alUsdMainnet))} alUSD</b></span>
                 <br/>
                 <span>(+) Elixir held alUSD backing in LPs: <b>{styleNumber(Math.round(this.props.surplus.alUsdBackingTokensInElixir))}</b></span>
@@ -47,15 +34,15 @@ export default class AlUsdSummary extends React.Component {
                   <div className="small-table-inner-4">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/frax_crv.png').default } alt="Curve FraxBP pool logo" className="image" />
-                      <span className="table-text-title">FraxBP Curve</span>
+                      <span className="table-text-title">frxUSD Curve</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInCurveFBP/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInCurveFrxUsd/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">FraxBP</span>
-                      <span className="important-2">${Math.round(this.props.lps.fbpInCurveFBP/10000)/100}M</span>
+                      <span className="table-text-bold-2">frxUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.frxUsdInCurveFrxUsd/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell-disappear">
                       <span></span>
@@ -67,7 +54,7 @@ export default class AlUsdSummary extends React.Component {
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalCurveFBP}M</span>
+                      <span className="important-2">${totalCurveFrxUsd}M</span>
                     </span>
                   </div>
 
@@ -185,15 +172,15 @@ export default class AlUsdSummary extends React.Component {
                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/frax.png').default } alt="FRAX logo" className="image" />
-                      <span className="table-text-title">Ramses FRAX</span>
+                      <span className="table-text-title">Arbitrum USDC</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInRamsesFrax/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInArbiUsdc/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
-                      <span className="table-text-bold-2">FRAX</span>
-                      <span className="important-2">${Math.round(this.props.lps.fraxInRamsesFrax/10000)/100}M</span>
+                      <span className="table-text-bold-2">USDC</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInArbiUsdc/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
                       <span></span>
@@ -205,7 +192,7 @@ export default class AlUsdSummary extends React.Component {
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalRamsesFrax}M</span>
+                      <span className="important-2">${totalArbiUsdc}M</span>
                     </span>
                   </div>
 
