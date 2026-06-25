@@ -11,6 +11,7 @@ export default class AlUsdSummary extends React.Component {
       const totalDolaVelodrome = Math.round(this.props.lps.alUsdInVeloDolaAlUsd/10000+this.props.lps.dolaInVeloDolaAlUsd/10000)/100;
       const totalDolaCurve = Math.round(this.props.lps.alUsdInCurveDola/10000+this.props.lps.sdolaInCurveDola/10000)/100;
       const totalArbiUsdc = Math.round(this.props.lps.alUsdInArbiUsdc/10000+this.props.lps.usdcInArbiUsdc/10000)/100;
+      const totalUsdcCurve = Math.round(this.props.lps.alUsdInUsdcCurve/10000+this.props.lps.usdcInUsdcCurve/10000)/100;
         return (
             <div className="summary">
                 <span>To see the current APR of each pool, head over to the <Link to="/earn">Earn subpage</Link></span>
@@ -193,6 +194,33 @@ export default class AlUsdSummary extends React.Component {
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
                       <span className="important-2">${totalArbiUsdc}M</span>
+                    </span>
+                  </div>
+
+                  <div className="small-table-inner-11">
+                    <span className="small-table-cell-title">
+                      <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
+                      <span className="table-text-title">Curve USDC</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">alUSD</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInUsdcCurve/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">USDC</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInUsdcCurve/10000)/100}M</span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <span className="small-table-cell">
+                      <span className="table-text-bold-2">Total</span>
+                      <span className="important-2">${totalUsdcCurve}M</span>
                     </span>
                   </div>
 

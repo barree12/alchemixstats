@@ -105,6 +105,7 @@ export default class App extends React.Component {
     this.wethArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.wethArbitrumContractAddress);
     this.usdcArbitrumContract = new web3arbitrum.eth.Contract(abis.erc20LikeAbi, addresses.usdcArbitrumContractAddress);
     this.alUsdFrxUsdCurve = new web3.eth.Contract(abis.erc20LikeAbi, addresses.alUsdFrxUsdCurveContractAddress);
+    this.usdcContract = new web3.eth.Contract(abis.erc20LikeAbi, addresses.usdcAddress);
   }
 
   componentDidMount() {
@@ -210,9 +211,11 @@ export default class App extends React.Component {
       this.alUsdArbitrumContract.methods.balanceOf(addresses.curveArbiAlUsdUsdcContractAddress).call(),
       this.usdcArbitrumContract.methods.balanceOf(addresses.curveArbiAlUsdUsdcContractAddress).call(),
       this.alEthArbitrumContract.methods.balanceOf(addresses.curveArbiAlEthWethContractAddress).call(),
-      this.wethArbitrumContract.methods.balanceOf(addresses.curveArbiAlEthWethContractAddress).call()
+      this.wethArbitrumContract.methods.balanceOf(addresses.curveArbiAlEthWethContractAddress).call(),
+      this.alUsdContract.methods.balanceOf(addresses.alUsdUsdcCurveContractAddress).call(),
+      this.usdcContract.methods.balanceOf(addresses.alUsdUsdcCurveContractAddress).call()
     ])
-    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveDola, sdolaInCurveDola, veloStats1, veloStats2, alUsdInCurveFrxUsd, frxUsdInCurveFrxUsd, alUsdInArbiUsdc, usdcInArbiUsdc, alEthInArbiWeth, wethInArbiWeth]) => {
+    .then(([alUsdIn3Crv, crv3In3Crv, alEthInSaddle, wethInSaddle, sEthInSaddle, alEthInFrxEthCrv, frxEthInFrxEthCrv, alEthInAlEthWethCrv, wethInAlEthWethCrv, alUsdInCurveDola, sdolaInCurveDola, veloStats1, veloStats2, alUsdInCurveFrxUsd, frxUsdInCurveFrxUsd, alUsdInArbiUsdc, usdcInArbiUsdc, alEthInArbiWeth, wethInArbiWeth, alUsdInUsdcCurve, usdcInUsdcCurve]) => {
       lps.alUsdIn3Crv = alUsdIn3Crv/Math.pow(10, 18);
       lps.crv3In3Crv = crv3In3Crv/Math.pow(10, 18);
       lps.alEthInSaddle = alEthInSaddle/Math.pow(10, 18);
@@ -230,6 +233,8 @@ export default class App extends React.Component {
       lps.usdcInArbiUsdc = usdcInArbiUsdc/Math.pow(10, 6);
       lps.alEthInArbiWeth = alEthInArbiWeth/Math.pow(10, 18);
       lps.wethInArbiWeth = wethInArbiWeth/Math.pow(10, 18);
+      lps.alUsdInUsdcCurve = alUsdInUsdcCurve/Math.pow(10, 18);
+      lps.usdcInUsdcCurve = usdcInUsdcCurve/Math.pow(10, 6);
       let veloStats = veloStats1.concat(veloStats2)
       for(let i=0;i<veloStats.length;i++){
         if(veloStats[i][1] === alUsdUsdc) {

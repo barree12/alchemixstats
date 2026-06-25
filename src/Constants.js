@@ -75,7 +75,8 @@ export const addresses = {
     arbitrumAlUsdTransmuter: '0x693b7594ae0633d9c5574d0da46a040f92f5b281',
     optimismAlEthTransmuter: '0x2584e8b0616b3e750492c9629a3b27679c410cb9',
     optimismAlUsdTransmuter: '0x693b7594ae0633d9c5574d0da46a040f92f5b281',
-    frxUsdContractAddress: '0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29'
+    frxUsdContractAddress: '0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29',
+    alUsdUsdcCurveContractAddress: '0x1edd809bc939dc80630cd9f7aea2247a83440fe5',
 
 }
 
