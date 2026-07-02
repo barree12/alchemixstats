@@ -77,6 +77,10 @@ export const addresses = {
     optimismAlUsdTransmuter: '0x693b7594ae0633d9c5574d0da46a040f92f5b281',
     frxUsdContractAddress: '0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29',
     alUsdUsdcCurveContractAddress: '0x1edd809bc939dc80630cd9f7aea2247a83440fe5',
+    mainnetUsdcMyt: '0x9b44efca3e2a707b63dc00ce79d646e5e5d24ba5',
+    mainnetEthMyt: '0x29bcfed246ce37319d94eba107db90c453d4c43d',
+    optimismUsdcMyt: '0xaf510a560744880410f0f65e3341a020fbc2ca41',
+    optimismEthMyt: '0x91b8657aea26caa8a0e9d6dd4e24727ccf32f822'
 
 }
 
