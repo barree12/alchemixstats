@@ -31,8 +31,8 @@ import {
 //FOR TESTING - const web3 = new Web3('https://eth-mainnet.g.alchemy.com/v2/m4nhopYhysiwNnoLZ7vnyxxwjHHtYcKP');
 const web3 = new Web3('https://eth-mainnet.public.blastapi.io');
 //const web3ftm = new Web3('https://rpcapi-tracing.fantom.network');
-//const web3optimism = new Web3('https://mainnet.optimism.io');
-const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
+const web3optimism = new Web3('https://mainnet.optimism.io');
+//const web3optimism = new Web3('https://opt-mainnet.g.alchemy.com/v2/p9poBr_K0kBvzVt3V6Lo1wasL9r32FpP');
 const web3arbitrum = new Web3('https://arb1.arbitrum.io/rpc')
 //const web3metis = new Web3('https://metis-mainnet.public.blastapi.io')
 
