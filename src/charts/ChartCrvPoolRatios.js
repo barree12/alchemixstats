@@ -1,7 +1,17 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
+import { saveAs } from 'file-saver'; 
 
 export default class ChartCrvPoolRatios extends React.Component {
+
+  saveCanvas() {
+       //save to png
+       const canvasSave = document.getElementById('poolRatios');
+       canvasSave.toBlob(function (blob) {
+           saveAs(blob, "testing.png")
+       })
+   }
+
 
   render(){  
   let alEthFrxEthRatio = this.props.debankData.alEthFrxEthInElixir / this.props.alEthFrxEthTotalValue;
@@ -17,8 +27,10 @@ export default class ChartCrvPoolRatios extends React.Component {
 
   return (
       <div className="chart-container-3">
+        <a onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
         <Chart
-          type='bar' 
+          type='bar'
+          id='poolRatios'
           data={{
             labels: ["alUSD-frxUSD", "alETH-frxETH", "alUSD-sDOLA", "Velo alUSD-USDC", "Velo alETH-WETH",  "Velo alETH-pxETH", "Arbi alUSD-USDC", "Arbi alETH-WETH"],
             datasets: [{
