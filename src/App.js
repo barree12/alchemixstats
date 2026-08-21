@@ -69,6 +69,7 @@ export default class App extends React.Component {
       transmuterStatsLoading: true,
       alUsdLoading: true,
       debankDataLoading: true,
+      isDarkMode: true,
       activeTab: 'treasury'
     };
     this.selectTab = this.selectTab.bind(this);
@@ -119,6 +120,11 @@ export default class App extends React.Component {
 
   selectTab(active){
     this.setState({ activeTab: active });
+  }
+
+  toggleLightMode(){
+    this.setState({ isDarkMode: !this.state.isDarkMode });
+    console.log("toggled light mode")
   }
 
   aggregateWeb3Calls(){
@@ -885,12 +891,15 @@ export default class App extends React.Component {
     Legend,
     Filler
   )
-
+  console.log(this.state.isDarkMode)
   return (
-    <div className="App">
+    <div className={`${this.state.isDarkMode ? 'App-dark-mode' : 'App'}`}>
       <div className="header-container">
         <div className="header-style">
           <img className="alchemix-logo" src={ require('./logos/alchemix-stats-logo.svg').default } alt="ALCX logo" />
+        </div>
+        <div onClick={() => this.toggleLightMode()}>
+          {this.state.isDarkMode ? <img className="image-menu" src={ require('./logos/dark_mode.png').default } alt="dark mode button" /> : <img className="image-menu" src={ require('./logos/light_mode.png').default } alt="light mode button" />}
         </div>
         <div className="header-switcher">
           <Link to="/" style={{ textDecoration: 'none' }}>
@@ -908,13 +917,13 @@ export default class App extends React.Component {
         alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} v2Caps={this.state.v2Caps}
         tokenPricesLoading={this.state.tokenPricesLoading} debankData={this.state.debankData} tokensPerShare={this.state.tokensPerShare}
         alUsdPegLoading={this.state.alUsdPegLoading} alEthPegLoading={this.state.alEthPegLoading}
-        lpsLoading={this.state.lpsLoading}
+        lpsLoading={this.state.lpsLoading} isDarkMode={this.state.isDarkMode}
         v2CurrentLoading={this.state.v2CurrentLoading} debankDataLoading={this.state.debankDataLoading}
       />
       <div className="button-group-large-screen">
       <div className="general-switcher-container">
     
-            <div className="menu-switcher">
+            <div className={`${this.state.isDarkMode ? 'menu-switcher-dark-mode' : 'menu-switcher'}`}>
                 {this.state.activeTab === "treasury" ? 
                 <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="alethcurve logo" className="image-menu" />
@@ -976,7 +985,7 @@ export default class App extends React.Component {
       <div className="button-group-small-screen">
           <div className="general-switcher-container">
     
-            <div className="menu-switcher">
+            <div className={`${this.state.isDarkMode ? 'menu-switcher-dark-mode' : 'menu-switcher'}`}>
                 {this.state.activeTab === "treasury" ? 
                 <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("treasury")}}>
                     <img src={ require('./logos/treasury_thin.svg').default } alt="treasury logo" className="image-menu" />
@@ -1007,7 +1016,7 @@ export default class App extends React.Component {
               </div>
             </div>
           <div className="general-switcher-container">
-              <div className="menu-switcher">
+              <div className={`${this.state.isDarkMode ? 'menu-switcher-dark-mode' : 'menu-switcher'}`}>
                 {this.state.activeTab === "transmuters" ? 
                 <div className="general-switcher-buttons-active" onClick={() => {this.selectTab("transmuters")}}>
                     <img src={ require('./logos/vaults.svg').default } alt="transmuters logo" className="image-menu" />
@@ -1041,18 +1050,19 @@ export default class App extends React.Component {
       <br/>
       <br/>
       {this.state.activeTab !== "emissions" ? "" :
-      <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} />
+      <Emissions alcxData={this.state.alcxData} alcxDataLoading={this.state.alcxDataLoading} alcxTotalMarketcap={alcxTotalMarketcap} isDarkMode={this.state.isDarkMode} />
       }
       {this.state.activeTab !== "deposits" ? "" : ((this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.alchemistStatsLoading || this.state.transmuterStatsLoading) ? "Loading..." :
         <Deposits
           v3MainnetAlchemistEthTvlUsd={v3MainnetAlchemistEthTvlUsd} v3OptimismAlchemistEthTvlUsd={v3OptimismAlchemistEthTvlUsd}
           v3ArbitrumAlchemistEthTvlUsd={v3ArbitrumAlchemistEthTvlUsd} tokenPrices={this.state.tokenPrices}
           alchemistStats={this.state.alchemistStats} alchemistStatsLoading={this.state.alchemistStatsLoading}
+          isDarkMode={this.state.isDarkMode}
         />)}
 
       {this.state.activeTab !== "transmuters" ? "" :
       <Transmuters
-        transmuterStats={this.state.transmuterStats} transmuterStatsLoading={this.state.transmuterStatsLoading}
+        transmuterStats={this.state.transmuterStats} transmuterStatsLoading={this.state.transmuterStatsLoading} isDarkMode={this.state.isDarkMode}
         />}
 
       {this.state.activeTab !== "treasury" ? "" :
@@ -1062,16 +1072,17 @@ export default class App extends React.Component {
         alAssetCrvSupply={this.state.alAssetCrvSupply}
         alEthFrxEthTotalValue={alEthFrxEthTotalValue}
         alEthWethArbiTotalValue={alEthWethArbiTotalValue}
+        isDarkMode={this.state.isDarkMode}
         />}
       
       {this.state.activeTab !== "revenues" ? "" : 
-      <Revenues ethPrice={this.state.tokenPrices.eth} />
+      <Revenues ethPrice={this.state.tokenPrices.eth} isDarkMode={this.state.isDarkMode}/>
       }
 
       {this.state.activeTab !== "alassets" ? "" : ((this.state.alUsdPegLoading || this.state.alEthPegLoading || this.state.lpsLoading || this.state.tokenPricesLoading || this.state.v2CurrentLoading || this.state.debankDataLoading) ? "Loading..." :
       <AlAssets 
           alUsdPeg={this.state.alUsdPeg} alEthPeg={this.state.alEthPeg} lps={this.state.lps} ethPrice={this.state.tokenPrices.eth}
-          alAssetSupply={this.state.alAssetSupply} debankData={this.state.debankData}
+          alAssetSupply={this.state.alAssetSupply} debankData={this.state.debankData} isDarkMode={this.state.isDarkMode}
       />)
       }
 

@@ -177,36 +177,31 @@ export default class AlAssets extends React.Component {
                     <h2>alUSD</h2>
                 </div>
                 <AlUsdSummary lps={this.props.lps} surplus={this.state.surplus} />
-                <div className="section-wrapper">
-                    {/*<div className="chart-title">
+                {/*<div className="section-wrapper">
+                    <div className="chart-title">
                         <h3>alUSD Total Supply</h3>
                         <ChartAlusdSupply marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
-                    </div>*/}
+                    </div>
                     <div className="chart-title">
                         <h3>alUSD Price</h3>
                         <div className="button-container">
-                            {/*<ButtonGroup size="small">
-                            <Button variant={this.state.alUsdPegActive.dai ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("dai")}}>DAI</Button>
-                            <Button variant={this.state.alUsdPegActive.usdc ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("usdc")}}>USDC</Button>
-                            <Button variant={this.state.alUsdPegActive.usdt ? "contained" : "outlined"} color="inherit" onClick={() => {this.alUsdPegClick("usdt")}}>USDT</Button>
-                            </ButtonGroup>*/}
                             <div className="toggle-text">
                             $<Switch onChange={this.toggleAlUsdPeg} checked={this.state.alUsdPegToggle} />%
                             </div>
                         </div>
                         <ChartAlusdPrice data={this.props.alUsdPeg} toggle={this.state.alUsdPegToggle} />
                     </div>
-                </div>
+                </div>*/}
                 <div className="section-header">
                     <img src={ require('./logos/aleth_blue.svg').default } alt="alETH logo" className="image3" />
                     <h2>alETH</h2>
                 </div>
                 <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} surplus={this.state.surplus} />
-                <div className="section-wrapper">
-                    {/*<div className="chart-title">
+                {/*<div className="section-wrapper">
+                    <div className="chart-title">
                         <h3>alETH Total Supply</h3>
                         <ChartAlethSupply />
-        </div>*/}
+        </div>
                     <div className="chart-title">
                         <h3>alETH Price</h3>
                         <div className="toggle-text">
@@ -214,7 +209,7 @@ export default class AlAssets extends React.Component {
                         </div>
                         <ChartAlEthPrice alEthPeg={this.props.alEthPeg} toggle={this.state.alEthPegToggle} />
                     </div>
-                </div>
+                </div>*/}
             </>
         );
     }
