@@ -27,7 +27,7 @@ export default class ChartCrvPoolRatios extends React.Component {
 
   return (
       <div className="chart-container-3">
-        <a onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
+        <div onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></div>
         <Chart
           type='bar'
           id='poolRatios'

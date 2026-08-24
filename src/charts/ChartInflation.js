@@ -15,7 +15,7 @@ function ChartInflation(){
 
     return (
       <div className="chart-container-2">
-          <a onClick={() => {saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
+          <div onClick={() => {saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></div>
         <Chart 
           type='line'
           id='inflation'
