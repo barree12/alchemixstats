@@ -23,7 +23,7 @@ export default class ChartArbiTransmuterUsd extends React.Component {
           data={{
             labels: this.props.transmuterStats.date,
             datasets: [{
-              label: 'MYT Deposits',
+              label: 'Transmuter Deposits',
               data: this.props.transmuterStats.usdArbitrum,
               backgroundColor: 'rgba(115,136,255,1)',
               borderColor: 'rgba(240,238,129,1)',

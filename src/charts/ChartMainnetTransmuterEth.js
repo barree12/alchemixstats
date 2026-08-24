@@ -23,7 +23,7 @@ export default class ChartMainnetTransmuterEth extends React.Component {
           data={{
             labels: this.props.transmuterStats.date,
             datasets: [{
-              label: 'MYT Deposits',
+              label: 'Transmuter Deposits',
               data: this.props.transmuterStats.ethMainnet,
               backgroundColor: 'rgba(35,148,54,0.8)',
               borderColor: 'rgba(240,238,129,1)',

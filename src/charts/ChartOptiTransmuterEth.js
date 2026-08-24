@@ -23,7 +23,7 @@ export default class ChartOptiTransmuterEth extends React.Component {
           data={{
             labels: this.props.transmuterStats.date,
             datasets: [{
-              label: 'MYT Deposits',
+              label: 'Transmuter Deposits',
               data: this.props.transmuterStats.ethOptimism,
               backgroundColor: 'rgba(255, 92, 51,0.9)',
               borderColor: 'rgba(255, 92, 51,1)',
