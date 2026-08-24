@@ -8,7 +8,7 @@ export default class ChartCrvPoolRatios extends React.Component {
        //save to png
        const canvasSave = document.getElementById('poolRatios');
        canvasSave.toBlob(function (blob) {
-           saveAs(blob, "testing.png")
+           saveAs(blob, "pool_ratios.png")
        })
    }
 

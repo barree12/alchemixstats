@@ -1,14 +1,25 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
+import { saveAs } from 'file-saver'; 
 
 export default class ChartOptiTransmuterEth extends React.Component {
+
+  saveCanvas() {
+      //save to png
+      const canvasSave = document.getElementById('optiTransmuterEth');
+      canvasSave.toBlob(function (blob) {
+        saveAs(blob, "opti_transmuter_eth.png")
+      })
+  }
 
   render(){  
     
   return (
       <div className="chart-container-3">
+        <a onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
         <Chart
           type='line' 
+          id='optiTransmuterEth'
           data={{
             labels: this.props.transmuterStats.date,
             datasets: [{

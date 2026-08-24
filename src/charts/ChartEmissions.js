@@ -1,14 +1,24 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
 import { calculateEmissionScheduleChart, createDateArray } from '../Functions';
+import { saveAs } from 'file-saver'; 
 
+function saveCanvas() {
+       //save to png
+       const canvasSave = document.getElementById('emissions');
+       canvasSave.toBlob(function (blob) {
+           saveAs(blob, "emissions.png")
+       })
+   }
 
 function ChartEmissions(){
   
     return (
       <div className="chart-container-2">
+        <a onClick={() => {saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
         <Chart
-          type='line' 
+          type='line'
+          id='emissions'
           data={{
             labels: createDateArray(),
             datasets: [{

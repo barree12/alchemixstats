@@ -1,14 +1,25 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
+import { saveAs } from 'file-saver'; 
 
 export default class ChartMainnetAlchemistEthTVL extends React.Component {
+
+  saveCanvas() {
+       //save to png
+       const canvasSave = document.getElementById('mainnetEthAlchemistTvl');
+       canvasSave.toBlob(function (blob) {
+           saveAs(blob, "mainnet_alchemist_eth_tvl.png")
+       })
+   }
 
   render(){  
     
   return (
       <div className="chart-container-3">
+        <a onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
         <Chart
-          type='line' 
+          type='line'
+          id='mainnetEthAlchemistTvl'
           data={{
             labels: this.props.alchemistStats.date,
             datasets: [{

@@ -1,14 +1,25 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
+import { saveAs } from 'file-saver'; 
 
 export default class ChartMainnetTransmuterUsd extends React.Component {
+  
+  saveCanvas() {
+       //save to png
+       const canvasSave = document.getElementById('mainnetUsdTransmuter');
+       canvasSave.toBlob(function (blob) {
+           saveAs(blob, "mainnet_transmuter_usd.png")
+       })
+   }
 
   render(){  
 
   return (
       <div className="chart-container-3">
+        <a onClick={() => {this.saveCanvas()}}><img src={ require('../logos/download_button.png').default } alt="download logo" className="image-menu" /></a>
         <Chart
-          type='line' 
+          type='line'
+          id='mainnetUsdTransmuter'
           data={{
             labels: this.props.transmuterStats.date,
             datasets: [{
