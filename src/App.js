@@ -314,7 +314,8 @@ export default class App extends React.Component {
     this.setState({ alUsdPeg: alUsdPeg, alUsdPegLoading: false });
   }
 
-  calculateAlchemistStats(result){
+  calculateAlchemistStats(params){
+    let result = params.skip3000.items.reverse().concat(params.skip2000.items.reverse()).concat(params.skip1000.items.reverse()).concat(params.skip0.items.reverse());
     const startingDate = new Date(Number(result[0].timestamp) * 1000);
     let currentDate = startingDate.toISOString().split('T')[0];
     let alchemistStats = [];
@@ -365,7 +366,6 @@ export default class App extends React.Component {
   }
 
   calculateTransmuterStats(result){
-    console.log(result)
     const startingDate = new Date(Number(result[0].timestamp) * 1000);
     let currentDate = startingDate.toISOString().split('T')[0];
     let transmuterStats = [];
@@ -752,42 +752,10 @@ export default class App extends React.Component {
     
   }
 
-  /*getPegQuery(alAsset, collateralToken, tradeSize, skip){
-    return `{
-      poolHistoricalRates(
-        first: 1000
-        skip: ` + skip + `
-        where: {inputToken: "` + alAsset + `", outputToken: "` + collateralToken + `", inputAmount: "` + tradeSize.toLocaleString('fullwide', {useGrouping:false}) + `"}
-        orderBy: timestamp
-        orderDirection: desc
-      ) {
-        outputAmount
-        timestamp
-      }
-    }`
-  }
-
-  getPegQuery2(alAsset, collateralToken, tradeSize, skip){
-    return `{
-      poolHistoricalRates(
-        first: 1000
-        orderBy: timestamp
-        orderDirection: desc
-      ) {
-        inputAmount
-        outputAmount
-        timestamp
-        inputToken
-        outputToken
-      }
-    }`
-  }*/
-
-  getTransmuterStatsQuery(skip){
+  getTransmuterStatsQuery(){
     return `{
       transmuterStats (
             limit: 1000, 
-            offset: ` + skip + `,
             orderBy: "timestamp", 
             orderDirection: "desc"
       ) {
@@ -801,11 +769,75 @@ export default class App extends React.Component {
     }`
   }
 
-  getAlchemistStatsQuery(skip){
+  /*getAlchemistStatsQuery(skip){
     return `{
       alchemistStats (
         limit: 1000,
         offset: ` + skip + `,
+        orderBy: "timestamp", 
+        orderDirection: "desc"
+      ) {
+        items {
+          totalDebt
+          timestamp
+          alchemist
+          myttvl
+          chain
+        }
+      }
+    }`
+  }*/
+
+  getAlchemistStatsQuery(){
+    return `{
+      skip3000: alchemistStats (
+        limit: 1000,
+        offset: 3000,
+        orderBy: "timestamp", 
+        orderDirection: "desc"
+      ) {
+        items {
+          totalDebt
+          timestamp
+          alchemist
+          myttvl
+          chain
+        }
+      }
+
+      skip2000: alchemistStats (
+        limit: 1000,
+        offset: 2000,
+        orderBy: "timestamp", 
+        orderDirection: "desc"
+      ) {
+        items {
+          totalDebt
+          timestamp
+          alchemist
+          myttvl
+          chain
+        }
+      }
+
+      skip1000: alchemistStats (
+        limit: 1000,
+        offset: 1000,
+        orderBy: "timestamp", 
+        orderDirection: "desc"
+      ) {
+        items {
+          totalDebt
+          timestamp
+          alchemist
+          myttvl
+          chain
+        }
+      }
+
+      skip0: alchemistStats (
+        limit: 1000,
+        offset: 0,
         orderBy: "timestamp", 
         orderDirection: "desc"
       ) {
@@ -831,14 +863,8 @@ export default class App extends React.Component {
   getAlUsdPeg(){
     //const usdcPegQuery = this.getPegQuery(addresses.alUsdAddress, addresses.usdcAddress, Math.pow(10, 21), 0);
     //const alEthPegQuery = this.getPegQuery(addresses.frxEthAddress, addresses.frxEthAddress, Math.pow(10,18)*2, 0);
-    const alchemistStatsQuery = this.getAlchemistStatsQuery(0);
-    const alchemistStatsSkip1000Query = this.getAlchemistStatsQuery(1000);
-    const alchemistStatsSkip2000Query = this.getAlchemistStatsQuery(2000);
-    const alchemistStatsSkip3000Query = this.getAlchemistStatsQuery(3000);
-    const transmuterStatsQuery = this.getTransmuterStatsQuery(0);
-    const transmuterStatsSkip1000Query = this.getTransmuterStatsQuery(1000);
-    const transmuterStatsSkip2000Query = this.getTransmuterStatsQuery(2000);
-    const transmuterStatsSkip3000Query = this.getTransmuterStatsQuery(3000);
+    const alchemistStatsQuery = this.getAlchemistStatsQuery();
+    const transmuterStatsQuery = this.getTransmuterStatsQuery();
 
     let authorizationHeader = {
       method: 'GET',
@@ -849,32 +875,15 @@ export default class App extends React.Component {
     }
 
     Promise.all([
-      //fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(usdcPegQuery)).then(res => res.json()),
-      //fetch("https://gateway-arbitrum.network.thegraph.com/api/c1a654d7642ea0e30d259cd58e8b41d5/subgraphs/id/FQHEgGziETEqw7oV32wLvFGCPthqj5YDMm7jhVtLn5PJ", this.getSubgraphRequestOptions(alEthPegQuery)).then(res => res.json()),
       fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsSkip1000Query)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsSkip2000Query)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsSkip3000Query)).then(res => res.json()),
       fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsQuery)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsSkip1000Query)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsSkip2000Query)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsSkip3000Query)).then(res => res.json()),
     ])
-      .then(([alchemistStats, alchemistStatsSkip1000, alchemistStatsSkip2000, alchemistStatsSkip3000, transmuterStats, transmuterStatsSkip1000, transmuterStatsSkip2000, transmuterStatsSkip3000]) => {
-        //this.calculateAlUsdPeg(usdcPeg.data.poolHistoricalRates.reverse())
-        //this.calculateAlEthPeg(alEthPeg.data.poolHistoricalRates.reverse())
+      .then(([alchemistStats, transmuterStats]) => {
+
         this.calculateAlEthPeg()
         this.calculateAlUsdPeg()
-        this.calculateAlchemistStats(alchemistStatsSkip3000.data.alchemistStats.items.reverse().concat(alchemistStatsSkip2000.data.alchemistStats.items.reverse()).concat(alchemistStatsSkip1000.data.alchemistStats.items.reverse()).concat(alchemistStats.data.alchemistStats.items.reverse()))
-        this.calculateTransmuterStats(transmuterStatsSkip3000.data.transmuterStats.items.reverse().concat(transmuterStatsSkip2000.data.transmuterStats.items.reverse()).concat(transmuterStatsSkip1000.data.transmuterStats.items.reverse()).concat(transmuterStats.data.transmuterStats.items.reverse()))
-        //console.log(alchemistStats)
-        /*let url = "https://ipfs.imimim.info/ipfs/" + ipfsOptiFile.rows[0].ipfs_pin_hash;
-        fetch(url).then(res => res.json()).then(
-          (l2AlchemistTvl) => { 
-            this.calculateOptiTvl(l2AlchemistTvl)
-            this.calculateArbiTvl(l2AlchemistTvl)
-          },
-          (error) => { console.log(error) })*/
+        this.calculateAlchemistStats(alchemistStats.data)
+        this.calculateTransmuterStats(transmuterStats.data.transmuterStats.items.reverse())
       })
       .catch(function(err) {
         console.log(err.message);
