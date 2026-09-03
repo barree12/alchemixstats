@@ -875,8 +875,8 @@ export default class App extends React.Component {
     }
 
     Promise.all([
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json()),
-      fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(transmuterStatsQuery)).then(res => res.json()),
+      fetch("https://ponder.alchemix.fi", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json()),
+      fetch("https://ponder.alchemix.fi", this.getSubgraphRequestOptions(transmuterStatsQuery)).then(res => res.json()),
     ])
       .then(([alchemistStats, transmuterStats]) => {
 
