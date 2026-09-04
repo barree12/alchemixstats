@@ -42,7 +42,7 @@ export default class Revenues extends React.Component {
           //let monthDifference = Math.floor((currentDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 31))
           //console.log(monthDifference)
           //if(month === currentDate.getMonth() && year === currentDate.getFullYear()){
-            if(revenues[i].category === 'Harvest revenue') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].usdValue) 
+            if(revenues[i].category === 'MYT performance fees') revenueArray.harvest[monthDifference+1] += parseInt(revenues[i].usdValue) 
             else if(revenues[i].category === 'Elixir Revenue') revenueArray.elixir[monthDifference+1] += parseInt(revenues[i].usdValue)
             else { revenueArray.treasury[monthDifference+1] += parseInt(revenues[i].usdValue)
             //if(parseInt(revenues[i].usdValue) > 1000000) console.log(i)
@@ -94,7 +94,7 @@ export default class Revenues extends React.Component {
 
       Promise.all([
         fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=den_revenue.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
-        fetch("https://ponder--ponder--qsxl6ml4dlkk.code.run", this.getSubgraphRequestOptions(subgraphQuery)).then(res => res.json()),
+        fetch("https://ponder.alchemix.fi", this.getSubgraphRequestOptions(subgraphQuery)).then(res => res.json()),
       ])
       .then(([result, subgraphResult]) => {
         console.log(subgraphResult)

@@ -27,7 +27,7 @@ export default class ChartRevenues extends React.Component {
           data={{
             labels: monthArray,
             datasets: [{
-              label: 'Harvests',
+              label: 'MYT fees',
               data: inverseHarvests,
               backgroundColor: 'rgba(161,175,255,0.8)',
               borderColor: 'rgba(240,238,129,1)',

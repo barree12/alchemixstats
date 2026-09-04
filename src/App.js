@@ -866,13 +866,13 @@ export default class App extends React.Component {
     const alchemistStatsQuery = this.getAlchemistStatsQuery();
     const transmuterStatsQuery = this.getTransmuterStatsQuery();
 
-    let authorizationHeader = {
+    /*let authorizationHeader = {
       method: 'GET',
       headers: { 
         'pinata_api_key': '7237805a818b4433e8a1',
         'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
       }
-    }
+    }*/
 
     Promise.all([
       fetch("https://ponder.alchemix.fi", this.getSubgraphRequestOptions(alchemistStatsQuery)).then(res => res.json()),
