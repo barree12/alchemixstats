@@ -8,8 +8,8 @@ import ChartArbiAlchemistEthTVL from './charts/ChartArbiAlchemistEthTVL';
 //import { Switch } from '@mui/material';
 import OptiSummary from './OptiSummary';
 import ArbiSummary from './ArbiSummary';
-import LoadingComponent from './LoadingComponent';
-import { formatDate, datesEqual, wait  } from './Functions';
+//import LoadingComponent from './LoadingComponent';
+//import { formatDate, datesEqual, wait  } from './Functions';
 
 export default class Deposits extends React.Component {
     

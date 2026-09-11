@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { styleNumber } from './Functions';
+//import { styleNumber } from './Functions';
 
 export default class AlEthSummary extends React.Component {
 

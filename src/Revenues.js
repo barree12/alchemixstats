@@ -1,7 +1,7 @@
 import React from 'react';
 import LoadingComponent from './LoadingComponent';
 import ChartRevenues from './charts/ChartRevenues';
-import { addresses, abis } from './Constants';
+import { addresses } from './Constants';
 
 export default class Revenues extends React.Component {
     
@@ -20,7 +20,7 @@ export default class Revenues extends React.Component {
     }
 
     getDetailedRevenue(revenues, subgraphResult){
-      console.log(revenues)
+
       let revenueArray = {
         treasury: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         elixir: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -97,7 +97,7 @@ export default class Revenues extends React.Component {
         fetch("https://ponder.alchemix.fi", this.getSubgraphRequestOptions(subgraphQuery)).then(res => res.json()),
       ])
       .then(([result, subgraphResult]) => {
-        console.log(subgraphResult)
+
         let url = "https://ipfs.imimim.info/ipfs/" + result.rows[0].ipfs_pin_hash;
               fetch(url).then(res => res.json()).then(
                 (result2) => { 
@@ -125,10 +125,10 @@ export default class Revenues extends React.Component {
     }
 
     render(){
-        let harvestRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.harvest[1] + this.state.revenue.harvest[2] + this.state.revenue.harvest[3])*4/1000000;
-        let treasuryRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.treasury[1] + this.state.revenue.treasury[2] + this.state.revenue.treasury[3])*4/1000000;
-        let elixirRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.elixir[1] + this.state.revenue.elixir[2] + this.state.revenue.elixir[3])*4/1000000;
-        let totalRevenue = harvestRevenue + treasuryRevenue + elixirRevenue;
+        //let harvestRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.harvest[1] + this.state.revenue.harvest[2] + this.state.revenue.harvest[3])*4/1000000;
+        //let treasuryRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.treasury[1] + this.state.revenue.treasury[2] + this.state.revenue.treasury[3])*4/1000000;
+        //let elixirRevenue = this.state.revenueLoading ? 0 : (this.state.revenue.elixir[1] + this.state.revenue.elixir[2] + this.state.revenue.elixir[3])*4/1000000;
+        //let totalRevenue = harvestRevenue + treasuryRevenue + elixirRevenue;
         return (
             <>
                 <div className="section-header">

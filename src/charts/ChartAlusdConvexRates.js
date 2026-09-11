@@ -1,41 +1,37 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
-import 'chartjs-adapter-date-fns';
 
-export default class ChartAlEthPrice extends React.Component {
+export default class ChartAlusdConvexRates extends React.Component {
 
   render(){  
-  let dates = [...this.props.alEthPeg.date];
-  let values = [...this.props.alEthPeg.peg];
-  let valuesPerc = [...this.props.alEthPeg.pegPerc];
-  const helperPointer = this;
+
   return (
       <div className="chart-container-3">
-        <Chart 
-          type='line'
+        <Chart
+          type='line' 
           data={{
-            labels: dates,
+            labels: this.props.marketcapDates,
             datasets: [{
-              label: 'alETH price',
-              data: this.props.toggle ? valuesPerc : values,
-              backgroundColor: 'rgba(240,238,129,0.8)',
+              label: '',
+              data: this.props.marketcaps,
+              backgroundColor: 'rgba(49,204,75,0.5)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',
-              fill: false,
+              fill: true,
             }]
           }}
             options={{
               hover: {
-                mode: 'index',
+                mode: 'nearest',
                 intersect: false,
               },
               plugins: {
                 tooltip: {
                   enabled: true,
                   intersect: false,
-                  mode: 'index',
+                  mode: 'nearest',
                   cornerRadius: 1,
                   caretPadding: 5,
                   caretSize: 10,
@@ -44,18 +40,12 @@ export default class ChartAlEthPrice extends React.Component {
                   callbacks: {
                     label: function(context) {
                         let label = context.dataset.label || '';
-
-                        if (label) {
-                            label += ': ';
-                        }
                         if (context.parsed.y !== null) {
-                            label += Math.round(context.parsed.y*10000)/10000;
-                            if(helperPointer.props.toggle) label += '%';
-                            else label += ' ETH';
+                          label = 'alUSD supply: ' + Math.round(context.parsed.y*100)/100 + 'M';
                         }
                         return label;
                     }
-                }
+                  }
                 },
                 legend: {
                   display: false,
@@ -67,16 +57,11 @@ export default class ChartAlEthPrice extends React.Component {
                   }
                 },
               },
-              
               responsive: true,
               maintainAspectRatio: false,
               
               scales: {
                 xAxes: {
-                    type: 'time',
-                    time: {
-                      tooltipFormat: "yyyy-MM-dd",
-                    },
                     grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
@@ -84,13 +69,13 @@ export default class ChartAlEthPrice extends React.Component {
                     ticks: {
                       maxTicksLimit: 10,
                     },
-                },
+                  },
                 yAxes: {
                     grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    beginAtZero: false,
+                    beginAtZero: true,
                   }
               }
             }}

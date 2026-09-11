@@ -1,10 +1,10 @@
 import React from 'react';
-import ChartAlusdPrice from './charts/ChartAlusdPrice';
-import ChartAlEthPrice from './charts/ChartAlEthPrice';
+import ChartAlusdConvexRates from './charts/ChartAlusdConvexRates';
+import ChartAlEthConvexRates from './charts/ChartAlEthConvexRates';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
-import { Switch } from '@mui/material';
-import LoadingComponent from './LoadingComponent';
+//import { Switch } from '@mui/material';
+//import LoadingComponent from './LoadingComponent';
 import { abis, addresses } from './Constants';
 import Web3 from 'web3';
 
@@ -45,7 +45,7 @@ export default class AlAssets extends React.Component {
     }
 
     componentDidMount() {
-        //this.getBacking();
+        this.getConvexRates();
       }
 
     toggleAlUsdPeg(){
@@ -56,7 +56,7 @@ export default class AlAssets extends React.Component {
         this.setState({ alEthPegToggle: !this.state.alEthPegToggle });
     }
 
-    calculateBacking(mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer, daiInOptimismTransmuterBuffer, usdcInOptimismTransmuterBuffer, usdtInOptimismTransmuterBuffer, wethInOptimismTransmuterBuffer, usdcInArbitrumTransmuterBuffer, wethInArbitrumTransmuterBuffer){
+    /*calculateBacking(mainnetDebt, v1Debt, optimismDebt, arbitrumDebt, daiInTransmuterBuffer, usdcInTransmuterBuffer, usdtInTransmuterBuffer, fraxInTransmuterBuffer, wethInTransmuterBuffer, daiInOptimismTransmuterBuffer, usdcInOptimismTransmuterBuffer, usdtInOptimismTransmuterBuffer, wethInOptimismTransmuterBuffer, usdcInArbitrumTransmuterBuffer, wethInArbitrumTransmuterBuffer){
         let alUsdDebt = 0;
         let alEthDebt = 0;
         let alUsdOptimismDebt = 0;
@@ -167,6 +167,38 @@ export default class AlAssets extends React.Component {
             console.log(err.message);
         });
 
+    }*/
+
+    calculateConvexAprRates(result){
+        console.log(result)
+    }
+
+    getConvexRates() {
+        let authorizationHeader = {
+            method: 'GET',
+            headers: { 
+              'pinata_api_key': '7237805a818b4433e8a1',
+              'pinata_secret_api_key': '1b5bf925a71ba50d2649a1861e00210ac142a74a20562f743f160d6d820cad23'
+            }
+          }
+
+        Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=convex_apr_rates_history.csv&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+        ])
+        .then(([convexAprRates]) => {
+            let convexAprRatesUrl = "https://ipfs.imimim.info/ipfs/" + convexAprRates.rows[0].ipfs_pin_hash;
+            console.log(convexAprRates)
+            Promise.all([fetch(convexAprRatesUrl).then(res => res.json())])
+                .then(([convexAprRatesFinal]) => {
+                    this.calculateConvexAprRates(convexAprRatesFinal)
+            })
+            .catch(function(err) {
+                console.log(err.message);
+            });
+
+        })
+        .catch(function(err) {
+            console.log(err.message);
+        });
     }
 
     render(){
@@ -177,21 +209,12 @@ export default class AlAssets extends React.Component {
                     <h2>alUSD</h2>
                 </div>
                 <AlUsdSummary lps={this.props.lps} surplus={this.state.surplus} />
-                {/*<div className="section-wrapper">
+                <div className="section-wrapper">
                     <div className="chart-title">
-                        <h3>alUSD Total Supply</h3>
-                        <ChartAlusdSupply marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
+                        <h3>alUSD Convex APRs</h3>
+                        <ChartAlusdConvexRates marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
                     </div>
-                    <div className="chart-title">
-                        <h3>alUSD Price</h3>
-                        <div className="button-container">
-                            <div className="toggle-text">
-                            $<Switch onChange={this.toggleAlUsdPeg} checked={this.state.alUsdPegToggle} />%
-                            </div>
-                        </div>
-                        <ChartAlusdPrice data={this.props.alUsdPeg} toggle={this.state.alUsdPegToggle} />
-                    </div>
-                </div>*/}
+                </div>
                 <div className="section-header">
                     <img src={ require('./logos/aleth_blue.svg').default } alt="alETH logo" className="image3" />
                     <h2>alETH</h2>

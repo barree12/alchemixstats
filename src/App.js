@@ -10,7 +10,7 @@ import Revenues from './Revenues';
 import Treasury from './Treasury';
 import Transmuters from './Transmuters';
 import { Link } from "react-router-dom";
-import { formatDate, datesEqual, wait } from './Functions';
+//import { formatDate, datesEqual, wait } from './Functions';
 import { addresses, abis } from './Constants';
 import {
   Chart as ChartJS,
@@ -138,7 +138,6 @@ export default class App extends React.Component {
     }
 
     let alAssetSupply = {alEth: 0, alUsd: 0, alUsdOptimism: 0, nextAlUsdOptimism: 0}
-    let tokenParams = {}
 
     Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=alchemixStatsYieldTokenData.json&status=pinned", authorizationHeader).then(res => res.json()),
     ])
@@ -195,7 +194,6 @@ export default class App extends React.Component {
   getLPs(){
     let alUsdUsdc = "sAMMV2-USDC/alUSD";
     let ethPool = "sAMMV2-alETH/WETH";
-    let frxEth = "sAMMV2-alETH/frxETH";
     let pxEthAlEth = 'sAMMV2-pxETH/alETH';
     let dolaAlUsd = 'sAMMV2-DOLA/alUSD';
     let lps = { alUsdIn3Crv: 0, crv3In3Crv: 0, alUsdInVelodrome: 0, usdcInVelodrome: 0, alEthInVelodrome: 0, wethInVelodrome: 0, alEthInFrxEthCrv: 0, frxEthInFrxEthCrv: 0, pxEthInVeloAlEth: 0, alEthInVeloAlEth: 0, alUsdInVeloDolaAlUsd: 0, dolaInVeloDolaAlUsd: 0, alUsdInCurveDola: 0, sdolaInCurveDola: 0, alUsdInArbiUsdc: 0, usdcInArbiUsdc: 0, alEthInArbiWeth: 0, wethInArbiWeth: 0 }
@@ -412,7 +410,7 @@ export default class App extends React.Component {
         console.log(err)
       }
     }
-    console.log(formattedStats)
+
     this.setState({ transmuterStats: formattedStats, transmuterStatsLoading: false });
   }
 
@@ -480,13 +478,11 @@ export default class App extends React.Component {
     let sortedTreasuryStrategicAssets = [];
     let elixirAssets = {};
     let sortedElixirAssets = [];
-    let alUsdFraxbpConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:19';
     let alEthFrxEthConvexId = '0x41a5881c17185383e19df6fa4ec158a6f4851a69:54';
     let alUsdSdolaConvexId = '0x7ee5f33e36988070a8e265a0f28a91514f45f630';
     let alEthWethVelodromeId = '0xc16adbf2d01d6524b79cbb610ce31d5db80eee3c';
     let alUsdUsdcVelodromeId = '0xe8b219c285e4e4ec28ac80fdc4b9739b18cb8890';
     let alEthPxEthVelodromeId = '0x28cd6d3471e031f8b380a64e9da3b9b12a473186';
-    let alEthFrxEthVelodromeId = '0xfc0b9a9c2b63e6acaca91a77a80bfa83c615e6c5';
     let veloAlEthWethAddress = '0xa1055762336F92b4B8d2eDC032A0Ce45ead6280a';
     let veloAlUsdUsdcAddress = '0x124d69daeda338b1b31ffc8e429e39c9a991164e';
     let veloAlEthPxEthAddress = '0x03799d6a59624abdd50f8774d360a64f4fbfdcf5';
