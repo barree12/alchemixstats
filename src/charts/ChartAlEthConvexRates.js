@@ -5,19 +5,26 @@ import 'chartjs-adapter-date-fns';
 export default class ChartAlEthConvexRates extends React.Component {
 
   render(){  
-  let dates = [...this.props.alEthPeg.date];
-  let values = [...this.props.alEthPeg.peg];
-  let valuesPerc = [...this.props.alEthPeg.pegPerc];
-  const helperPointer = this;
+ 
   return (
       <div className="chart-container-3">
         <Chart 
           type='line'
           data={{
-            labels: dates,
+            labels: this.props.convexRates.date,
             datasets: [{
-              label: 'alETH price',
-              data: this.props.toggle ? valuesPerc : values,
+              label: 'alETH-frxETH',
+              data: this.props.convexRates.alEthFrxEth,
+              backgroundColor: 'rgba(54, 181, 195, 0.8)',
+              borderColor: 'rgba(54, 181, 195,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: false,
+            },
+            {
+              label: 'alETH-WETH',
+              data: this.props.convexRates.alEthWeth,
               backgroundColor: 'rgba(240,238,129,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
@@ -49,16 +56,14 @@ export default class ChartAlEthConvexRates extends React.Component {
                             label += ': ';
                         }
                         if (context.parsed.y !== null) {
-                            label += Math.round(context.parsed.y*10000)/10000;
-                            if(helperPointer.props.toggle) label += '%';
-                            else label += ' ETH';
+                            label += Math.round(context.parsed.y*10000)/10000 + "%";
                         }
                         return label;
                     }
                 }
                 },
                 legend: {
-                  display: false,
+                  display: true,
                   position: 'top',
                   labels: {
                     color: '#F5C09A',
@@ -73,10 +78,6 @@ export default class ChartAlEthConvexRates extends React.Component {
               
               scales: {
                 xAxes: {
-                    type: 'time',
-                    time: {
-                      tooltipFormat: "yyyy-MM-dd",
-                    },
                     grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
@@ -84,13 +85,14 @@ export default class ChartAlEthConvexRates extends React.Component {
                     ticks: {
                       maxTicksLimit: 10,
                     },
-                },
+                  },
                 yAxes: {
                     grid: {
                       color: 'rgba(0, 0, 0, 0.0)',
                       tickMarkLength: 10,
                     },
-                    beginAtZero: false,
+                    beginAtZero: true,
+                    stacked: false
                   }
               }
             }}

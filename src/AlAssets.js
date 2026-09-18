@@ -4,7 +4,7 @@ import ChartAlEthConvexRates from './charts/ChartAlEthConvexRates';
 import AlEthSummary from './AlEthSummary';
 import AlUsdSummary from './AlUsdSummary';
 //import { Switch } from '@mui/material';
-//import LoadingComponent from './LoadingComponent';
+import LoadingComponent from './LoadingComponent';
 import { abis, addresses } from './Constants';
 import Web3 from 'web3';
 
@@ -18,10 +18,8 @@ export default class AlAssets extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            alUsdPeg: {},
-            alEthPeg: {},
-            alUsdPegLoading: {},
-            alEthPegLoading: {},
+            convexRates: {},
+            convexRatesLoading: {},
             alUsdPegToggle: true,
             alEthPegToggle: true,
             //alUsdPegActive: { dai: true, usdc: false, usdt: false },
@@ -169,9 +167,54 @@ export default class AlAssets extends React.Component {
 
     }*/
 
-    calculateConvexAprRates(result){
-        console.log(result)
-    }
+        calculateConvexAprRates(result){
+        const startingDate = new Date(Number(result[0].timestamp) * 1000);
+        let currentDate = startingDate.toISOString().split('T')[0];
+        let convexRates = [];
+        let formattedStats = { date: [], alUsdUsdc: [], alUsdSdola: [], alUsdFrxUsd: [], alEthFrxEth: [], alEthWeth: [] };
+        let statObject = { date: currentDate, alUsdUsdc: 0, alUsdSdola: 0, alUsdFrxUsd: 0, alEthFrxEth: 0, alEthWeth: 0 };
+        for(let i=0;i<result.length;i++){
+          try {
+              const date = new Date(Number(result[i].timestamp) * 1000);
+              const dayString = date.toISOString().split('T')[0];
+              if(dayString !== currentDate){
+                convexRates.push(JSON.parse(JSON.stringify(statObject)));
+                currentDate = dayString;
+                statObject = JSON.parse(JSON.stringify(statObject));
+                statObject.date = currentDate;
+              }
+              if(result[i].pool.name === "alusd+usdc"){ statObject.alUsdUsdc = result[i].rates.totalApr }
+              if(result[i].pool.name === "sdola+alusd"){ statObject.alUsdSdola = result[i].rates.totalApr }
+              if(result[i].pool.name === "alusd+frxusd"){ statObject.alUsdFrxUsd = result[i].rates.totalApr }
+              if(result[i].pool.name === "aleth+fraxeth"){ statObject.alEthFrxEth = result[i].rates.totalApr }
+              if(result[i].pool.name === "aleth+weth"){ statObject.alEthWeth = result[i].rates.totalApr }
+              
+              if(i === result.length - 1){
+                convexRates.push(JSON.parse(JSON.stringify(statObject)));   
+              }
+          }
+          catch (err) {
+            console.log(err)
+          }
+        }
+
+        for(let i=1;i<convexRates.length;i++){
+            try {
+                formattedStats.date[i] = convexRates[i].date;
+                formattedStats.alUsdUsdc[i] = convexRates[i].alUsdUsdc;
+                formattedStats.alUsdSdola[i] = convexRates[i].alUsdSdola;
+                formattedStats.alUsdFrxUsd[i] = convexRates[i].alUsdFrxUsd;
+                formattedStats.alEthFrxEth[i] = convexRates[i].alEthFrxEth;
+                formattedStats.alEthWeth[i] = convexRates[i].alEthWeth;
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+
+        this.setState({ convexRates: formattedStats, convexRatesLoading: false });
+      }
+
 
     getConvexRates() {
         let authorizationHeader = {
@@ -182,11 +225,10 @@ export default class AlAssets extends React.Component {
             }
           }
 
-        Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=convex_apr_rates_history.csv&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
+        Promise.all([fetch("https://api.pinata.cloud/data/pinList?includeCount=false&metadata[name]=convex_apr_rates_history.json&status=pinned&pageLimit=1000", authorizationHeader).then(res => res.json()),
         ])
         .then(([convexAprRates]) => {
             let convexAprRatesUrl = "https://ipfs.imimim.info/ipfs/" + convexAprRates.rows[0].ipfs_pin_hash;
-            console.log(convexAprRates)
             Promise.all([fetch(convexAprRatesUrl).then(res => res.json())])
                 .then(([convexAprRatesFinal]) => {
                     this.calculateConvexAprRates(convexAprRatesFinal)
@@ -212,7 +254,11 @@ export default class AlAssets extends React.Component {
                 <div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alUSD Convex APRs</h3>
-                        <ChartAlusdConvexRates marketcapDates={this.props.alUsdMarketcapDates} marketcaps={this.props.alUsdMarketcaps} />
+                        {this.state.convexRatesLoading ? (
+                            <LoadingComponent />
+                        ) : (
+                            <ChartAlusdConvexRates convexRates={this.state.convexRates} />
+                        )}
                     </div>
                 </div>
                 <div className="section-header">
@@ -220,6 +266,16 @@ export default class AlAssets extends React.Component {
                     <h2>alETH</h2>
                 </div>
                 <AlEthSummary lps={this.props.lps} ethPrice={this.props.ethPrice} surplus={this.state.surplus} />
+                <div className="section-wrapper">
+                    <div className="chart-title">
+                        <h3>alETH Convex APRs</h3>
+                        {this.state.convexRatesLoading ? (
+                            <LoadingComponent />
+                        ) : (
+                            <ChartAlEthConvexRates convexRates={this.state.convexRates} />
+                        )}
+                    </div>
+                </div>
                 {/*<div className="section-wrapper">
                     <div className="chart-title">
                         <h3>alETH Total Supply</h3>

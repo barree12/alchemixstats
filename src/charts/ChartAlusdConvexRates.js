@@ -1,37 +1,58 @@
 import React from 'react';
 import { Chart } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 
-export default class ChartAlusdConvexRates extends React.Component {
+export default class ChartAlEthConvexRates extends React.Component {
 
   render(){  
-
+ 
   return (
       <div className="chart-container-3">
-        <Chart
-          type='line' 
+        <Chart 
+          type='line'
           data={{
-            labels: this.props.marketcapDates,
+            labels: this.props.convexRates.date,
             datasets: [{
-              label: '',
-              data: this.props.marketcaps,
-              backgroundColor: 'rgba(49,204,75,0.5)',
+              label: 'alUSD-frxUSD',
+              data: this.props.convexRates.alUsdFrxUsd,
+              backgroundColor: 'rgba(54, 181, 195, 0.8)',
+              borderColor: 'rgba(54, 181, 195,1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: false,
+            },
+            {
+              label: 'alUSD-sDola',
+              data: this.props.convexRates.alUsdSdola,
+              backgroundColor: 'rgba(240,238,129,0.8)',
               borderColor: 'rgba(240,238,129,1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',
-              fill: true,
+              fill: false,
+            },
+            {
+              label: 'alUSD-USDC',
+              data: this.props.convexRates.alUsdUsdc,
+              backgroundColor: 'rgba(229, 129, 240, 0.8)',
+              borderColor: 'rgba(229, 129, 240, 1)',
+              borderWidth: 1,
+              pointRadius: 0,
+              pointBorderColor: '#ffffff',
+              fill: false,
             }]
           }}
             options={{
               hover: {
-                mode: 'nearest',
+                mode: 'index',
                 intersect: false,
               },
               plugins: {
                 tooltip: {
                   enabled: true,
                   intersect: false,
-                  mode: 'nearest',
+                  mode: 'index',
                   cornerRadius: 1,
                   caretPadding: 5,
                   caretSize: 10,
@@ -40,15 +61,19 @@ export default class ChartAlusdConvexRates extends React.Component {
                   callbacks: {
                     label: function(context) {
                         let label = context.dataset.label || '';
+
+                        if (label) {
+                            label += ': ';
+                        }
                         if (context.parsed.y !== null) {
-                          label = 'alUSD supply: ' + Math.round(context.parsed.y*100)/100 + 'M';
+                            label += Math.round(context.parsed.y*10000)/10000 + "%";
                         }
                         return label;
                     }
-                  }
+                }
                 },
                 legend: {
-                  display: false,
+                  display: true,
                   position: 'top',
                   labels: {
                     color: '#F5C09A',
@@ -57,6 +82,7 @@ export default class ChartAlusdConvexRates extends React.Component {
                   }
                 },
               },
+              
               responsive: true,
               maintainAspectRatio: false,
               
@@ -76,6 +102,7 @@ export default class ChartAlusdConvexRates extends React.Component {
                       tickMarkLength: 10,
                     },
                     beginAtZero: true,
+                    stacked: false
                   }
               }
             }}
