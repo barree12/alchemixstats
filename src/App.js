@@ -440,8 +440,7 @@ export default class App extends React.Component {
   }
 
   isStrategic(object){
-    if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO" || 
-    object === "FRAX") return true;
+    if(object === "sdCRV" || object === "CVX" || object === "VELO" || object === "SDT" || object === "AERO") return true;
     else return false;
   }
 
@@ -551,9 +550,6 @@ export default class App extends React.Component {
         }
       }
     }
-
-    treasuryAssetsStrategic["FRAX"] += treasuryAssets["sdFXS"];
-    treasuryAssets["sdFXS"] = 0;
 
     for(let i=0;i<tokensConcat.length-1;i++){
       if(this.isStrategic(tokensConcat[i].symbol)) {

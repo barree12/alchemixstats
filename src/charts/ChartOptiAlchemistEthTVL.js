@@ -25,8 +25,8 @@ export default class ChartOptiAlchemistEthTVL extends React.Component {
             datasets: [{
               label: 'MYT Deposits',
               data: this.props.alchemistStats.ethOptimismMyt,
-              backgroundColor: 'rgba(255, 92, 51,0.9)',
-              borderColor: 'rgba(255, 92, 51,1)',
+              backgroundColor: 'rgba(255, 4, 33, 0.9)',
+              borderColor: 'rgba(255, 4, 33, 1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',

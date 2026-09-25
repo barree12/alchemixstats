@@ -142,8 +142,7 @@ export default class Treasury extends React.Component {
                 <span>
                     <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9">
                     Treasury Wallet 1</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x8392f6669292fa56123f71949b52d883ae57e225">
-                    Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x3216d2a52f0094aa860ca090bc5c335de36e6273">
-                    SDT Controller</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xc224bf25dcc99236f00843c7d8c4194abe8aa94a">
+                    Treasury Wallet 2</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xc224bf25dcc99236f00843c7d8c4194abe8aa94a">
                     Optimism Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x7e108711771dfdb10743f016d46d75a9379ca043">
                     Arbitrum Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0x24e9cbb9ddda1247ae4b4eeee3c569a2190ac401">
                     Base Multisig</a>, <a target="_blank" rel="noreferrer" href="https://debank.com/profile/0xa03e089163af6c05210d4ce99b63ddd21c5753c9">
@@ -177,7 +176,7 @@ export default class Treasury extends React.Component {
                             <h3>Strategic Holdings</h3>
                             <div className="small-table-inner-map">
                             <div className="map-row"><span className="small-table-row"></span><span className="table-text-bold">USD value</span></div>
-                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 6, false).map((asset, index) => {
+                            {this.formatArrays(this.props.debankData.sortedTreasuryStrategicAssets, 5, false).map((asset, index) => {
                               return(
                                 <div className="map-row" key={asset.symbol}><span className="small-table-row"><img src={this.getLogo(asset.symbol)} alt="logo" className="image" />{asset.symbol}</span><span className="table-text-bold">${styleNumber(asset.amount)}</span></div>
                               )
@@ -204,7 +203,6 @@ export default class Treasury extends React.Component {
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdfraxbp")} alt="logo" className="image" />alUSD-frxUSD</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdFrxUsdInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethfrxethcurve")} alt="logo" className="image" />alETH-frxETH</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthFrxEthInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("dola")} alt="logo" className="image" />alUSD-sDOLA</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdSdolaInElixir)}</span></div>
-                            <div className="map-row"><span className="small-table-row"><img src={this.getLogo("vault")} alt="logo" className="image" />msUSD-FRAXBP</span><span className="table-text-bold">${styleNumber(this.props.debankData.msUsdFraxBpInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />WETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthWethVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alethwethvelo")} alt="logo" className="image" />pxETH Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alEthPxEthVeloInElixir)}</span></div>
                             <div className="map-row"><span className="small-table-row"><img src={this.getLogo("alusdusdcvelo")} alt="logo" className="image" />alUSD Velo</span><span className="table-text-bold">${styleNumber(this.props.debankData.alUsdUsdcVeloInElixir)}</span></div>

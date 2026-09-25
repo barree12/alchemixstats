@@ -25,8 +25,8 @@ saveCanvas() {
             datasets: [{
               label: 'MYT Deposits',
               data: this.props.alchemistStats.ethArbitrumMyt,
-              backgroundColor: 'rgba(115,136,255,1)',
-              borderColor: 'rgba(240,238,129,1)',
+              backgroundColor: 'rgba(1, 107, 229, 0.9)',
+              borderColor: 'rgba(1, 107, 229, 1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',

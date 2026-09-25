@@ -25,8 +25,8 @@ export default class ChartOptiTransmuterUsd extends React.Component {
             datasets: [{
               label: 'Transmuter Deposits',
               data: this.props.transmuterStats.usdOptimism,
-              backgroundColor: 'rgba(255, 92, 51,0.8)',
-              borderColor: 'rgba(255, 92, 51,1)',
+              backgroundColor: 'rgba(255, 4, 33, 0.9)',
+              borderColor: 'rgba(255, 4, 33, 1)',
               borderWidth: 1,
               pointRadius: 0,
               pointBorderColor: '#ffffff',
