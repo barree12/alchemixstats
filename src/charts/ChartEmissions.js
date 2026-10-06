@@ -67,7 +67,7 @@ function ChartEmissions(){
                   display: true,
                   position: 'top',
                   labels: {
-                    color: '#F5C09A',
+                    color: '#7b7b7b',
                     usePointStyle: true,
                     pointStyle: 'circle'
                   }
