@@ -10,12 +10,8 @@ export default class AlEthSummary extends React.Component {
         const ethInCrvUsd = Math.round(this.props.lps.wethInAlEthWethCrv*this.props.ethPrice/10000)/100;
         const wethInSaddleUsd = Math.round(this.props.lps.wethInSaddle*this.props.ethPrice/10000)/100;
         const sEthInSaddleUsd = Math.round(this.props.lps.sEthInSaddle*this.props.ethPrice/10000)/100;
-        const alEthInVelodromeUsd = Math.round(this.props.lps.alEthInVelodrome*this.props.ethPrice/10000)/100;
-        const wethInVelodromeUsd = Math.round(this.props.lps.wethInVelodrome*this.props.ethPrice/10000)/100;
         const alEthInFrxEthCrvUsd = Math.round(this.props.lps.alEthInFrxEthCrv*this.props.ethPrice/10000)/100;
         const frxEthInFrxEthCrvUsd = Math.round(this.props.lps.frxEthInFrxEthCrv*this.props.ethPrice/10000)/100;
-        const alEthInArbiWethUsd = Math.round(this.props.lps.alEthInArbiWeth*this.props.ethPrice/10000)/100;
-        const wethInArbiWethUsd = Math.round(this.props.lps.wethInArbiWeth*this.props.ethPrice/10000)/100;
 
         return (
             <div className="summary">

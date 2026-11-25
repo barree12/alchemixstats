@@ -97,18 +97,8 @@ export default class ChartCrvPoolRatios extends React.Component {
                             ((context.dataset.label === 'External' && context.label === 'alUSD-frxUSD') ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdFrxUsd - helperPointer.props.debankData.alUsdFrxUsdInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "alETH-frxETH") ? (Math.round(helperPointer.props.debankData.alEthFrxEthInElixir/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'External' && context.label === "alETH-frxETH") ? (Math.round((helperPointer.props.alEthFrxEthTotalValue - helperPointer.props.debankData.alEthFrxEthInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Velo alETH-WETH") ? (Math.round(helperPointer.props.debankData.alEthWethVeloInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Velo alETH-WETH") ? (Math.round((helperPointer.props.debankData.veloAlEthWethPool - helperPointer.props.debankData.alEthWethVeloInElixir)/10000)/100 + "M") : "") +
                             ((context.dataset.label === 'Owned' && context.label === "alUSD-sDOLA") ? (Math.round(helperPointer.props.debankData.alUsdSdolaInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "alUSD-sDOLA") ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdSdola - helperPointer.props.debankData.alUsdSdolaInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Velo alETH-pxETH") ? (Math.round(helperPointer.props.debankData.alEthPxEthVeloInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Velo alETH-pxETH") ? (Math.round((helperPointer.props.debankData.veloAlEthPxEthPool - helperPointer.props.debankData.alEthPxEthVeloInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Velo alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcVeloInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Velo alUSD-USDC") ? (Math.round((helperPointer.props.debankData.veloAlUsdUsdcPool - helperPointer.props.debankData.alUsdUsdcVeloInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Arbi alETH-WETH") ? (Math.round(helperPointer.props.debankData.alEthWethArbiInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Arbi alETH-WETH") ? (Math.round((helperPointer.props.alEthWethArbiTotalValue - helperPointer.props.debankData.alEthWethArbiInElixir)/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'Owned' && context.label === "Arbi alUSD-USDC") ? (Math.round(helperPointer.props.debankData.alUsdUsdcArbiInElixir/10000)/100 + "M") : "") +
-                            ((context.dataset.label === 'External' && context.label === "Arbi alUSD-USDC") ? (Math.round((helperPointer.props.alAssetCrvSupply.arbiAlUsdUsdc - helperPointer.props.debankData.alUsdUsdcArbiInElixir)/10000)/100 + "M") : "")
+                            ((context.dataset.label === 'External' && context.label === "alUSD-sDOLA") ? (Math.round((helperPointer.props.alAssetCrvSupply.alUsdSdola - helperPointer.props.debankData.alUsdSdolaInElixir)/10000)/100 + "M") : "")
                           }
                         return label;
                     }
