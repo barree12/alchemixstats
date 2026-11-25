@@ -86,30 +86,30 @@ export default class AlUsdSummary extends React.Component {
                     </span>
                   </div>
 
-                  <div className="small-table-inner-4">
+                   <div className="small-table-inner-11">
                     <span className="small-table-cell-title">
                       <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
-                      <span className="table-text-title">alUSD Velodrome</span>
+                      <span className="table-text-title">Curve USDC</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInVelodrome/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.alUsdInUsdcCurve/10000)/100}M</span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">USDC</span>
-                      <span className="important-2">${Math.round(this.props.lps.usdcInVelodrome/10000)/100}M</span>
+                      <span className="important-2">${Math.round(this.props.lps.usdcInUsdcCurve/10000)/100}M</span>
                     </span>
-                    <span className="small-table-cell-disappear">
+                    <span className="small-table-cell">
                       <span></span>
                       <span></span>
                     </span>
-                    <span className="small-table-cell-disappear">
+                    <span className="small-table-cell">
                       <span></span>
                       <span></span>
                     </span>
                     <span className="small-table-cell">
                       <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalAlUsdVelodrome}M</span>
+                      <span className="important-2">${totalUsdcCurve}M</span>
                     </span>
                   </div>
                   
@@ -143,86 +143,6 @@ export default class AlUsdSummary extends React.Component {
                     </span>
                   </div>
 
-                  <div className="small-table-inner-11">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/dola.png').default } alt="sDOLA logo" className="image" />
-                      <span className="table-text-title">DOLA Velodrome</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInVeloDolaAlUsd/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">DOLA</span>
-                      <span className="important-2">${Math.round(this.props.lps.dolaInVeloDolaAlUsd/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalDolaVelodrome}M</span>
-                    </span>
-                  </div>
-
-                  <div className="small-table-inner-11">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/frax.png').default } alt="FRAX logo" className="image" />
-                      <span className="table-text-title">Arbitrum USDC</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInArbiUsdc/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">USDC</span>
-                      <span className="important-2">${Math.round(this.props.lps.usdcInArbiUsdc/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalArbiUsdc}M</span>
-                    </span>
-                  </div>
-
-                  <div className="small-table-inner-11">
-                    <span className="small-table-cell-title">
-                      <img src={ require('./logos/alusd_usdc.png').default } alt="alUSD-USDC logo" className="image" />
-                      <span className="table-text-title">Curve USDC</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">alUSD</span>
-                      <span className="important-2">${Math.round(this.props.lps.alUsdInUsdcCurve/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">USDC</span>
-                      <span className="important-2">${Math.round(this.props.lps.usdcInUsdcCurve/10000)/100}M</span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span></span>
-                      <span></span>
-                    </span>
-                    <span className="small-table-cell">
-                      <span className="table-text-bold-2">Total</span>
-                      <span className="important-2">${totalUsdcCurve}M</span>
-                    </span>
-                  </div>
 
                   </div>
           </div>

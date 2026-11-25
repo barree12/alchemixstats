@@ -17,11 +17,11 @@ export default class ChartCrvPoolRatios extends React.Component {
   let alEthFrxEthRatio = this.props.debankData.alEthFrxEthInElixir / this.props.alEthFrxEthTotalValue;
   let alUsdFrxUsdCrvRatio = this.props.debankData.alUsdFrxUsdInElixir / this.props.alAssetCrvSupply.alUsdFrxUsd;
   let alUsdSdolaRatio = this.props.debankData.alUsdSdolaInElixir / this.props.alAssetCrvSupply.alUsdSdola;
-  let veloAlEthRatio = this.props.debankData.alEthWethVeloInElixir / this.props.debankData.veloAlEthWethPool;
+  /*let veloAlEthRatio = this.props.debankData.alEthWethVeloInElixir / this.props.debankData.veloAlEthWethPool;
   let veloAlEthPxEthRatio = this.props.debankData.alEthPxEthVeloInElixir / this.props.debankData.veloAlEthPxEthPool;
   let veloAlUsdRatio = this.props.debankData.alUsdUsdcVeloInElixir / this.props.debankData.veloAlUsdUsdcPool;
   let arbiAlEthRatio = this.props.debankData.alEthWethArbiInElixir / this.props.alEthWethArbiTotalValue;
-  let arbiAlUsdRatio = this.props.debankData.alUsdUsdcArbiInElixir / this.props.alAssetCrvSupply.arbiAlUsdUsdc;
+  let arbiAlUsdRatio = this.props.debankData.alUsdUsdcArbiInElixir / this.props.alAssetCrvSupply.arbiAlUsdUsdc;*/
 
   const helperPointer = this;
 
@@ -32,18 +32,18 @@ export default class ChartCrvPoolRatios extends React.Component {
           type='bar'
           id='poolRatios'
           data={{
-            labels: ["alUSD-frxUSD", "alETH-frxETH", "alUSD-sDOLA", "Velo alUSD-USDC", "Velo alETH-WETH",  "Velo alETH-pxETH", "Arbi alUSD-USDC", "Arbi alETH-WETH"],
+            labels: ["alUSD-frxUSD", "alETH-frxETH", "alUSD-sDOLA"],
             datasets: [{
               label: 'Owned',
               data: [
                 Math.round(alUsdFrxUsdCrvRatio*10000)/100,
                 Math.round(alEthFrxEthRatio*10000)/100,
                 Math.round(alUsdSdolaRatio*10000)/100,
-                Math.round(veloAlUsdRatio*10000)/100,
+                /*Math.round(veloAlUsdRatio*10000)/100,
                 Math.round(veloAlEthRatio*10000)/100,
                 Math.round(veloAlEthPxEthRatio*10000)/100,
                 Math.round(arbiAlUsdRatio*10000)/100,
-                Math.round(arbiAlEthRatio*10000)/100      
+                Math.round(arbiAlEthRatio*10000)/100*/
               ],
               backgroundColor: 'rgba(115,136,255,0.8)',
               borderColor: 'rgba(255,204,75,1)',
@@ -58,11 +58,11 @@ export default class ChartCrvPoolRatios extends React.Component {
                 Math.round((1-alUsdFrxUsdCrvRatio)*10000)/100,
                 Math.round((1-alEthFrxEthRatio)*10000)/100,
                 Math.round((1-alUsdSdolaRatio)*10000)/100,
-                Math.round((1-veloAlUsdRatio)*10000)/100,
+                /*Math.round((1-veloAlUsdRatio)*10000)/100,
                 Math.round((1-veloAlEthRatio)*10000)/100,
                 Math.round((1-veloAlEthPxEthRatio)*10000)/100,
                 Math.round((1-arbiAlUsdRatio)*10000)/100,
-                Math.round((1-arbiAlEthRatio)*10000)/100
+                Math.round((1-arbiAlEthRatio)*10000)/100*/
               ],
               backgroundColor: 'rgba(255,204,75,0.7)',
               borderColor: 'rgba(255,204,75,1)',
